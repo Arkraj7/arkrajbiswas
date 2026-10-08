@@ -102,7 +102,10 @@
   }
 
   /* ----- NASA POWER climatology ----- */
+  let requestSeq = 0;
+
   async function load() {
+    const token = ++requestSeq;
     showSkeleton("Loading long-term climate data…");
     say("");
     try {
@@ -117,11 +120,14 @@
         const data = await res.json();
         params = data && data.properties && data.properties.parameter;
         if (!params || !params.T2M) throw new Error("power empty");
+        if (token !== requestSeq) return; // a newer search won — discard stale data
         cache.set(key, params);
       }
+      if (token !== requestSeq) return;
       renderFromCache(params);
-      loadPulse(); // independent; failures hide the strip silently
+      loadPulse(token);
     } catch (e) {
+      if (token !== requestSeq) return;
       els.chart.hidden = true;
       showSkeleton("Climate data is temporarily unavailable.");
     }
@@ -144,7 +150,7 @@
     if (els.note) els.note.textContent = state.example
       ? "Example location — search for another place below."
       : `Showing data for ${state.label}.`;
-    els.meta.textContent = `${state.label} · ${cfg.label} · Long-term monthly means · ${cfg.unit} · NASA POWER`;
+    els.meta.textContent = `${state.label} · ${fmtLat(state.lat)}, ${fmtLon(state.lon)} · ${cfg.label} · Long-term monthly climatological mean · ${cfg.unit} · NASA POWER`;
   }
 
   function showSkeleton(text) {
@@ -181,14 +187,16 @@
   }
 
   /* ----- Biodiversity Pulse (GBIF, public data — never research data) ----- */
-  async function loadPulse() {
+  async function loadPulse(token) {
     if (!els.pulse) return;
+    const myLat = state.lat, myLon = state.lon;
     try {
-      const base = `https://api.gbif.org/v1/occurrence/search?decimal_latitude=${state.lat}&decimal_longitude=${state.lon}`;
+      const base = `https://api.gbif.org/v1/occurrence/search?decimal_latitude=${myLat}&decimal_longitude=${myLon}`;
       const [cRes, eRes] = await Promise.all([
         fetch(`${base}&limit=0`),
         fetch(`${base}&limit=4&hasCoordinate=true`)
       ]);
+      if (token !== requestSeq || myLat !== state.lat || myLon !== state.lon) return;
       if (!cRes.ok) throw new Error("gbif failed");
       const count = (await cRes.json()).count;
       if (typeof count !== "number") throw new Error("gbif empty");
@@ -204,6 +212,8 @@
   }
 
   /* ----- Helpers ----- */
+  function fmtLat(v) { return `${Math.abs(v).toFixed(2)}°${v >= 0 ? "N" : "S"}`; }
+  function fmtLon(v) { return `${Math.abs(v).toFixed(2)}°${v >= 0 ? "E" : "W"}`; }
   function say(text) { if (els.status) els.status.textContent = text; }
   function escapeHTML(s) {
     return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");

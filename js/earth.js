@@ -16,6 +16,7 @@
   function init() {
     els = {
       place: document.getElementById("earthPlace"),
+      coords: document.getElementById("earthCoords"),
       temp: document.getElementById("earthTemp"),
       cond: document.getElementById("earthCond"),
       status: document.getElementById("earthStatus"),
@@ -93,42 +94,63 @@
     }
   }
 
-  /* ----- Data ----- */
+  /* ----- Data (ECMWF IFS HRES via Open-Meteo, standard fallback) ----- */
+  let requestSeq = 0;
+
+  function wxUrl(lat, lon, ecmwf) {
+    return `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+      `&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m` +
+      `&hourly=uv_index,precipitation_probability` +
+      `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max` +
+      `&timezone=auto&forecast_days=7` + (ecmwf ? `&models=ecmwf_ifs` : ``);
+  }
+
+  async function fetchWeather(lat, lon) {
+    // Prefer ECMWF IFS HRES; fall back to the standard best-match model.
+    try {
+      const r = await fetch(wxUrl(lat, lon, true));
+      if (!r.ok) throw new Error("ecmwf failed");
+      return { wx: await r.json(), model: "ECMWF IFS HRES" };
+    } catch (e) {
+      const r = await fetch(wxUrl(lat, lon, false));
+      if (!r.ok) throw new Error("weather failed");
+      return { wx: await r.json(), model: "Open-Meteo" };
+    }
+  }
+
   async function load(lat, lon, label) {
+    const token = ++requestSeq;
     const key = `${lat.toFixed(2)},${lon.toFixed(2)}`;
     const hit = cache.get(key);
     if (hit && Date.now() - hit.at < CACHE_MS) {
-      render(label, hit.wx, hit.aq);
+      if (token !== requestSeq) return;
+      render(label, lat, lon, hit.wx, hit.aq, hit.model);
       say("");
       return;
     }
     say("Reading the atmosphere…");
     setBusy(true);
     try {
-      const wxUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
-        `&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m` +
-        `&hourly=uv_index,precipitation_probability` +
-        `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max` +
-        `&timezone=auto&forecast_days=7`;
       const aqUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}` +
         `&current=us_aqi,pm2_5&timezone=auto`;
-      const [wxRes, aqRes] = await Promise.all([fetch(wxUrl), fetch(aqUrl)]);
-      if (!wxRes.ok) throw new Error("weather failed");
-      const wx = await wxRes.json();
+      const [w, aqRes] = await Promise.all([fetchWeather(lat, lon), fetch(aqUrl)]);
+      if (token !== requestSeq) return; // a newer search won — discard stale data
       let aq = null;
       if (aqRes.ok) { try { aq = await aqRes.json(); } catch (e) { aq = null; } }
-      cache.set(key, { at: Date.now(), wx, aq });
-      render(label, wx, aq);
+      if (token !== requestSeq) return;
+      cache.set(key, { at: Date.now(), wx: w.wx, aq, model: w.model });
+      render(label, lat, lon, w.wx, aq, w.model);
       say("");
     } catch (e) {
+      if (token !== requestSeq) return;
       say("Live environmental data is temporarily unavailable.");
     } finally {
-      setBusy(false);
+      if (token === requestSeq) setBusy(false);
     }
   }
 
   /* ----- Render ----- */
-  function render(label, wx, aq) {
+  function render(label, lat, lon, wx, aq, model) {
     const c = (wx && wx.current) || {};
     const h = (wx && wx.hourly) || {};
     const d = (wx && wx.daily) || {};
@@ -136,6 +158,7 @@
 
     const t = num(c.temperature_2m);
     els.place.textContent = label || "Current conditions";
+    if (els.coords) els.coords.textContent = `${fmtLat(lat)}, ${fmtLon(lon)} · Forecast: ${model || "Open-Meteo"}`;
     els.temp.innerHTML = t === null ? "—<small> °C</small>" : `${Math.round(t)}<small> °C</small>`;
     const feels = num(c.apparent_temperature);
     els.cond.textContent = `${weatherLabel(c.weather_code)}${feels === null ? "" : ` · Feels like ${Math.round(feels)}°`}`;
@@ -177,6 +200,8 @@
   }
 
   function setMeta(el, text) { if (el) el.textContent = text; }
+  function fmtLat(v) { return `${Math.abs(v).toFixed(2)}°${v >= 0 ? "N" : "S"}`; }
+  function fmtLon(v) { return `${Math.abs(v).toFixed(2)}°${v >= 0 ? "E" : "W"}`; }
   function say(text) { if (els.status) els.status.textContent = text; }
   function setBusy(b) { if (els.locate) els.locate.disabled = b; }
 

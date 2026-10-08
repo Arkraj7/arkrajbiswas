@@ -104,6 +104,13 @@ p { margin: 0 0 1em; max-width: var(--measure); }
 .brand-mark { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: var(--paper); display: grid; place-items: center; flex: none; transition: transform 0.4s ease; }
 .brand:hover .brand-mark { transform: rotate(-14deg); }
 .brand-mark svg { width: 18px; height: 18px; }
+.mark-draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: markdraw 7s ease-in-out infinite; }
+@keyframes markdraw {
+  0% { stroke-dashoffset: 1; opacity: 0.5; }
+  35% { stroke-dashoffset: 0; opacity: 1; }
+  70% { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: 1; opacity: 0.5; }
+}
 .brand-text { font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 0.01em; }
 .brand-text em { font-style: italic; color: var(--accent); }
 .nav-inline { display: flex; gap: 4px; margin-left: auto; }
@@ -517,7 +524,7 @@ body.menu-open .scrim { opacity: 1; pointer-events: auto; }
 /* ---------- 14. Responsive ---------- */
 @media (min-width: 901px) {
   /* Lift the About portrait toward the heading on desktop only */
-  .about-open .portrait-frame { transform: translateY(-clamp(16px, 2vw, 32px)); }
+  .about-open .portrait-frame { transform: translateY(-clamp(20px, 3vw, 40px)); }
 }
 @media (max-width: 1020px) {
   .nav-inline { display: none; }
@@ -559,5 +566,6 @@ body.menu-open .scrim { opacity: 1; pointer-events: auto; }
   .nav-links { transition: none; }
   .slides-frame img { transition: none; }
   .slides-bar.go i { animation: none; }
+  .mark-draw { animation: none; stroke-dashoffset: 0; opacity: 1; }
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
