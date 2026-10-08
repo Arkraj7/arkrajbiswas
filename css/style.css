@@ -61,8 +61,8 @@ body {
 }
 ::selection { background: var(--accent); color: var(--paper); }
 :focus-visible { outline: 2px solid var(--earth); outline-offset: 3px; border-radius: 3px; }
-.container { max-width: var(--container); margin: 0 auto; padding: 0 var(--gutter); }
-.container-narrow { max-width: min(880px, 100% - var(--gutter) * 2); margin: 0 auto; padding: 0 var(--gutter); }
+.container { width: min(94vw, 1500px); margin: 0 auto; }
+.container-narrow { width: min(94vw, 860px); margin: 0 auto; }
 img, svg { max-width: 100%; }
 
 h1, h2, h3 { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.02em; line-height: 1.06; text-wrap: balance; }
@@ -172,7 +172,7 @@ body.menu-open .scrim { opacity: 1; pointer-events: auto; }
 
 /* ---------- 6. Hero (full-viewport editorial composition) ---------- */
 .hero { padding: clamp(48px, 7vh, 96px) 0 clamp(48px, 6vw, 88px); }
-.hero-grid { display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr); gap: clamp(36px, 4.5vw, 80px); align-items: end; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: clamp(36px, 4.5vw, 88px); align-items: center; }
 .hero-role { font-size: clamp(0.95rem, 1.2vw, 1.05rem); color: var(--ink-soft); max-width: 28rem; margin: 0 0 26px; }
 .hero-name { font-size: clamp(3.6rem, 8.6vw, 7.5rem); line-height: 0.93; margin: 0 0 28px; letter-spacing: -0.035em; }
 .hero-name span { display: block; }
@@ -195,6 +195,44 @@ body.menu-open .scrim { opacity: 1; pointer-events: auto; }
 [data-theme="dark"] .motif { background: linear-gradient(180deg, #18261d, var(--paper) 75%); }
 .visual-caption { display: flex; justify-content: space-between; gap: 12px; margin-top: 12px; }
 .north { display: inline-flex; align-items: center; gap: 8px; }
+
+/* ---------- 6a. Fieldwork slideshow (real photographs) ---------- */
+.slideshow { width: clamp(300px, 34vw, 500px); justify-self: end; }
+.slideshow figure { margin: 0; }
+.slides-frame {
+  position: relative; aspect-ratio: 4 / 5; overflow: hidden;
+  border: 1px solid var(--line); border-radius: 4px; background: var(--stone);
+  box-shadow: var(--shadow);
+}
+.slides-frame img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: center; opacity: 0;
+  transition: opacity 0.9s ease;
+}
+.slides-frame img.current { opacity: 1; }
+.slides-ui { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-top: 12px; }
+.slides-bar { height: 2px; background: var(--line-soft); margin-top: 10px; overflow: hidden; border-radius: 2px; }
+.slides-bar i { display: block; height: 100%; width: 0; background: var(--accent); }
+.slides-bar.go i { animation: slideprog 5s linear forwards; }
+@keyframes slideprog { from { width: 0; } to { width: 100%; } }
+.slides-ctrl { display: flex; gap: 8px; margin-top: 12px; }
+.slide-btn {
+  border: 1px solid var(--line); background: transparent; color: var(--ink-soft);
+  border-radius: 999px; padding: 7px 14px; cursor: pointer;
+  font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em;
+  transition: border-color 0.25s, color 0.25s;
+}
+.slide-btn:hover { border-color: var(--accent); color: var(--ink); }
+
+/* Fieldwork grid (research page documentation strip) */
+.field-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 2vw, 24px); }
+.field-grid figure { margin: 0; }
+.field-grid .frame {
+  aspect-ratio: 4 / 5; overflow: hidden; border: 1px solid var(--line);
+  border-radius: 4px; background: var(--stone);
+}
+.field-grid img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; transition: transform 0.6s ease; }
+.field-grid figure:hover img { transform: scale(1.025); }
 
 /* ---------- 7. Section rhythm ---------- */
 .section { padding: clamp(64px, 8vw, 120px) 0; }
@@ -411,6 +449,28 @@ body.menu-open .scrim { opacity: 1; pointer-events: auto; }
 .footer-links a[aria-disabled="true"] { color: var(--muted); cursor: default; }
 .footer-base { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-top: 30px; padding-top: 18px; border-top: 1px solid var(--line-soft); }
 
+/* ---------- 13a. Dark theme — late-evening studio tuning ---------- */
+[data-theme="dark"] {
+  --line: #2c382d;
+  --line-soft: rgba(237, 235, 225, 0.08);
+  --shadow: 0 30px 70px -44px rgba(0, 0, 0, 0.75);
+}
+[data-theme="dark"] .site-header { background: color-mix(in srgb, var(--paper) 90%, transparent); }
+[data-theme="dark"] .nav-links { background: #131a14; }
+[data-theme="dark"] .slides-frame,
+[data-theme="dark"] .field-grid .frame { border-color: #33402f; box-shadow: 0 30px 70px -44px rgba(0, 0, 0, 0.8); }
+[data-theme="dark"] .slides-frame img,
+[data-theme="dark"] .field-grid img { filter: brightness(0.94) saturate(0.96); }
+[data-theme="dark"] .btn-solid { background: var(--ink); }
+[data-theme="dark"] .filter-btn.active { border-color: var(--accent); }
+[data-theme="dark"] .index-row:hover,
+[data-theme="dark"] .tax-row:hover { background: rgba(157, 190, 163, 0.07); }
+[data-theme="dark"] .modal { background: #121814; }
+[data-theme="dark"] .earth-band { background: #121915; }
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea { color-scheme: dark; }
+
 /* ---------- 13. Reveal ---------- */
 .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.7s ease, transform 0.7s ease; }
 .reveal.visible { opacity: 1; transform: none; }
@@ -424,6 +484,9 @@ body.menu-open .scrim { opacity: 1; pointer-events: auto; }
 }
 @media (max-width: 900px) {
   .hero-grid, .feature, .archive-feature, .earth-grid, .bio-grid, .contact-close, .contact-grid, .about-cols { grid-template-columns: 1fr; }
+  .slideshow { width: 100%; max-width: 380px; justify-self: start; }
+  .slides-frame { max-height: 58vh; }
+  .field-grid { grid-template-columns: 1fr 1fr; }
   .section-head { grid-template-columns: 1fr; }
   .section-head p { justify-self: start; }
   .tax-row { grid-template-columns: 44px 1fr 28px; gap: 14px; }
@@ -443,11 +506,15 @@ body.menu-open .scrim { opacity: 1; pointer-events: auto; }
   .trajectory { grid-template-columns: 1fr; }
   .trajectory li + li { padding-left: 0; border-left: none; }
   .group-head { flex-wrap: wrap; gap: 8px; }
+  .field-grid { grid-template-columns: 1fr; }
+  .field-grid .frame { aspect-ratio: 4 / 3; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .modal { animation: none; }
   .nav-links { transition: none; }
+  .slides-frame img { transition: none; }
+  .slides-bar.go i { animation: none; }
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
