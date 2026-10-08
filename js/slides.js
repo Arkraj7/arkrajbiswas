@@ -15,6 +15,7 @@
     if (imgs.length < 2) return;
 
     const count = document.getElementById("slideCount");
+    const label = document.getElementById("slideLabel");
     const bar = document.getElementById("slideBar");
     const prev = document.getElementById("slidePrev");
     const next = document.getElementById("slideNext");
@@ -31,6 +32,7 @@
       i = (n + imgs.length) % imgs.length;
       imgs.forEach((img, k) => img.classList.toggle("current", k === i));
       if (count) count.textContent = `${pad(i + 1)} / ${pad(imgs.length)}`;
+      if (label) label.textContent = imgs[i].dataset.label || "Field documentation";
       restartBar();
     }
 
