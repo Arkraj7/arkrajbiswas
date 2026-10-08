@@ -1,9 +1,10 @@
 /* ============================================================
-   Arkraj Biswas — Editorial Studio v3
+   Arkraj Biswas — Editorial Studio
    Modules: theme → drawer → progress/reveal → research index
    → modal → contact. Preserved hooks: #themeToggle, #hamburger,
    #navLinks, .filter-btn, #researchGrid, #searchInput, modal ids,
    POSTS (categories climate | environment | agriculture).
+   Only verified content — no invented abstracts or findings.
    ============================================================ */
 
 /* ---------- Theme (day / night, persisted) ---------- */
@@ -23,67 +24,70 @@
   });
 })();
 
-/* ---------- Research data ----------
-   Starter entries — replace with real projects/publications.
-   Keep `category` to climate | environment | agriculture so the
-   existing filters + #filter- deep links keep working.
-   No findings are claimed; statuses say framework/note. */
+/* ---------- Research entries (verified only) ----------
+   Where only a title is known, the body says so — nothing is
+   invented. Keep `category` to climate | environment | agriculture
+   so filters + #filter- deep links keep working. */
+const PLACEHOLDER_BODY = "<p>Details and full text will be added here.</p>";
+
 const POSTS = [
   {
-    id: "urban-heat-green",
-    category: "climate",
-    title: "Urban Heat & Green Space",
-    summary: "A framework for reading land-surface temperature against vegetation and built-up cover — intended to show where shade and planting matter most.",
-    meta: "2025 · Study framework",
-    year: "2025", location: "City-scale · India", methods: "LST · NDVI · NDBI", status: "Framework", kind: "Study framework",
-    body: `<p><em>Starter entry — no results claimed.</em> The intended analysis compares satellite-derived land-surface temperature (LST) with vegetation (NDVI) and built-up (NDBI) indices across seasons.</p><h4>Planned method</h4><p>Landsat / Sentinel composites in Google Earth Engine, zonal means by ward and green-cover class, ground checks with handheld readings where possible.</p><h4>To add later</h4><p>Study-area map, imagery dates, full method note, DOI links and honest limitations.</p>`
-  },
-  {
-    id: "monsoon-small-farms",
-    category: "climate",
-    title: "Monsoon Variability & Small Farms",
-    summary: "Erratic rainfall rewrites sowing calendars. A grounded look at adaptation options for smallholders.",
-    meta: "2025 · Essay",
-    year: "2025", location: "Eastern India", methods: "Rainfall records · Interviews", status: "Note", kind: "Essay",
-    body: `<p>When the monsoon stutters — late onset, long dry breaks, sudden downpours — small farms feel it first. Sowing windows shrink and input costs climb.</p><h4>What helps in practice</h4><p><strong>Flexible calendars:</strong> short-duration and staggered varieties. <strong>In-situ moisture:</strong> bunds, mulches, farm ponds. <strong>Information:</strong> weekly agro-advisories for day-to-day calls.</p><h4>Open questions</h4><p>Pairing traditional rain-reading with modern forecasts; insurance that pays out on time. <em>Replace with findings and citations.</em></p>`
-  },
-  {
-    id: "commons-ponds",
+    id: "nagar-van-yojana",
     category: "environment",
-    title: "Village Ponds as Climate Infrastructure",
-    summary: "Commons ponds recharge groundwater, host biodiversity and buffer floods — adaptation hiding in plain sight.",
-    meta: "2025 · Study note",
-    year: "2025", location: "Rural commons", methods: "Remote sensing · Field survey", status: "Note", kind: "Study note",
-    body: `<p>Across South Asia, tanks and ponds were engineered ecosystems — catchment, feeder channels, sluices, shared rules. Encroachment and neglect broke the chain.</p><p>Revival works when desilting pairs with clear stewardship: who maintains inlets, who guards water quality, who decides sharing in dry months.</p><p><em>Future version:</em> pond inventory map, satellite time-series, community protocols.</p>`
+    title: "Socio-Economic, Cultural & Ecological Benefits — Nagar Van Yojana",
+    summary: "An integrated assessment of the socio-economic, livelihood, socio-cultural, ecological and climatic benefits of Nagar Van Yojana.",
+    meta: "Jan–Jun 2025 · Urban forestry",
+    year: "2025", location: "", methods: "Environmental Assessment", status: "Jan–Jun 2025", kind: "Environmental Assessment",
+    body: `<p>An integrated assessment of the socio-economic, livelihood, socio-cultural, ecological and climatic benefits of Nagar Van Yojana.</p>${PLACEHOLDER_BODY}`
   },
   {
-    id: "soil-carbon-bank",
-    category: "agriculture",
-    title: "Reading Soil Organic Carbon",
-    summary: "Why soil organic carbon matters, how cover crops and compost build it, and what to measure on a low budget.",
-    meta: "2024 · Explainer",
-    year: "2024", location: "Field notes", methods: "SOC · Cover crops · Compost", status: "Note", kind: "Explainer",
-    body: `<p>Soil organic carbon (SOC) feeds microbes, holds water and steadies yields — a savings account where small regular deposits compound.</p><h4>Deposits that work</h4><p>Cover crops, compost and farmyard manure, reduced tillage, diverse rotations. Avoid bare soil.</p><h4>Measuring simply</h4><p>Colour, smell, infiltration and earthworm counts before any lab test. Note the baseline; re-check each season.</p>`
+    id: "bengaluru-uhi-decadal",
+    category: "climate",
+    title: "Decadal Study of UHI, GSI & UDI over Bengaluru",
+    summary: "A decadal geospatial study examining changes in urban heat, green spaces and urban development using satellite imagery and landscape indicators.",
+    meta: "Jan–Jun 2025 · Bengaluru",
+    year: "2025", location: "Bengaluru", methods: "UHI · GSI · UDI", status: "Jan–Jun 2025", kind: "Geospatial Study",
+    body: `<p>A decadal geospatial study examining changes in urban heat, green spaces and urban development using satellite imagery and landscape indicators.</p>${PLACEHOLDER_BODY}`
   },
   {
-    id: "millets-heat",
-    category: "agriculture",
-    title: "Millets in a Hotter World",
-    summary: "Short cycles, low water needs, deep nutrition — why millets deserve a bigger place on plates and in policy.",
-    meta: "2024 · Note",
-    year: "2024", location: "Semi-arid regions", methods: "Crop review · Nutrition data", status: "Note", kind: "Note",
-    body: `<p>Millets sip water where rice gulps it, mature quickly, and pack iron, fibre and calcium — fitting the erratic-rainfall future.</p><p>Challenges: processing drudgery, thin value chains, shifting tastes. Responses: decentralised processing, school-meal demand, honest pricing for farmers.</p>`
-  },
-  {
-    id: "restoring-degraded-patch",
+    id: "enhancing-urban-forestry",
     category: "environment",
-    title: "Restoring a Degraded Patch",
-    summary: "Native species, water harvesting, patience — a practical sequence for bringing tired land back to life.",
-    meta: "2024 · Field guide",
-    year: "2024", location: "Degraded commons", methods: "Swales · Natives · Photo plots", status: "Note", kind: "Field guide",
-    body: `<p>Restoration starts with water, not plants. Watch where rain flows, pools, and where soil lies bare — then slow it, spread it, sink it.</p><h4>A simple sequence</h4><p><strong>Protect:</strong> rest the patch. <strong>Water:</strong> contour trenches, swales, mulch. <strong>Pioneer:</strong> hardy natives first. <strong>Diversify:</strong> shrubs and trees once the microclimate softens.</p><p>Photograph the same spot monthly — recovery is slow until it suddenly isn't.</p>`
+    title: "Enhancing Urban Forestry",
+    summary: "Policy brief on field evidence and implementation recommendations for the Nagar Van Yojana.",
+    meta: "Policy brief · Urban forestry",
+    year: "", location: "", methods: "Evidence & Implementation", status: "Policy Brief", kind: "Policy Brief",
+    body: `<p>Policy brief on field evidence and implementation recommendations for the Nagar Van Yojana.</p>${PLACEHOLDER_BODY}`
+  },
+  {
+    id: "etawah-design",
+    category: "environment",
+    title: "The Etawah Design: A 123-Acre Urban Forest as Its Lungs",
+    summary: "Details and full text will be added here.",
+    meta: "Details forthcoming",
+    year: "", location: "", methods: "", status: "Details forthcoming", kind: "Entry",
+    body: PLACEHOLDER_BODY
+  },
+  {
+    id: "reimagining-ugs",
+    category: "environment",
+    title: "Reimagining Urban Green Spaces as Fundamental Infrastructure in a Warming India",
+    summary: "Details and full text will be added here.",
+    meta: "Details forthcoming",
+    year: "", location: "", methods: "", status: "Details forthcoming", kind: "Entry",
+    body: PLACEHOLDER_BODY
+  },
+  {
+    id: "ugs-dynamics-bengaluru",
+    category: "environment",
+    title: "Spatiotemporal Assessment of UGS Dynamics – Bengaluru",
+    summary: "Details and full text will be added here.",
+    meta: "Bengaluru · Details forthcoming",
+    year: "", location: "Bengaluru", methods: "", status: "Details forthcoming", kind: "Entry",
+    body: PLACEHOLDER_BODY
   }
 ];
+
+const FEATURED_ID = "nagar-van-yojana";
 
 /* ---------- Shared UI ---------- */
 document.addEventListener("DOMContentLoaded", () => {
@@ -151,35 +155,26 @@ function initReveal() {
   els.forEach((el) => io.observe(el));
 }
 
-/* ---------- Home: selected rows + latest notes (from POSTS) ---------- */
+/* ---------- Home: selected rows (from POSTS, minus featured) ---------- */
 function esc(s) {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
+function metaLine(p) {
+  return [p.location, p.methods].filter(Boolean).join(" — ");
+}
+
 function initHomeLists() {
   const rows = document.getElementById("selectedRows");
-  if (rows) {
-    const picks = POSTS.filter((p) => p.id !== "urban-heat-green").slice(0, 3);
-    rows.innerHTML = picks.map((p) => `
-      <a class="index-row" href="research.html" data-open-note="${esc(p.id)}" style="text-decoration:none;color:inherit">
-        <span class="i-year">${esc(p.year || "")}</span>
-        <span><h4>${esc(p.title)}</h4><p class="i-sub">${esc(p.summary)}</p></span>
-        <span class="i-side"><span class="tag tag-${esc(p.category)}">${esc(p.category)}</span><span class="i-open">Open <span class="arr">→</span></span></span>
-      </a>`).join("");
-    bindNoteLinks(rows);
-  }
-  const notes = document.getElementById("latestNotes");
-  if (notes) {
-    const picks = POSTS.slice(1, 4);
-    notes.innerHTML = picks.map((p) => `
-      <div class="note-cell">
-        <span class="meta">${esc(p.year || "")} · ${esc(p.category)}</span>
-        <h3>${esc(p.title)}</h3>
-        <p>${esc(p.summary)}</p>
-        <a href="research.html" class="text-link small" data-open-note="${esc(p.id)}">Read →</a>
-      </div>`).join("");
-    bindNoteLinks(notes);
-  }
+  if (!rows) return;
+  const picks = POSTS.filter((p) => p.id !== FEATURED_ID).slice(0, 3);
+  rows.innerHTML = picks.map((p) => `
+    <a class="index-row" href="research.html" data-open-note="${esc(p.id)}" style="text-decoration:none;color:inherit">
+      <span class="i-year">${esc(p.year || p.status || "")}</span>
+      <span><h4>${esc(p.title)}</h4>${metaLine(p) ? `<p class="i-sub">${esc(metaLine(p))}</p>` : ""}</span>
+      <span class="i-side"><span class="tag tag-${esc(p.category)}">${esc(p.category)}</span><span class="i-open">Open <span class="arr">→</span></span></span>
+    </a>`).join("");
+  bindNoteLinks(rows);
 }
 
 /* Cross-page note opening: store id, archive page opens the modal */
@@ -254,15 +249,15 @@ function renderResearch() {
     const label = activeFilter === "all" ? "across all themes" : `in ${activeFilter}`;
     count.textContent = `Showing ${list.length} of ${POSTS.length} entries ${label}.`;
   }
-  if (archiveCount) archiveCount.textContent = `${POSTS.length} entries · starter frameworks`;
+  if (archiveCount) archiveCount.textContent = `${POSTS.length} entries`;
   if (empty) empty.hidden = list.length > 0;
 
   grid.innerHTML = list.map((p) => `
     <article class="index-row reveal visible" data-id="${esc(p.id)}" tabindex="0" role="button" aria-label="Open research note: ${esc(p.title)}">
-      <span class="i-year">${esc(p.year || "")}</span>
+      <span class="i-year">${esc(p.year || p.status || "")}</span>
       <span>
         <h3>${esc(p.title)}</h3>
-        <p class="i-sub">${esc(p.location || "")}${p.location && p.methods ? " — " : ""}${esc(p.methods || "")}</p>
+        ${metaLine(p) ? `<p class="i-sub">${esc(metaLine(p))}</p>` : ""}
       </span>
       <span class="i-side">
         <span class="tag tag-${esc(p.category)}">${esc(p.category)}</span>
@@ -313,10 +308,11 @@ function openModal(id) {
   const tag = document.getElementById("modalTag");
   tag.textContent = p.category;
   tag.className = "tag tag-" + p.category;
-  document.getElementById("modalStatus").textContent = (p.kind || "Note") + " · " + (p.year || "");
+  document.getElementById("modalStatus").textContent =
+    [p.kind, p.year].filter(Boolean).join(" · ") || p.status || "Entry";
   document.getElementById("modalTitle").textContent = p.title;
   document.getElementById("modalMeta").textContent =
-    [p.year, p.location, p.methods].filter(Boolean).join("  ·  ");
+    [p.year || p.status, p.location, p.methods].filter(Boolean).join("  ·  ");
   document.getElementById("modalBody").innerHTML = p.body;
   backdrop.hidden = false;
   document.body.style.overflow = "hidden";
@@ -335,7 +331,7 @@ function closeModal() {
 }
 
 /* ---------- Contact form (no backend: opens mailto) ---------- */
-const PLACEHOLDER_INBOX = "hello@arkrajbiswas.example"; // placeholder — replace with real address
+const REAL_INBOX = "arkraj.biswas6@gmail.com";
 
 function initContactForm() {
   const form = document.getElementById("contactForm");
@@ -353,6 +349,6 @@ function initContactForm() {
     const subject = encodeURIComponent(`[Website] ${topic} — from ${name}`);
     const body = encodeURIComponent(`${msg}\n\n— ${name} (${email})`);
     document.getElementById("formSuccess").hidden = false;
-    window.location.href = `mailto:${PLACEHOLDER_INBOX}?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${REAL_INBOX}?subject=${subject}&body=${body}`;
   });
 }

@@ -1,7 +1,8 @@
-# Arkraj Biswas — Field Notebook 🌱
+# Arkraj Biswas — Personal Research Website
 
-Personal research site for **Arkraj Biswas**: climate, landscapes and
-environmental systems — sustainability, remote sensing, GIS, agriculture.
+Personal site for **Arkraj Biswas**, Environmental & Climate Researcher:
+climate, urban environments, GIS, remote sensing, forestry, agriculture
+and environmental policy.
 
 Pages: `Home · About · Research (archive) · Contact`. Static HTML/CSS/JS,
 no build step. Day/night modes, left slide-out drawer, archive filter +
@@ -21,10 +22,10 @@ python -m http.server 8000
 - **Research entries** → `js/main.js`, `POSTS` array. Keep `category` to
   `climate | environment | agriculture` (filters + `#filter-` deep links
   depend on it). Optional fields: `year, location, methods, status, kind`.
-- **Homepage ledger** mirrors `POSTS` automatically (`#featuredLedger`).
+- **Homepage selected-work rows** mirror `POSTS` automatically (`#selectedRows`, minus the featured entry).
 - **Bio / timeline** → `about.html` (sections A–E, placeholders labelled).
-- **Email + profiles** → `contact.html` (placeholder inbox
-  `hello@arkrajbiswas.example` — visibly marked, not a real address).
+- **Email + profiles** → `contact.html` (real inbox
+  `arkraj.biswas6@gmail.com`; LinkedIn/Scholar slots activate when links are shared).
 - **Theme** → `css/style.css` `:root` / `[data-theme="dark"]`.
 
 ## Deploy
