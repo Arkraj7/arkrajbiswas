@@ -3,97 +3,150 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Research — Arkraj Biswas</title>
-  <meta name="description" content="Research, articles and study notes by Arkraj Biswas on climate, environment and agriculture." />
+  <title>Research Archive — Arkraj Biswas</title>
+  <meta name="description" content="Research archive of Arkraj Biswas — starter frameworks and field notes on climate, urban environment, remote sensing, GIS, sustainability and agriculture." />
+  <meta name="author" content="Arkraj Biswas" />
+  <meta name="theme-color" content="#1c2b23" />
+  <link rel="canonical" href="https://arkrajbiswas.com/research.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Arkraj Biswas" />
+  <meta property="og:title" content="Research Archive — Arkraj Biswas" />
+  <meta property="og:description" content="Field notes and study frameworks: climate, environment, GIS, remote sensing, agriculture." />
+  <meta property="og:url" content="https://arkrajbiswas.com/research.html" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>" />
 </head>
 <body>
   <div class="progress-bar" id="progressBar"></div>
   <div class="grain" aria-hidden="true"></div>
+  <div class="scrim" id="scrim" hidden></div>
 
-  <header class="site-header" id="siteHeader">
-    <nav class="nav container">
+  <header class="site-header">
+    <nav class="nav container" aria-label="Primary">
+      <button class="menu-btn" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+        <span class="bars" aria-hidden="true"><span></span><span></span><span></span></span> MENU
+      </button>
       <a href="index.html" class="brand">
-        <span class="brand-leaf" aria-hidden="true">
+        <span class="brand-mark" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13c0-4 3-8 9-10 5-1.5 7-1 7-1s-.5 3-2 6c-2 4-4 8-7 12z"/><path d="M4 21c4-6 8-9 12-11"/></svg>
         </span>
-        <span class="brand-text">Arkraj <em>Biswas</em></span>
+        <span><span class="brand-text">Arkraj <em>Biswas</em></span><span class="brand-sub">FIELD NOTEBOOK · CLIMATE / GIS</span></span>
       </a>
-      <div class="nav-links" id="navLinks">
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="research.html" class="active">Research</a>
-        <a href="contact.html">Contact</a>
-        <a href="contact.html" class="btn btn-small nav-cta">Say hello →</a>
-      </div>
       <div class="nav-actions">
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle day / night mode" title="Toggle day / night">
+        <span class="coords" aria-hidden="true">Archive — AB·003</span>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle day and night mode" title="Toggle day / night">
           <span class="toggle-track"><span class="toggle-thumb">
             <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
             <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
           </span></span>
         </button>
-        <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
       </div>
     </nav>
   </header>
 
+  <nav class="nav-links" id="navLinks" aria-label="Site sections">
+    <div class="drawer-head"><span class="field-label field-label--accent">Index</span><span class="coords">AB — 003</span></div>
+    <div class="drawer-links">
+      <a href="index.html" class="drawer-link"><span class="n">01</span> Home</a>
+      <a href="about.html" class="drawer-link"><span class="n">02</span> About</a>
+      <a href="research.html" class="drawer-link active"><span class="n">03</span> Research</a>
+      <a href="contact.html" class="drawer-link"><span class="n">04</span> Contact</a>
+    </div>
+    <div class="drawer-foot">
+      <a href="contact.html" class="btn btn-primary btn-small">Discuss a note <span class="arr">→</span></a>
+      <p class="coords">Research / 03<br />Filter · search · read</p>
+    </div>
+  </nav>
+
   <main class="container">
     <section class="page-hero">
-      <p class="eyebrow reveal">Research & writing</p>
-      <h1 class="reveal">The <em>notebook</em>.</h1>
-      <p class="lede reveal">Essays, explainers and field notes. Filter by theme, or search. Click any card to expand the full note — new pieces are added as plain data in <code>js/main.js</code>.</p>
+      <p class="eyebrow reveal">Research / 03 — The archive</p>
+      <h1 class="reveal">Research <em>archive</em>.</h1>
+      <p class="lede reveal">Field notes and study frameworks — not finished papers. Each entry lists year, location, method and status. Open any note to read; everything here is editable starter material.</p>
+      <div class="archive-meta reveal">
+        <span class="field-label">Entries — 06 starter notes</span>
+        <span class="coords">Climate · Environment · Agriculture</span>
+        <span class="coords">Future: publications · DOI · maps · CV</span>
+      </div>
       <div class="research-controls reveal">
-        <div class="filter-row" role="tablist" aria-label="Filter by theme">
+        <div class="filter-row" role="group" aria-label="Filter by theme">
           <button class="filter-btn active" data-filter="all">All</button>
           <button class="filter-btn" data-filter="climate" id="filter-climate">Climate</button>
           <button class="filter-btn" data-filter="environment" id="filter-environment">Environment</button>
           <button class="filter-btn" data-filter="agriculture" id="filter-agriculture">Agriculture</button>
         </div>
         <label class="search-box">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          <input type="search" id="searchInput" placeholder="Search notes… e.g. soil, monsoon, water" aria-label="Search notes" />
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="search" id="searchInput" placeholder="Search archive… soil, LST, monsoon, pond" aria-label="Search research archive" />
         </label>
       </div>
-      <p class="muted small reveal" id="resultCount"></p>
+      <p class="muted small reveal" id="resultCount" role="status"></p>
     </section>
 
-    <section class="section" style="padding-top:0">
-      <div class="research-grid" id="researchGrid"><!-- rendered by JS --></div>
+    <section class="section" style="padding-top:6px" aria-label="Research entries">
+      <div class="research-grid" id="researchGrid"><!-- rendered by js/main.js from POSTS --></div>
       <div class="empty-state" id="emptyState" hidden>
-        <p>🌱 Nothing sprouted for that search.</p>
+        <p>🌱 Nothing filed under that query.</p>
+        <p class="small muted">Try “soil”, “heat”, “pond” — or clear the filters.</p>
         <button class="btn btn-ghost" id="resetFilters">Clear filters</button>
       </div>
     </section>
 
     <section class="section">
       <div class="cta-card reveal">
-        <div><h2>Writing something together?</h2><p>If you work on farms, forests, water or climate — I'd love to compare notes.</p></div>
-        <a href="contact.html" class="btn btn-light">Get in touch →</a>
+        <div>
+          <p class="field-label" style="color:#cdbf9f">Next — Correspondence</p>
+          <h2>Working on something adjacent?</h2>
+          <p>Corrections and half-formed ideas are welcome. Good threads may become entries — with permission.</p>
+        </div>
+        <a href="contact.html" class="btn btn-light">Get in touch <span class="arr">→</span></a>
       </div>
     </section>
   </main>
 
-  <!-- Reader modal -->
+  <!-- Reader modal: opens a research note -->
   <div class="modal-backdrop" id="modalBackdrop" hidden>
     <article class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
-      <span class="tag" id="modalTag">Climate</span>
+      <button class="modal-close" id="modalClose" aria-label="Close note">ESC · CLOSE ✕</button>
+      <div class="modal-eyebrow">
+        <span class="tag" id="modalTag">Note</span>
+        <span class="field-label" id="modalStatus">Field note</span>
+      </div>
       <h2 id="modalTitle"></h2>
-      <p class="muted small" id="modalMeta"></p>
+      <p class="coords" id="modalMeta"></p>
+      <hr class="modal-rule" />
       <div class="modal-body" id="modalBody"></div>
+      <div class="modal-foot">
+        <span class="small muted">Starter note — cite, map and DOI slots ready for the full version.</span>
+        <a href="contact.html" class="text-link small">Discuss this note →</a>
+      </div>
     </article>
   </div>
 
   <footer class="site-footer">
-    <div class="container footer-grid">
-      <div><p class="brand-text">Arkraj <em>Biswas</em></p><p class="muted">Notes on climate, environment & agriculture.<br />Grown slowly, on the web.</p></div>
-      <nav class="footer-nav"><a href="index.html">Home</a><a href="about.html">About</a><a href="research.html">Research</a><a href="contact.html">Contact</a></nav>
-      <div class="footer-right"><p class="muted small">© <span id="year">2026</span> Arkraj Biswas · Built with care</p></div>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <p class="footer-name">Arkraj <em>Biswas</em></p>
+          <p class="footer-tag">Climate · Environment · Sustainability · Research</p>
+        </div>
+        <div>
+          <p class="field-label" style="margin:0 0 12px">Elsewhere — placeholders until linked</p>
+          <nav class="footer-links" aria-label="Profiles">
+            <a href="contact.html">Email</a>
+            <a href="#" aria-disabled="true" title="Not yet linked">LinkedIn · soon</a>
+            <a href="#" aria-disabled="true" title="Not yet linked">Scholar · soon</a>
+            <a href="https://github.com/Arkraj7" target="_blank" rel="noopener">GitHub ↗</a>
+          </nav>
+        </div>
+      </div>
+      <div class="footer-base">
+        <span class="small muted">© <span id="year">2026</span> Arkraj Biswas</span>
+        <span class="coords">Sheet 03 / Research — AB·003</span>
+      </div>
     </div>
   </footer>
   <script src="js/main.js"></script>

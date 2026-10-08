@@ -1,32 +1,43 @@
-# Arkraj Biswas — Personal Website 🌱
+# Arkraj Biswas — Field Notebook 🌱
 
-Personal site for **Arkraj Biswas**: research, articles and study notes on
-**climate sustainability, environment and agriculture**.
+Personal research site for **Arkraj Biswas**: climate, landscapes and
+environmental systems — sustainability, remote sensing, GIS, agriculture.
 
-Live pages: `Home · About · Research · Contact`, with day/night mode.
+Pages: `Home · About · Research (archive) · Contact`. Static HTML/CSS/JS,
+no build step. Day/night modes, left slide-out drawer, archive filter +
+search + reading modal.
 
 ## Run locally
 
-Just open `index.html` in a browser — no build step needed.
-Or serve it:
+Open `index.html`, or serve:
 
 ```bash
-npx serve .
-# or
 python -m http.server 8000
+# → http://localhost:8000/
 ```
 
-## Edit your content
+## Edit content
 
-- **Research posts** → `js/main.js`, edit the `POSTS` array (copy a block, change category to `climate | environment | agriculture`).
-- **Bio / timeline** → `about.html`
-- **Contact links + inbox** → `contact.html` (search for `TODO`)
-- **Colours / theme** → `css/style.css` (`:root` and `[data-theme="dark"]`)
+- **Research entries** → `js/main.js`, `POSTS` array. Keep `category` to
+  `climate | environment | agriculture` (filters + `#filter-` deep links
+  depend on it). Optional fields: `year, location, methods, status, kind`.
+- **Homepage ledger** mirrors `POSTS` automatically (`#featuredLedger`).
+- **Bio / timeline** → `about.html` (sections A–E, placeholders labelled).
+- **Email + profiles** → `contact.html` (placeholder inbox
+  `hello@arkrajbiswas.example` — visibly marked, not a real address).
+- **Theme** → `css/style.css` `:root` / `[data-theme="dark"]`.
 
-## Deploy (GitHub Pages)
+## Deploy
 
-1. Push to `main` (already wired below).
-2. In GitHub: **Settings → Pages → Source: GitHub Actions**.
-3. Site goes live at `https://<username>.github.io/arkrajbiswas/`.
+GitHub Pages via `.github/workflows/pages.yml` (unchanged mechanism).
+Settings → Pages → Source: GitHub Actions.
 
-The workflow in `.github/workflows/pages.yml` deploys static files automatically.
+- Relative asset links (`css/`, `js/`, `.html`) work on both the project
+  path and the future custom domain.
+- Canonical URLs + sitemap/robots point at `https://arkrajbiswas.com`.
+- No `CNAME` committed yet — add it only when the domain is connected.
+
+## Future slots (architecture ready, not implemented)
+
+Publications · DOI links · maps / GIS figures · satellite imagery ·
+field photos · CV download · ORCID / Scholar / ResearchGate.
