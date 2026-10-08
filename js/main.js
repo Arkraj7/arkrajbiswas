@@ -1,8 +1,9 @@
 /* ============================================================
-   Arkraj Biswas — Field Notebook v2
-   Modules: theme → drawer → progress/reveal → research → modal
-   → contact. Keeps: #themeToggle, #hamburger, #navLinks,
-   .filter-btn, #researchGrid, #searchInput, modal ids, POSTS.
+   Arkraj Biswas — Editorial Studio v3
+   Modules: theme → drawer → progress/reveal → research index
+   → modal → contact. Preserved hooks: #themeToggle, #hamburger,
+   #navLinks, .filter-btn, #researchGrid, #searchInput, modal ids,
+   POSTS (categories climate | environment | agriculture).
    ============================================================ */
 
 /* ---------- Theme (day / night, persisted) ---------- */
@@ -13,77 +14,74 @@
   const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
   root.setAttribute("data-theme", saved || (prefersDark ? "dark" : "light"));
   document.addEventListener("DOMContentLoaded", () => {
-    ["themeToggle", "themeToggleFooter"].forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) el.addEventListener("click", toggleTheme);
+    const el = document.getElementById("themeToggle");
+    if (el) el.addEventListener("click", () => {
+      const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem("ab-theme", next); } catch (e) { /* ignore */ }
     });
   });
-  function toggleTheme() {
-    const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
-    root.setAttribute("data-theme", next);
-    try { localStorage.setItem("ab-theme", next); } catch (e) { /* ignore */ }
-  }
 })();
 
 /* ---------- Research data ----------
    Starter entries — replace with real projects/publications.
    Keep `category` to climate | environment | agriculture so the
    existing filters + #filter- deep links keep working.
-   New optional fields: year, location, methods, status, kind. */
+   No findings are claimed; statuses say framework/note. */
 const POSTS = [
-  {
-    id: "monsoon-small-farms",
-    category: "climate",
-    title: "Monsoon variability & small farms: what changes first?",
-    summary: "Erratic rainfall rewrites sowing calendars. A grounded look at adaptation options that actually work for smallholders.",
-    meta: "8 min read · Essay",
-    year: "2025", location: "Eastern India", methods: "Rainfall records · Field interviews", status: "Starter note", kind: "Essay",
-    body: `<p>When the monsoon stutters — late onset, long dry breaks, sudden downpours — small farms feel it first. Sowing windows shrink, seedlings drown or dry, and input costs climb.</p><h4>What helps in practice</h4><p><strong>1. Flexible calendars:</strong> short-duration and staggered varieties buy room to re-sow. <strong>2. In-situ moisture:</strong> bunds, mulches and farm ponds carry crops through breaks. <strong>3. Information:</strong> weekly agro-advisories beat seasonal forecasts for day-to-day calls.</p><h4>Open questions</h4><p>How do we pair traditional rain-reading with modern forecasts? What insurance designs actually pay out on time? <em>Replace this starter text with findings, citations and links.</em></p>`
-  },
   {
     id: "urban-heat-green",
     category: "climate",
-    title: "Urban heat & green spaces: reading the city surface",
-    summary: "Starter framework for mapping land-surface temperature against vegetation and built-up indices in a growing city.",
-    meta: "7 min read · Study framework",
-    year: "2025", location: "City-scale · India", methods: "LST · NDVI · NDBI", status: "Starter framework", kind: "Study framework",
-    body: `<p><em>Starter entry — no results claimed yet.</em> The intended analysis compares satellite-derived land-surface temperature (LST) with vegetation (NDVI) and built-up (NDBI) indices across seasons.</p><h4>Planned method</h4><p>Landsat / Sentinel composites in Google Earth Engine, zonal means by ward/green cover, ground checks with handheld readings where possible.</p><h4>To add later</h4><p>Study area map, imagery dates, full method note, DOI links, and honest limitations.</p>`
+    title: "Urban Heat & Green Space",
+    summary: "A framework for reading land-surface temperature against vegetation and built-up cover — intended to show where shade and planting matter most.",
+    meta: "2025 · Study framework",
+    year: "2025", location: "City-scale · India", methods: "LST · NDVI · NDBI", status: "Framework", kind: "Study framework",
+    body: `<p><em>Starter entry — no results claimed.</em> The intended analysis compares satellite-derived land-surface temperature (LST) with vegetation (NDVI) and built-up (NDBI) indices across seasons.</p><h4>Planned method</h4><p>Landsat / Sentinel composites in Google Earth Engine, zonal means by ward and green-cover class, ground checks with handheld readings where possible.</p><h4>To add later</h4><p>Study-area map, imagery dates, full method note, DOI links and honest limitations.</p>`
   },
   {
-    id: "soil-carbon-bank",
-    category: "agriculture",
-    title: "Soil is a bank account: reading soil organic carbon",
-    summary: "Why soil organic carbon matters, how cover crops and compost build it, and what to measure on a low budget.",
-    meta: "6 min read · Explainer",
-    year: "2024", location: "Field notes", methods: "SOC · Cover crops · Compost", status: "Starter note", kind: "Explainer",
-    body: `<p>Soil organic carbon (SOC) is stored sunlight — it feeds microbes, holds water, and steadies yields. Think of it as a savings account: small regular deposits compound.</p><h4>Deposits that work</h4><p>Cover crops between seasons, compost and farmyard manure, reduced tillage, and diverse rotations. Avoid bare soil wherever possible.</p><h4>Measuring simply</h4><p>Colour, smell, water infiltration and earthworm counts tell you a lot before any lab test. Note your baseline and re-check each season.</p>`
-  },
-  {
-    id: "millets-heat",
-    category: "agriculture",
-    title: "Millets in a hotter world: an underrated resilience crop",
-    summary: "Short cycles, low water needs, deep nutrition. Why millets deserve a bigger place on plates and policies.",
-    meta: "5 min read · Note",
-    year: "2024", location: "Semi-arid regions", methods: "Crop review · Nutrition data", status: "Starter note", kind: "Note",
-    body: `<p>Millets sip water where rice gulps it, mature quickly, and pack iron, fibre and calcium. They fit exactly the erratic-rainfall future we face.</p><p>Challenges are real — processing drudgery, thin value chains, shifting tastes. Solutions live in decentralised processing, school-meal demand, and honest pricing for farmers.</p>`
-  },
-  {
-    id: "restoring-degraded-patch",
-    category: "environment",
-    title: "Restoring a degraded patch: a beginner's field guide",
-    summary: "Native species, water harvesting, patience. A practical sequence for bringing tired land back to life.",
-    meta: "10 min read · Field guide",
-    year: "2024", location: "Degraded commons", methods: "Swales · Natives · Photo plots", status: "Starter note", kind: "Field guide",
-    body: `<p>Restoration starts with water, not plants. Watch where rain flows, where it pools, where the soil is bare. Then slow it, spread it, sink it.</p><h4>A simple sequence</h4><p><strong>1. Protect:</strong> fence or agree to rest the patch. <strong>2. Water:</strong> contour trenches, swales, mulch. <strong>3. Pioneer:</strong> hardy natives and grasses first. <strong>4. Diversify:</strong> add shrubs and trees once the microclimate softens.</p><p>Document everything with photos from the same spot each month — recovery is slow until it suddenly isn't.</p>`
+    id: "monsoon-small-farms",
+    category: "climate",
+    title: "Monsoon Variability & Small Farms",
+    summary: "Erratic rainfall rewrites sowing calendars. A grounded look at adaptation options for smallholders.",
+    meta: "2025 · Essay",
+    year: "2025", location: "Eastern India", methods: "Rainfall records · Interviews", status: "Note", kind: "Essay",
+    body: `<p>When the monsoon stutters — late onset, long dry breaks, sudden downpours — small farms feel it first. Sowing windows shrink and input costs climb.</p><h4>What helps in practice</h4><p><strong>Flexible calendars:</strong> short-duration and staggered varieties. <strong>In-situ moisture:</strong> bunds, mulches, farm ponds. <strong>Information:</strong> weekly agro-advisories for day-to-day calls.</p><h4>Open questions</h4><p>Pairing traditional rain-reading with modern forecasts; insurance that pays out on time. <em>Replace with findings and citations.</em></p>`
   },
   {
     id: "commons-ponds",
     category: "environment",
-    title: "Village ponds as climate infrastructure",
-    summary: "Commons ponds recharge groundwater, host biodiversity and buffer floods. Revival is adaptation hiding in plain sight.",
-    meta: "9 min read · Study note",
-    year: "2025", location: "Rural commons", methods: "Remote sensing · Field survey", status: "Starter note", kind: "Study note",
-    body: `<p>Across South Asia, tanks and ponds were engineered ecosystems — catchment, feeder channels, sluices, shared rules. Encroachment and neglect broke the chain.</p><p>Revival works when desilting pairs with clear stewardship: who maintains inlets, who guards water quality, who decides sharing in dry months.</p><p><em>Future version:</em> add pond inventory map, satellite time-series, and community protocols.</p>`
+    title: "Village Ponds as Climate Infrastructure",
+    summary: "Commons ponds recharge groundwater, host biodiversity and buffer floods — adaptation hiding in plain sight.",
+    meta: "2025 · Study note",
+    year: "2025", location: "Rural commons", methods: "Remote sensing · Field survey", status: "Note", kind: "Study note",
+    body: `<p>Across South Asia, tanks and ponds were engineered ecosystems — catchment, feeder channels, sluices, shared rules. Encroachment and neglect broke the chain.</p><p>Revival works when desilting pairs with clear stewardship: who maintains inlets, who guards water quality, who decides sharing in dry months.</p><p><em>Future version:</em> pond inventory map, satellite time-series, community protocols.</p>`
+  },
+  {
+    id: "soil-carbon-bank",
+    category: "agriculture",
+    title: "Reading Soil Organic Carbon",
+    summary: "Why soil organic carbon matters, how cover crops and compost build it, and what to measure on a low budget.",
+    meta: "2024 · Explainer",
+    year: "2024", location: "Field notes", methods: "SOC · Cover crops · Compost", status: "Note", kind: "Explainer",
+    body: `<p>Soil organic carbon (SOC) feeds microbes, holds water and steadies yields — a savings account where small regular deposits compound.</p><h4>Deposits that work</h4><p>Cover crops, compost and farmyard manure, reduced tillage, diverse rotations. Avoid bare soil.</p><h4>Measuring simply</h4><p>Colour, smell, infiltration and earthworm counts before any lab test. Note the baseline; re-check each season.</p>`
+  },
+  {
+    id: "millets-heat",
+    category: "agriculture",
+    title: "Millets in a Hotter World",
+    summary: "Short cycles, low water needs, deep nutrition — why millets deserve a bigger place on plates and in policy.",
+    meta: "2024 · Note",
+    year: "2024", location: "Semi-arid regions", methods: "Crop review · Nutrition data", status: "Note", kind: "Note",
+    body: `<p>Millets sip water where rice gulps it, mature quickly, and pack iron, fibre and calcium — fitting the erratic-rainfall future.</p><p>Challenges: processing drudgery, thin value chains, shifting tastes. Responses: decentralised processing, school-meal demand, honest pricing for farmers.</p>`
+  },
+  {
+    id: "restoring-degraded-patch",
+    category: "environment",
+    title: "Restoring a Degraded Patch",
+    summary: "Native species, water harvesting, patience — a practical sequence for bringing tired land back to life.",
+    meta: "2024 · Field guide",
+    year: "2024", location: "Degraded commons", methods: "Swales · Natives · Photo plots", status: "Note", kind: "Field guide",
+    body: `<p>Restoration starts with water, not plants. Watch where rain flows, pools, and where soil lies bare — then slow it, spread it, sink it.</p><h4>A simple sequence</h4><p><strong>Protect:</strong> rest the patch. <strong>Water:</strong> contour trenches, swales, mulch. <strong>Pioneer:</strong> hardy natives first. <strong>Diversify:</strong> shrubs and trees once the microclimate softens.</p><p>Photograph the same spot monthly — recovery is slow until it suddenly isn't.</p>`
   }
 ];
 
@@ -95,23 +93,21 @@ document.addEventListener("DOMContentLoaded", () => {
   initDrawer();
   initProgress();
   initReveal();
+  initHomeLists();
   initResearchPage();
   initContactForm();
 });
 
-/* ----- Left slide-out drawer (keeps #hamburger + #navLinks ids) ----- */
+/* ----- Drawer (keeps #hamburger + #navLinks ids) ----- */
 function initDrawer() {
   const burger = document.getElementById("hamburger");
   const drawer = document.getElementById("navLinks");
   const scrim = document.getElementById("scrim");
   if (!burger || !drawer) return;
-
   const setOpen = (open) => {
     drawer.classList.toggle("open", open);
     document.body.classList.toggle("menu-open", open);
     burger.setAttribute("aria-expanded", open ? "true" : "false");
-    if (scrim) scrim.hidden = false;
-    requestAnimationFrame(() => { if (scrim) scrim.style.opacity = ""; });
     if (open) {
       const first = drawer.querySelector("a");
       if (first) first.focus({ preventScroll: true });
@@ -120,13 +116,10 @@ function initDrawer() {
     }
   };
   const isOpen = () => drawer.classList.contains("open");
-
   burger.addEventListener("click", () => setOpen(!isOpen()));
   if (scrim) scrim.addEventListener("click", () => setOpen(false));
   drawer.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => setOpen(false)));
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && isOpen()) setOpen(false);
-  });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && isOpen()) setOpen(false); });
 }
 
 /* ----- Scroll progress ----- */
@@ -158,13 +151,54 @@ function initReveal() {
   els.forEach((el) => io.observe(el));
 }
 
+/* ---------- Home: selected rows + latest notes (from POSTS) ---------- */
+function esc(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function initHomeLists() {
+  const rows = document.getElementById("selectedRows");
+  if (rows) {
+    const picks = POSTS.filter((p) => p.id !== "urban-heat-green").slice(0, 3);
+    rows.innerHTML = picks.map((p) => `
+      <a class="index-row" href="research.html" data-open-note="${esc(p.id)}" style="text-decoration:none;color:inherit">
+        <span class="i-year">${esc(p.year || "")}</span>
+        <span><h4>${esc(p.title)}</h4><p class="i-sub">${esc(p.summary)}</p></span>
+        <span class="i-side"><span class="tag tag-${esc(p.category)}">${esc(p.category)}</span><span class="i-open">Open <span class="arr">→</span></span></span>
+      </a>`).join("");
+    bindNoteLinks(rows);
+  }
+  const notes = document.getElementById("latestNotes");
+  if (notes) {
+    const picks = POSTS.slice(1, 4);
+    notes.innerHTML = picks.map((p) => `
+      <div class="note-cell">
+        <span class="meta">${esc(p.year || "")} · ${esc(p.category)}</span>
+        <h3>${esc(p.title)}</h3>
+        <p>${esc(p.summary)}</p>
+        <a href="research.html" class="text-link small" data-open-note="${esc(p.id)}">Read →</a>
+      </div>`).join("");
+    bindNoteLinks(notes);
+  }
+}
+
+/* Cross-page note opening: store id, archive page opens the modal */
+function bindNoteLinks(scope) {
+  scope.querySelectorAll("[data-open-note]").forEach((a) => {
+    a.addEventListener("click", () => {
+      try { sessionStorage.setItem("ab-open-note", a.dataset.openNote); } catch (e) { /* ignore */ }
+    });
+  });
+}
+
 /* ---------- Research archive ---------- */
 let activeFilter = "all";
 let query = "";
 
 function initResearchPage() {
   const grid = document.getElementById("researchGrid");
-  if (!grid) { initModal(); return; }
+  initModal();
+  if (!grid) return;
 
   if (location.hash.startsWith("#filter-")) {
     const f = location.hash.replace("#filter-", "");
@@ -198,20 +232,14 @@ function initResearchPage() {
   });
 
   renderResearch();
-  initModal();
-  initFeaturedLedger();
 }
 
 function filteredPosts() {
   return POSTS.filter((p) => {
     const okCat = activeFilter === "all" || p.category === activeFilter;
-    const hay = (p.title + " " + p.summary + " " + (p.methods || "") + " " + (p.location || "") + " " + p.body).toLowerCase();
+    const hay = (p.title + " " + p.summary + " " + (p.methods || "") + " " + (p.location || "")).toLowerCase();
     return okCat && (!query || hay.includes(query));
   });
-}
-
-function esc(s) {
-  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
 function renderResearch() {
@@ -219,70 +247,53 @@ function renderResearch() {
   if (!grid) return;
   const empty = document.getElementById("emptyState");
   const count = document.getElementById("resultCount");
+  const archiveCount = document.getElementById("archiveCount");
   const list = filteredPosts();
 
   if (count) {
-    const label = activeFilter === "all" ? "across all themes" : `in “${activeFilter}”`;
+    const label = activeFilter === "all" ? "across all themes" : `in ${activeFilter}`;
     count.textContent = `Showing ${list.length} of ${POSTS.length} entries ${label}.`;
   }
+  if (archiveCount) archiveCount.textContent = `${POSTS.length} entries · starter frameworks`;
   if (empty) empty.hidden = list.length > 0;
 
-  grid.innerHTML = list.map((p, i) => `
-    <article class="archive-card reveal visible" data-id="${esc(p.id)}" tabindex="0" role="button" aria-label="Open research note: ${esc(p.title)}">
-      <div class="archive-top">
+  grid.innerHTML = list.map((p) => `
+    <article class="index-row reveal visible" data-id="${esc(p.id)}" tabindex="0" role="button" aria-label="Open research note: ${esc(p.title)}">
+      <span class="i-year">${esc(p.year || "")}</span>
+      <span>
+        <h3>${esc(p.title)}</h3>
+        <p class="i-sub">${esc(p.location || "")}${p.location && p.methods ? " — " : ""}${esc(p.methods || "")}</p>
+      </span>
+      <span class="i-side">
         <span class="tag tag-${esc(p.category)}">${esc(p.category)}</span>
-        <span class="archive-idx">N° ${String(i + 1).padStart(2, "0")}</span>
-      </div>
-      <h3>${esc(p.title)}</h3>
-      <p>${esc(p.summary)}</p>
-      <dl class="archive-meta-grid">
-        <div><dt>Year</dt><dd>${esc(p.year || "—")}</dd></div>
-        <div><dt>Location</dt><dd>${esc(p.location || "—")}</dd></div>
-        <div><dt>Method</dt><dd>${esc(p.methods || "—")}</dd></div>
-        <div><dt>Status</dt><dd>${esc(p.status || p.kind || "Note")}</dd></div>
-      </dl>
-      <span class="read-more">Open note <span class="arr">→</span></span>
+        <span class="i-open">Open <span class="arr">→</span></span>
+      </span>
     </article>`).join("");
 
-  grid.querySelectorAll(".archive-card").forEach((card) => {
-    card.addEventListener("click", () => openModal(card.dataset.id));
-    card.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openModal(card.dataset.id); }
+  grid.querySelectorAll(".index-row").forEach((row) => {
+    row.addEventListener("click", () => openModal(row.dataset.id));
+    row.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openModal(row.dataset.id); }
     });
   });
 }
 
-/* Homepage ledger mirrors the same POSTS (no duplication of content) */
-function initFeaturedLedger() {
-  const ledger = document.getElementById("featuredLedger");
-  if (!ledger) return;
-  const picks = POSTS.slice(0, 4);
-  ledger.innerHTML = picks.map((p, i) => `
-    <a class="ledger-row" href="research.html" data-open-note="${esc(p.id)}">
-      <span class="l-idx">${String(i + 1).padStart(2, "0")}</span>
-      <h3>${esc(p.title)} <span class="arr">→</span></h3>
-      <span class="l-topic">${esc(p.category)} · ${esc(p.location || "")}</span>
-      <span class="l-methods">${esc(p.methods || "")}</span>
-    </a>`).join("");
-}
-
-/* ---------- Modal: research-note reading experience ---------- */
+/* ---------- Modal ---------- */
 let lastFocused = null;
 
 function initModal() {
   const backdrop = document.getElementById("modalBackdrop");
   const close = document.getElementById("modalClose");
-  if (!backdrop || !close) return;
-  close.addEventListener("click", closeModal);
-  backdrop.addEventListener("click", (e) => { if (e.target === backdrop) closeModal(); });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
-
-  // Homepage ledger deep-opens the matching note on the archive page
-  document.querySelectorAll("[data-open-note]").forEach((a) => {
-    a.addEventListener("click", () => {
-      try { sessionStorage.setItem("ab-open-note", a.dataset.openNote); } catch (e) { /* ignore */ }
-    });
-  });
+  if (backdrop && close) {
+    close.addEventListener("click", closeModal);
+    backdrop.addEventListener("click", (e) => { if (e.target === backdrop) closeModal(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+  }
+  // Same-page openers (featured buttons)
+  document.querySelectorAll("[data-open-modal]").forEach((b) =>
+    b.addEventListener("click", () => openModal(b.dataset.openModal))
+  );
+  bindNoteLinks(document);
   try {
     const pending = sessionStorage.getItem("ab-open-note");
     if (pending && document.getElementById("researchGrid")) {
@@ -300,20 +311,19 @@ function openModal(id) {
   lastFocused = document.activeElement;
 
   const tag = document.getElementById("modalTag");
-  const status = document.getElementById("modalStatus");
   tag.textContent = p.category;
   tag.className = "tag tag-" + p.category;
-  if (status) status.textContent = (p.kind || "Field note") + " · " + (p.year || "");
+  document.getElementById("modalStatus").textContent = (p.kind || "Note") + " · " + (p.year || "");
   document.getElementById("modalTitle").textContent = p.title;
   document.getElementById("modalMeta").textContent =
-    [p.year, p.location, p.methods].filter(Boolean).join("  ·  ") || p.meta;
+    [p.year, p.location, p.methods].filter(Boolean).join("  ·  ");
   document.getElementById("modalBody").innerHTML = p.body;
   backdrop.hidden = false;
   document.body.style.overflow = "hidden";
-  const close = document.getElementById("modalClose");
-  if (close) close.focus({ preventScroll: true });
   const modal = backdrop.querySelector(".modal");
   if (modal) modal.scrollTop = 0;
+  const close = document.getElementById("modalClose");
+  if (close) close.focus({ preventScroll: true });
 }
 
 function closeModal() {
