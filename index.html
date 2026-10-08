@@ -154,15 +154,15 @@
       <p class="reveal" style="max-width:44rem;font-size:1.06rem;color:var(--ink-soft)">I am interested in research that does not stay inside one discipline. Some questions are best answered with satellite data and spatial analysis; others need field evidence, policy reading or a better understanding of how people experience a landscape. Much of my work sits somewhere between those approaches.</p>
     </section>
 
-    <!-- SELECTED WORK -->
-    <section class="section band" aria-labelledby="selH">
+    <!-- CURRENT RESEARCH -->
+    <section class="section band" aria-labelledby="curH">
       <div class="container">
         <div class="section-head reveal">
           <div>
-            <p class="kicker">Selected work</p>
-            <h2 id="selH">Recent research</h2>
+            <p class="kicker">Current research · Ongoing</p>
+            <h2 id="curH">Human-centric urban forestry</h2>
           </div>
-          <p>Assessments, studies and briefs. <a href="research.html" class="text-link">Full archive →</a></p>
+          <p>National CAMPA project on the Nagar Van Yojana. Methodology shown — findings follow as confirmed.</p>
         </div>
         <div class="feature reveal">
           <div class="feature-visual visual-frame">
@@ -178,28 +178,82 @@
                   <path d="M40 300 C 160 260 260 320 400 290 S 540 300 610 280" opacity="0.7"/>
                   <path d="M40 340 C 170 305 270 360 410 330 S 545 340 615 320" opacity="0.9"/>
                 </g>
-                <text x="24" y="368" font-family="monospace" font-size="12" fill="currentColor" opacity="0.65">study grid</text>
-                <text x="470" y="368" font-family="monospace" font-size="12" fill="currentColor" opacity="0.65">assessment</text>
+                <text x="24" y="368" font-family="monospace" font-size="12" fill="currentColor" opacity="0.65">audit plots</text>
+                <text x="470" y="368" font-family="monospace" font-size="12" fill="currentColor" opacity="0.65">monitoring</text>
               </svg>
               <figcaption class="visual-caption">
-                <span class="meta">Nagar Van Yojana · assessment</span>
+                <span class="meta">Nagar Van Yojana · National CAMPA</span>
                 <span class="meta">Placeholder for project visual</span>
               </figcaption>
             </figure>
           </div>
           <div>
-            <p class="kicker">01 — Featured</p>
-            <h3><a href="research.html" data-open-note="nagar-van-yojana">Socio-Economic, Cultural &amp; Ecological Benefits — Nagar Van Yojana</a></h3>
-            <p>An integrated assessment of the socio-economic, livelihood, socio-cultural, ecological and climatic benefits of Nagar Van Yojana.</p>
+            <p><span class="ongoing-flag">Ongoing</span></p>
+            <h3><a href="research.html" data-open-note="urban-forestry-framework">Strategic Framework for Human-Centric Urban Forestry</a></h3>
+            <p>Evaluating the socio-economic, psychological and governance outcomes of the Nagar Van Yojana — through GIS-based audits, socio-economic surveys, psychological well-being assessments, and attention to climate resilience, community well-being and participatory governance, towards a monitoring framework.</p>
             <dl class="meta-row">
-              <div><dt>Period</dt><dd>January–June 2025</dd></div>
-              <div><dt>Focus</dt><dd>Urban forestry</dd></div>
-              <div><dt>Approach</dt><dd>Environmental assessment</dd></div>
+              <div><dt>Role</dt><dd>Research Associate, National CAMPA</dd></div>
+              <div><dt>Approach</dt><dd>Audits · Surveys · Assessments</dd></div>
+              <div><dt>Status</dt><dd>Ongoing — no results claimed yet</dd></div>
             </dl>
-            <a href="research.html" class="btn btn-solid" data-open-note="nagar-van-yojana">Open the note <span class="arr">→</span></a>
+            <a href="research.html" class="btn btn-solid" data-open-note="urban-forestry-framework">Open the entry <span class="arr">→</span></a>
           </div>
         </div>
-        <div class="index-list reveal" id="selectedRows"></div>
+      </div>
+    </section>
+
+    <!-- SELECTED WORK -->
+    <section class="section-tight container" aria-labelledby="selH">
+      <div class="section-head reveal">
+        <div>
+          <p class="kicker">Selected work</p>
+          <h2 id="selH">Projects &amp; writing</h2>
+        </div>
+        <p>Verified assessments, studies and briefs. <a href="research.html" class="text-link">Full archive →</a></p>
+      </div>
+      <div class="index-list reveal" id="selectedRows"></div>
+    </section>
+
+    <!-- EARTH / NOW -->
+    <section class="section earth-band" aria-labelledby="earthH">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <p class="kicker">Live environmental data</p>
+            <h2 id="earthH">Earth / Now</h2>
+          </div>
+          <p>Real-time atmosphere where you are — weather and air quality, read like a scientist.</p>
+        </div>
+        <div class="earth-grid reveal">
+          <div>
+            <p class="meta">Your sky</p>
+            <p class="earth-place" id="earthPlace">Somewhere on Earth</p>
+            <p class="earth-temp" id="earthTemp">—<small> °C</small></p>
+            <p class="earth-cond" id="earthCond">See what the atmosphere looks like where you are.</p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px">
+              <button class="btn btn-solid" id="earthLocate" type="button">Use my location <span class="arr">→</span></button>
+            </div>
+            <form class="earth-search" id="earthSearchForm" role="search" aria-label="Search for a place">
+              <input type="search" id="earthSearch" placeholder="Or type a place — Delhi, Bengaluru, London…" aria-label="Search for a place" autocomplete="off" list="earthPlaceList" />
+              <datalist id="earthPlaceList"></datalist>
+              <button class="btn btn-line" type="submit">Search</button>
+            </form>
+            <ul class="place-results" id="earthResults" aria-label="Matching places"></ul>
+            <p class="small muted earth-status" id="earthStatus" role="status"></p>
+          </div>
+          <div>
+            <dl class="earth-meta" id="earthMeta">
+              <div><dt>Feels like</dt><dd id="mFeels">—</dd></div>
+              <div><dt>Precipitation</dt><dd id="mPrecip">—</dd></div>
+              <div><dt>Humidity</dt><dd id="mHumidity">—</dd></div>
+              <div><dt>Wind</dt><dd id="mWind">—</dd></div>
+              <div><dt>UV index</dt><dd id="mUv">—</dd></div>
+              <div><dt>PM2.5</dt><dd id="mPm">—</dd></div>
+            </dl>
+            <div class="forecast-strip" id="earthForecast" aria-label="7-day forecast"></div>
+            <p class="meta earth-attrib">Weather data: Open-Meteo · Air-quality data: Open-Meteo / CAMS</p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -268,5 +322,6 @@
   </footer>
 
   <script src="js/main.js"></script>
+  <script src="js/earth.js"></script>
 </body>
 </html>

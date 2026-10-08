@@ -25,7 +25,9 @@
   --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
   --measure: 66ch;
-  --gutter: clamp(20px, 4vw, 40px);
+  --gutter: clamp(20px, 4.5vw, 72px);
+  --container: 1380px;
+  --space: clamp(64px, 8vw, 128px);
 }
 
 [data-theme="dark"] {
@@ -59,7 +61,8 @@ body {
 }
 ::selection { background: var(--accent); color: var(--paper); }
 :focus-visible { outline: 2px solid var(--earth); outline-offset: 3px; border-radius: 3px; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 var(--gutter); }
+.container { max-width: var(--container); margin: 0 auto; padding: 0 var(--gutter); }
+.container-narrow { max-width: min(880px, 100% - var(--gutter) * 2); margin: 0 auto; padding: 0 var(--gutter); }
 img, svg { max-width: 100%; }
 
 h1, h2, h3 { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.02em; line-height: 1.06; text-wrap: balance; }
@@ -167,11 +170,11 @@ body.menu-open .scrim { opacity: 1; pointer-events: auto; }
 .text-link { color: var(--accent); font-weight: 600; text-decoration: none; background-image: linear-gradient(currentColor, currentColor); background-size: 100% 1px; background-repeat: no-repeat; background-position: 0 100%; padding-bottom: 2px; transition: background-size 0.3s ease; }
 .text-link:hover { background-size: 0% 1px; }
 
-/* ---------- 6. Hero ---------- */
-.hero { padding: clamp(56px, 8vw, 110px) 0 clamp(48px, 6vw, 84px); }
-.hero-grid { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: clamp(36px, 5vw, 72px); align-items: end; }
-.hero-role { font-size: 0.95rem; color: var(--ink-soft); max-width: 26rem; margin: 0 0 26px; }
-.hero-name { font-size: clamp(3.4rem, 8.2vw, 6.6rem); line-height: 0.94; margin: 0 0 26px; letter-spacing: -0.035em; }
+/* ---------- 6. Hero (full-viewport editorial composition) ---------- */
+.hero { padding: clamp(48px, 7vh, 96px) 0 clamp(48px, 6vw, 88px); }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr); gap: clamp(36px, 4.5vw, 80px); align-items: end; }
+.hero-role { font-size: clamp(0.95rem, 1.2vw, 1.05rem); color: var(--ink-soft); max-width: 28rem; margin: 0 0 26px; }
+.hero-name { font-size: clamp(3.6rem, 8.6vw, 7.5rem); line-height: 0.93; margin: 0 0 28px; letter-spacing: -0.035em; }
 .hero-name span { display: block; }
 .hero-name .surname { font-style: italic; font-weight: 400; color: var(--accent); }
 .hero-statement { font-family: var(--font-display); font-size: clamp(1.25rem, 2.2vw, 1.6rem); line-height: 1.4; color: var(--ink); max-width: 30rem; margin: 0 0 14px; }
@@ -354,6 +357,49 @@ body.menu-open .scrim { opacity: 1; pointer-events: auto; }
 .status-flag.live { border-color: var(--accent); color: var(--accent); }
 .status-flag.soon { border-style: dashed; }
 
+/* ---------- 12a. Research groups / trajectory / Earth-Now ---------- */
+.group-head { display: flex; align-items: baseline; gap: 16px; margin: clamp(30px, 4vw, 48px) 0 4px; }
+.group-head:first-child { margin-top: 8px; }
+.group-head h2 { font-size: clamp(1.3rem, 2.2vw, 1.7rem); margin: 0; }
+.group-head .meta { margin-left: auto; }
+.ongoing-flag { font-family: var(--font-mono); font-size: 0.64rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--paper); background: var(--accent); border-radius: 999px; padding: 5px 12px; }
+
+.trajectory { list-style: none; margin: 26px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--ink); }
+.trajectory li { padding: 18px 18px 6px 0; border-bottom: 1px solid var(--line-soft); }
+.trajectory li + li { padding-left: 18px; border-left: 1px solid var(--line-soft); }
+.trajectory strong { display: block; font-family: var(--font-display); font-weight: 500; font-size: 1.02rem; line-height: 1.35; }
+.trajectory span { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+
+/* Earth / Now — scientist's data panel, not a weather app */
+.earth-band { background: var(--stone); border-top: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft); }
+.earth-grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(28px, 4vw, 64px); align-items: start; }
+.earth-place { font-family: var(--font-display); font-size: clamp(1.6rem, 2.8vw, 2.3rem); margin: 6px 0 0; }
+.earth-temp { font-family: var(--font-display); font-size: clamp(4.5rem, 9vw, 7.5rem); line-height: 1; letter-spacing: -0.04em; margin: 8px 0 0; }
+.earth-temp small { font-size: 0.32em; font-style: italic; color: var(--accent); letter-spacing: 0; }
+.earth-cond { color: var(--ink-soft); margin: 6px 0 0; }
+.earth-meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--ink); margin-top: 22px; }
+.earth-meta div { padding: 14px 14px 12px 0; border-bottom: 1px solid var(--line-soft); }
+.earth-meta div:nth-child(3n+2), .earth-meta div:nth-child(3n) { padding-left: 14px; border-left: 1px solid var(--line-soft); }
+.earth-meta dt { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+.earth-meta dd { margin: 2px 0 0; font-size: 1.02rem; }
+.earth-meta dd small { display: block; font-size: 0.78rem; color: var(--muted); }
+.earth-search { display: flex; gap: 10px; margin-top: 22px; max-width: 26rem; position: relative; flex-wrap: wrap; }
+.earth-search input { flex: 1 1 200px; font-family: inherit; font-size: 0.95rem; padding: 12px 2px; border: none; border-bottom: 1px solid var(--line); background: transparent; color: var(--ink); outline: none; border-radius: 0; }
+.earth-search input:focus { border-color: var(--accent); }
+.place-results { list-style: none; margin: 8px 0 0; padding: 0; border-top: 1px solid var(--line-soft); }
+.place-results li button { width: 100%; text-align: left; background: none; border: none; border-bottom: 1px solid var(--line-soft); padding: 11px 2px; cursor: pointer; color: var(--ink); font-family: inherit; font-size: 0.92rem; transition: padding-left 0.25s ease; }
+.place-results li button:hover { padding-left: 8px; color: var(--accent); }
+.place-results li button small { color: var(--muted); }
+.earth-status { margin-top: 18px; max-width: 30rem; }
+.forecast-strip { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--ink); margin-top: 30px; }
+.forecast-day { padding: 14px 10px 4px 0; }
+.forecast-day + .forecast-day { padding-left: 12px; border-left: 1px solid var(--line-soft); }
+.forecast-day .dow { font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.forecast-day .tmax { font-family: var(--font-display); font-size: 1.35rem; }
+.forecast-day .tmin { color: var(--muted); font-size: 0.88rem; }
+.forecast-day .pp { font-size: 0.76rem; color: var(--muted); }
+.earth-attrib { margin-top: 26px; }
+
 /* ---------- 12. Footer ---------- */
 .site-footer { border-top: 1px solid var(--line-soft); padding: 44px 0 32px; }
 .footer-grid { display: flex; justify-content: space-between; gap: 28px; flex-wrap: wrap; align-items: flex-start; }
@@ -373,9 +419,11 @@ body.menu-open .scrim { opacity: 1; pointer-events: auto; }
 @media (max-width: 1020px) {
   .nav-inline { display: none; }
   .menu-btn { display: inline-flex; }
+  .trajectory { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .trajectory li:nth-child(3) { padding-left: 0; border-left: none; }
 }
 @media (max-width: 900px) {
-  .hero-grid, .feature, .archive-feature, .bio-grid, .contact-close, .contact-grid, .about-cols { grid-template-columns: 1fr; }
+  .hero-grid, .feature, .archive-feature, .earth-grid, .bio-grid, .contact-close, .contact-grid, .about-cols { grid-template-columns: 1fr; }
   .section-head { grid-template-columns: 1fr; }
   .section-head p { justify-self: start; }
   .tax-row { grid-template-columns: 44px 1fr 28px; gap: 14px; }
@@ -386,6 +434,15 @@ body.menu-open .scrim { opacity: 1; pointer-events: auto; }
   .note-cell + .note-cell { padding-left: 0; border-left: none; }
   .note-cell { padding-right: 0; }
   .about-cols { gap: 8px; }
+  .earth-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .earth-meta div:nth-child(3n+2), .earth-meta div:nth-child(3n) { padding-left: 0; border-left: none; }
+  .earth-meta div:nth-child(even) { padding-left: 14px; border-left: 1px solid var(--line-soft); }
+  .forecast-strip { grid-template-columns: repeat(7, minmax(92px, 1fr)); overflow-x: auto; }
+}
+@media (max-width: 560px) {
+  .trajectory { grid-template-columns: 1fr; }
+  .trajectory li + li { padding-left: 0; border-left: none; }
+  .group-head { flex-wrap: wrap; gap: 8px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

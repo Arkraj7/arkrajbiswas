@@ -25,69 +25,106 @@
 })();
 
 /* ---------- Research entries (verified only) ----------
-   Where only a title is known, the body says so — nothing is
-   invented. Keep `category` to climate | environment | agriculture
-   so filters + #filter- deep links keep working. */
+   Groups: "current" | "projects" | "writing". Where only a title is
+   known, the body says so — nothing is invented. Keep `category` to
+   climate | environment | agriculture so filters keep working. */
 const PLACEHOLDER_BODY = "<p>Details and full text will be added here.</p>";
 
 const POSTS = [
   {
-    id: "nagar-van-yojana",
+    id: "urban-forestry-framework",
+    group: "current",
     category: "environment",
-    title: "Socio-Economic, Cultural & Ecological Benefits — Nagar Van Yojana",
-    summary: "An integrated assessment of the socio-economic, livelihood, socio-cultural, ecological and climatic benefits of Nagar Van Yojana.",
-    meta: "Jan–Jun 2025 · Urban forestry",
-    year: "2025", location: "", methods: "Environmental Assessment", status: "Jan–Jun 2025", kind: "Environmental Assessment",
-    body: `<p>An integrated assessment of the socio-economic, livelihood, socio-cultural, ecological and climatic benefits of Nagar Van Yojana.</p>${PLACEHOLDER_BODY}`
+    title: "Strategic Framework for Human-Centric Urban Forestry: Evaluating Socio-Economic, Psychological, and Governance Outcomes of the Nagar Van Yojana",
+    summary: "Ongoing National CAMPA research — GIS-based audits, socio-economic surveys, psychological well-being assessments, climate resilience, community well-being, participatory governance and a monitoring framework.",
+    meta: "Ongoing · National CAMPA",
+    year: "", location: "", methods: "GIS-based audits · Socio-economic surveys · Well-being assessments", status: "Ongoing", kind: "Current Research",
+    body: `<p>Ongoing National CAMPA research evaluating the socio-economic, psychological and governance outcomes of the Nagar Van Yojana. The work brings together GIS-based audits, socio-economic surveys, psychological well-being assessments, climate resilience, community well-being and participatory governance, towards a monitoring framework.</p><p><em>Methodology only — findings will be added here as they are confirmed.</em></p>`
   },
   {
-    id: "bengaluru-uhi-decadal",
+    id: "nagar-van-benefits",
+    group: "projects",
+    category: "environment",
+    title: "Socio-Economic, Cultural & Ecological Benefits — Nagar Van Yojana",
+    summary: "Assessing the socio-economic, livelihood, socio-cultural, ecological and climatic benefits of the Nagar Van Yojana through an integrated multi-analysis methodological framework.",
+    meta: "Jan–Jun 2025 · Urban forestry",
+    year: "2025", location: "", methods: "Urban Forestry · Environmental Assessment", status: "Jan–Jun 2025", kind: "Project",
+    body: `<p>Assessing the socio-economic, livelihood, socio-cultural, ecological and climatic benefits of the Nagar Van Yojana through an integrated multi-analysis methodological framework.</p>${PLACEHOLDER_BODY}`
+  },
+  {
+    id: "bengaluru-uhi",
+    group: "projects",
     category: "climate",
     title: "Decadal Study of UHI, GSI & UDI over Bengaluru",
-    summary: "A decadal geospatial study examining changes in urban heat, green spaces and urban development using satellite imagery and landscape indicators.",
+    summary: "Performed geospatial analysis of UHI, green space and urban development trends using satellite imagery and landscape indicators.",
     meta: "Jan–Jun 2025 · Bengaluru",
-    year: "2025", location: "Bengaluru", methods: "UHI · GSI · UDI", status: "Jan–Jun 2025", kind: "Geospatial Study",
-    body: `<p>A decadal geospatial study examining changes in urban heat, green spaces and urban development using satellite imagery and landscape indicators.</p>${PLACEHOLDER_BODY}`
+    year: "2025", location: "Bengaluru", methods: "UHI · GSI · UDI", status: "Jan–Jun 2025", kind: "Project",
+    body: `<p>Performed geospatial analysis of UHI, green space and urban development trends using satellite imagery and landscape indicators.</p>${PLACEHOLDER_BODY}`
   },
   {
     id: "enhancing-urban-forestry",
+    group: "writing",
     category: "environment",
-    title: "Enhancing Urban Forestry",
-    summary: "Policy brief on field evidence and implementation recommendations for the Nagar Van Yojana.",
+    title: "Enhancing Urban Forestry: Field Evidence and Implementation Recommendations for the Nagar Van Yojana",
+    summary: "Policy brief presenting field evidence and implementation recommendations for the Nagar Van Yojana.",
     meta: "Policy brief · Urban forestry",
-    year: "", location: "", methods: "Evidence & Implementation", status: "Policy Brief", kind: "Policy Brief",
-    body: `<p>Policy brief on field evidence and implementation recommendations for the Nagar Van Yojana.</p>${PLACEHOLDER_BODY}`
+    year: "", location: "", methods: "Field evidence · Implementation", status: "Policy Brief", kind: "Policy Brief",
+    body: `<p>Policy brief presenting field evidence and implementation recommendations for the Nagar Van Yojana.</p>${PLACEHOLDER_BODY}`
   },
   {
     id: "etawah-design",
+    group: "writing",
     category: "environment",
     title: "The Etawah Design: A 123-Acre Urban Forest as Its Lungs",
     summary: "Details and full text will be added here.",
-    meta: "Details forthcoming",
-    year: "", location: "", methods: "", status: "Details forthcoming", kind: "Entry",
+    meta: "Article · Details forthcoming",
+    year: "", location: "", methods: "", status: "Article", kind: "Article",
+    body: PLACEHOLDER_BODY
+  },
+  {
+    id: "forest-zodiac",
+    group: "writing",
+    category: "environment",
+    title: "When a Forest Knows Your Zodiac Sign",
+    summary: "Details and full text will be added here.",
+    meta: "Article · Details forthcoming",
+    year: "", location: "", methods: "", status: "Article", kind: "Article",
     body: PLACEHOLDER_BODY
   },
   {
     id: "reimagining-ugs",
+    group: "writing",
     category: "environment",
     title: "Reimagining Urban Green Spaces as Fundamental Infrastructure in a Warming India",
     summary: "Details and full text will be added here.",
-    meta: "Details forthcoming",
-    year: "", location: "", methods: "", status: "Details forthcoming", kind: "Entry",
+    meta: "Blog / Article · Details forthcoming",
+    year: "", location: "", methods: "", status: "Blog / Article", kind: "Blog / Article",
     body: PLACEHOLDER_BODY
   },
   {
-    id: "ugs-dynamics-bengaluru",
+    id: "ugs-thesis",
+    group: "writing",
     category: "environment",
     title: "Spatiotemporal Assessment of UGS Dynamics – Bengaluru",
     summary: "Details and full text will be added here.",
-    meta: "Bengaluru · Details forthcoming",
-    year: "", location: "Bengaluru", methods: "", status: "Details forthcoming", kind: "Entry",
+    meta: "Research thesis · Bengaluru",
+    year: "", location: "Bengaluru", methods: "", status: "Research Thesis", kind: "Research Thesis",
+    body: PLACEHOLDER_BODY
+  },
+  {
+    id: "etawah-field-evidence",
+    group: "writing",
+    category: "environment",
+    title: "Etawah Nagar Van: Field Evidence on Urban Forestry",
+    summary: "Details and full text will be added here.",
+    meta: "Research article · Details forthcoming",
+    year: "", location: "", methods: "", status: "Research Article", kind: "Research Article",
     body: PLACEHOLDER_BODY
   }
 ];
 
-const FEATURED_ID = "nagar-van-yojana";
+const FEATURED_ID = "urban-forestry-framework";
+const HOME_PICKS = ["nagar-van-benefits", "bengaluru-uhi", "enhancing-urban-forestry"];
 
 /* ---------- Shared UI ---------- */
 document.addEventListener("DOMContentLoaded", () => {
@@ -167,7 +204,7 @@ function metaLine(p) {
 function initHomeLists() {
   const rows = document.getElementById("selectedRows");
   if (!rows) return;
-  const picks = POSTS.filter((p) => p.id !== FEATURED_ID).slice(0, 3);
+  const picks = HOME_PICKS.map((id) => POSTS.find((p) => p.id === id)).filter(Boolean);
   rows.innerHTML = picks.map((p) => `
     <a class="index-row" href="research.html" data-open-note="${esc(p.id)}" style="text-decoration:none;color:inherit">
       <span class="i-year">${esc(p.year || p.status || "")}</span>
@@ -237,6 +274,36 @@ function filteredPosts() {
   });
 }
 
+const GROUPS = [
+  { key: "current", label: "Current research" },
+  { key: "projects", label: "Projects" },
+  { key: "writing", label: "Publications & writing" }
+];
+
+function rowHTML(p) {
+  return `
+    <article class="index-row reveal visible" data-id="${esc(p.id)}" tabindex="0" role="button" aria-label="Open research entry: ${esc(p.title)}">
+      <span class="i-year">${esc(p.year || p.status || "")}</span>
+      <span>
+        <h3>${esc(p.title)}${p.status === "Ongoing" ? ' <span class="ongoing-flag">Ongoing</span>' : ""}</h3>
+        ${metaLine(p) ? `<p class="i-sub">${esc(metaLine(p))}</p>` : ""}
+      </span>
+      <span class="i-side">
+        <span class="tag tag-${esc(p.category)}">${esc(p.category)}</span>
+        <span class="i-open">Open <span class="arr">→</span></span>
+      </span>
+    </article>`;
+}
+
+function bindRows(grid) {
+  grid.querySelectorAll(".index-row").forEach((row) => {
+    row.addEventListener("click", () => openModal(row.dataset.id));
+    row.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openModal(row.dataset.id); }
+    });
+  });
+}
+
 function renderResearch() {
   const grid = document.getElementById("researchGrid");
   if (!grid) return;
@@ -249,28 +316,17 @@ function renderResearch() {
     const label = activeFilter === "all" ? "across all themes" : `in ${activeFilter}`;
     count.textContent = `Showing ${list.length} of ${POSTS.length} entries ${label}.`;
   }
-  if (archiveCount) archiveCount.textContent = `${POSTS.length} entries`;
+  if (archiveCount) archiveCount.textContent = `${POSTS.length} verified entries`;
   if (empty) empty.hidden = list.length > 0;
 
-  grid.innerHTML = list.map((p) => `
-    <article class="index-row reveal visible" data-id="${esc(p.id)}" tabindex="0" role="button" aria-label="Open research note: ${esc(p.title)}">
-      <span class="i-year">${esc(p.year || p.status || "")}</span>
-      <span>
-        <h3>${esc(p.title)}</h3>
-        ${metaLine(p) ? `<p class="i-sub">${esc(metaLine(p))}</p>` : ""}
-      </span>
-      <span class="i-side">
-        <span class="tag tag-${esc(p.category)}">${esc(p.category)}</span>
-        <span class="i-open">Open <span class="arr">→</span></span>
-      </span>
-    </article>`).join("");
+  grid.innerHTML = GROUPS.map((g) => {
+    const items = list.filter((p) => p.group === g.key);
+    if (!items.length) return "";
+    return `<div class="group-head"><h2>${g.label}</h2><span class="meta">${items.length} ${items.length === 1 ? "entry" : "entries"}</span></div>
+      <div class="index-list">${items.map(rowHTML).join("")}</div>`;
+  }).join("");
 
-  grid.querySelectorAll(".index-row").forEach((row) => {
-    row.addEventListener("click", () => openModal(row.dataset.id));
-    row.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openModal(row.dataset.id); }
-    });
-  });
+  bindRows(grid);
 }
 
 /* ---------- Modal ---------- */
