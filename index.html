@@ -152,24 +152,14 @@
         <div class="feature reveal">
           <div class="feature-visual visual-frame">
             <figure>
-              <svg class="motif" viewBox="0 0 640 420" role="img" aria-label="Abstract assessment grid, placeholder for project visual">
-                <defs>
-                  <pattern id="rast" width="26" height="26" patternUnits="userSpaceOnUse">
-                    <rect x="2" y="2" width="22" height="22" fill="currentColor" opacity="0.28"/>
-                  </pattern>
-                </defs>
-                <rect x="24" y="24" width="592" height="300" fill="url(#rast)"/>
-                <g fill="none" stroke="currentColor" stroke-width="1.2">
-                  <path d="M40 300 C 160 260 260 320 400 290 S 540 300 610 280" opacity="0.7"/>
-                  <path d="M40 340 C 170 305 270 360 410 330 S 545 340 615 320" opacity="0.9"/>
-                </g>
-                <text x="24" y="368" font-family="monospace" font-size="12" fill="currentColor" opacity="0.65">audit plots</text>
-                <text x="470" y="368" font-family="monospace" font-size="12" fill="currentColor" opacity="0.65">monitoring</text>
-              </svg>
+              <div class="photo-wide">
+                <img src="assets/projects/cubbon-canopy.jpg" alt="Mature tree canopy viewed from below in an urban park (illustrative image, not project documentation)" loading="lazy" decoding="async" />
+              </div>
               <figcaption class="visual-caption">
-                <span class="meta">Nagar Van Yojana · National CAMPA</span>
-                <span class="meta">Placeholder for project visual</span>
+                <span class="meta">Illustrative project visual</span>
+                <span class="meta">Replace with project documentation</span>
               </figcaption>
+              <p class="meta" style="margin-top:8px">Illustrative image: <a href="https://commons.wikimedia.org/wiki/File:Tree_canopy_at_Cubbon_park,_Bengaluru_(2026)_01.jpg" target="_blank" rel="noopener">Gpkp, Wikimedia Commons, CC BY-SA 4.0</a></p>
             </figure>
           </div>
           <div>
@@ -242,6 +232,50 @@
       </div>
     </section>
 
+    <!-- CLIMATE LENS -->
+    <section class="section-tight container" aria-labelledby="lensH">
+      <div class="section-head reveal">
+        <div>
+          <p class="kicker">Long-term climate data</p>
+          <h2 id="lensH">Climate Lens</h2>
+        </div>
+        <p>Explore climate conditions through long-term environmental data. Observed series only — no trend claims.</p>
+      </div>
+      <div class="lens-grid reveal">
+        <div class="lens-controls">
+          <p class="meta">Place</p>
+          <p class="earth-place" id="lensPlace" style="font-size:clamp(1.4rem,2.4vw,2rem)">Bengaluru, India</p>
+          <p class="small muted" id="lensPlaceNote">Example location — search for another place below.</p>
+          <form class="lens-search" id="lensSearchForm" role="search" aria-label="Search for a place in Climate Lens">
+            <input type="search" id="lensSearch" placeholder="Delhi, Etawah, London…" aria-label="Search for a place" autocomplete="off" />
+            <button class="btn btn-line btn-small" type="submit" style="align-self:end">Search</button>
+          </form>
+          <ul class="place-results" id="lensResults" aria-label="Matching places"></ul>
+          <p class="meta" style="margin-top:6px">Variable</p>
+          <div class="var-row" role="group" aria-label="Climate variable">
+            <button class="var-btn" type="button" data-var="T2M" aria-pressed="true">Temperature</button>
+            <button class="var-btn" type="button" data-var="PRECTOTCORR" aria-pressed="false">Precipitation</button>
+            <button class="var-btn" type="button" data-var="RH2M" aria-pressed="false">Humidity</button>
+            <button class="var-btn" type="button" data-var="ALLSKY_SFC_SW_DWN" aria-pressed="false">Solar radiation</button>
+          </div>
+          <p class="small muted" id="lensStatus" role="status" style="margin:0"></p>
+        </div>
+        <div>
+          <div class="lens-chart" id="lensChartWrap">
+            <div class="lens-skeleton" id="lensSkeleton">Climate chart loads here — scroll to begin.</div>
+            <div id="lensChart" hidden></div>
+          </div>
+          <p class="meta" id="lensMeta" style="margin-top:14px">NASA POWER · long-term monthly means</p>
+          <div class="pulse-strip" id="pulseStrip" hidden>
+            <p class="meta">Biodiversity Pulse</p>
+            <p style="margin:6px 0 4px"><strong id="pulseCount">—</strong> <span class="muted" id="pulseText">public occurrence records near these coordinates.</span></p>
+            <p class="small muted" id="pulseExamples" style="margin:0 0 6px"></p>
+            <p class="meta">Public observations from GBIF — not Arkraj Biswas research data.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- A LITTLE ABOUT ME -->
     <section class="section-tight container" aria-labelledby="bioH">
       <div class="bio-grid">
@@ -298,5 +332,6 @@
   <script src="js/main.js"></script>
   <script src="js/earth.js"></script>
   <script src="js/slides.js"></script>
+  <script src="js/climate.js"></script>
 </body>
 </html>

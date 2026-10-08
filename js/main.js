@@ -28,7 +28,7 @@
    Groups: "current" | "projects" | "writing". Where only a title is
    known, the body says so — nothing is invented. Keep `category` to
    climate | environment | agriculture so filters keep working. */
-const PLACEHOLDER_BODY = "<p>Details and full text will be added here.</p>";
+const PLACEHOLDER_BODY = "<p>Detailed project information will be added here.</p>";
 
 const POSTS = [
   {

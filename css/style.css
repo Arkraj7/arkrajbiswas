@@ -232,6 +232,15 @@ body.menu-open .scrim { opacity: 1; pointer-events: auto; }
 }
 .photo-frame img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
 
+/* Wide editorial photograph frame (project features) */
+.photo-wide {
+  aspect-ratio: 16 / 10; overflow: hidden;
+  border: 1px solid var(--line); border-radius: 4px; background: var(--stone);
+  box-shadow: var(--shadow);
+}
+.photo-wide img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+.visual-caption a { color: inherit; }
+
 /* Fieldwork grid (research page documentation strip) */
 .field-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(14px, 2vw, 24px); }
 .field-grid figure { margin: 0; }
@@ -446,6 +455,22 @@ body.menu-open .scrim { opacity: 1; pointer-events: auto; }
 .forecast-day .pp { font-size: 0.76rem; color: var(--muted); }
 .earth-attrib { margin-top: 26px; }
 
+/* ---------- 12b. Climate Lens + Biodiversity Pulse ---------- */
+.lens-grid { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: clamp(28px, 4vw, 64px); align-items: start; }
+.lens-controls { display: flex; flex-direction: column; gap: 16px; }
+.lens-search { display: flex; gap: 10px; max-width: 26rem; }
+.lens-search input { flex: 1 1 180px; font-family: inherit; font-size: 0.95rem; padding: 12px 2px; border: none; border-bottom: 1px solid var(--line); background: transparent; color: var(--ink); outline: none; border-radius: 0; }
+.lens-search input:focus { border-color: var(--accent); }
+.var-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.var-btn { border: 1px solid var(--line); background: transparent; color: var(--ink-soft); border-radius: 999px; padding: 8px 16px; cursor: pointer; font-family: inherit; font-size: 0.85rem; font-weight: 600; transition: background 0.25s, color 0.25s, border-color 0.25s; }
+.var-btn:hover { border-color: var(--accent); color: var(--ink); }
+.var-btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.lens-chart { border-top: 1px solid var(--ink); padding-top: 18px; }
+.lens-chart svg { display: block; width: 100%; height: auto; }
+.lens-skeleton { border: 1px dashed var(--line); border-radius: 8px; padding: 44px 20px; text-align: center; color: var(--muted); font-size: 0.9rem; }
+.pulse-strip { margin-top: 30px; border-top: 1px solid var(--line-soft); padding-top: 18px; }
+.pulse-strip[hidden] { display: none; }
+
 /* ---------- 12. Footer ---------- */
 .site-footer { border-top: 1px solid var(--line-soft); padding: 44px 0 32px; }
 .footer-grid { display: flex; justify-content: space-between; gap: 28px; flex-wrap: wrap; align-items: flex-start; }
@@ -490,6 +515,10 @@ body.menu-open .scrim { opacity: 1; pointer-events: auto; }
 .reveal.visible { opacity: 1; transform: none; }
 
 /* ---------- 14. Responsive ---------- */
+@media (min-width: 901px) {
+  /* Lift the About portrait toward the heading on desktop only */
+  .about-open .portrait-frame { transform: translateY(-clamp(16px, 2vw, 32px)); }
+}
 @media (max-width: 1020px) {
   .nav-inline { display: none; }
   .menu-btn { display: inline-flex; }
@@ -497,7 +526,7 @@ body.menu-open .scrim { opacity: 1; pointer-events: auto; }
   .trajectory li:nth-child(3) { padding-left: 0; border-left: none; }
 }
 @media (max-width: 900px) {
-  .hero-grid, .feature, .archive-feature, .earth-grid, .bio-grid, .contact-close, .contact-grid, .about-cols { grid-template-columns: 1fr; }
+  .hero-grid, .feature, .archive-feature, .earth-grid, .lens-grid, .bio-grid, .contact-close, .contact-grid, .about-cols { grid-template-columns: 1fr; }
   .slideshow { width: 100%; max-width: 380px; justify-self: start; }
   .slides-frame { max-height: 58vh; }
   .field-grid { grid-template-columns: 1fr 1fr; }
