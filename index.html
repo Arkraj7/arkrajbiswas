@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=9" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%2333573f'/><path d='M6 22c4-3 7 1 11-2s6 0 7-3' stroke='%23faf8f2' fill='none' stroke-width='2' stroke-linecap='round'/><circle cx='22' cy='10' r='2.2' fill='%23faf8f2'/></svg>" />
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Person","name":"Arkraj Biswas","url":"https://arkrajbiswas.com/","image":"https://arkrajbiswas.com/assets/fieldwork/IMG-20260612-WA0001.jpg","jobTitle":"Environmental & Climate Researcher","description":"Environmental & Climate Researcher — climate, sustainability, GIS, remote sensing, forestry, agriculture, environmental policy.","sameAs":["https://in.linkedin.com/in/arkraj-biswas-kugel","https://github.com/Arkraj7"]}
@@ -256,10 +256,15 @@
           <ul class="place-results" id="lensResults" aria-label="Matching places"></ul>
           <p class="meta" style="margin-top:6px">Variable</p>
           <div class="var-row" role="group" aria-label="Climate variable">
-            <button class="var-btn" type="button" data-var="T2M" aria-pressed="true">Temperature</button>
-            <button class="var-btn" type="button" data-var="PRECTOTCORR" aria-pressed="false">Precipitation</button>
-            <button class="var-btn" type="button" data-var="RH2M" aria-pressed="false">Humidity</button>
-            <button class="var-btn" type="button" data-var="ALLSKY_SFC_SW_DWN" aria-pressed="false">Solar radiation</button>
+            <button class="var-btn" type="button" data-var="temp" aria-pressed="true">Temperature</button>
+            <button class="var-btn" type="button" data-var="precip" aria-pressed="false">Precipitation</button>
+            <button class="var-btn" type="button" data-var="rh" aria-pressed="false">Humidity</button>
+            <button class="var-btn" type="button" data-var="solar" aria-pressed="false">Solar radiation</button>
+          </div>
+          <p class="meta" style="margin-top:14px">View</p>
+          <div class="var-row" role="group" aria-label="Climate view">
+            <button class="var-btn view-btn" type="button" data-view="annual" aria-pressed="true">Annual history</button>
+            <button class="var-btn view-btn" type="button" data-view="recent" aria-pressed="false">Recent 30 days</button>
           </div>
           <p class="small muted" id="lensStatus" role="status" style="margin:0"></p>
         </div>
@@ -268,7 +273,7 @@
             <div class="lens-skeleton" id="lensSkeleton">Climate chart loads here — scroll to begin.</div>
             <div id="lensChart" hidden></div>
           </div>
-          <p class="meta" id="lensMeta" style="margin-top:14px">NASA POWER · annual historical series, 2001 onward</p>
+          <p class="meta" id="lensMeta" style="margin-top:14px">ERA5-Land via Open-Meteo · annual history from 2001</p>
           <p class="small muted" style="margin:8px 0 0">These values are climate-data estimates, not direct observations from a local weather station.</p>
           <div class="pulse-strip" id="pulseStrip" hidden>
             <p class="meta">Biodiversity Pulse</p>
@@ -334,9 +339,9 @@
     </div>
   </footer>
 
-  <script src="js/main.js"></script>
-  <script src="js/earth.js"></script>
-  <script src="js/slides.js"></script>
-  <script src="js/climate.js"></script>
+  <script src="js/main.js?v=9"></script>
+  <script src="js/earth.js?v=9"></script>
+  <script src="js/slides.js?v=9"></script>
+  <script src="js/climate.js?v=9"></script>
 </body>
 </html>

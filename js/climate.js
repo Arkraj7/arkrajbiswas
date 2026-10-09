@@ -1,28 +1,30 @@
 /* ============================================================
-   Climate Lens — historical annual climate series (NASA POWER
-   monthly/point) + Biodiversity Pulse (GBIF, recent records in a
-   defined box — labeled as public data, never research data).
-   No keys, no polling, no stored location, stale responses
-   discarded via request tokens.
+   Climate Lens — historical climate from ERA5-Land reanalysis
+   (Open-Meteo Historical Weather API, no key) + Biodiversity
+   Pulse (GBIF public observations — never research data).
+   View A: annual series 2001 -> latest complete year.
+   View B: recent 30 valid days ending at latest available date.
+   Stale responses discarded via request tokens; coordinates are
+   session-memory only, never stored.
    ============================================================ */
 (function climateLens() {
   document.addEventListener("DOMContentLoaded", init);
 
   const VARS = {
-    T2M: { label: "Air temperature", agg: "mean", unit: "°C", decimals: 1 },
-    PRECTOTCORR: { label: "Precipitation", agg: "total", unit: "mm", decimals: 0 },
-    RH2M: { label: "Relative humidity", agg: "mean", unit: "%", decimals: 1 },
-    ALLSKY_SFC_SW_DWN: { label: "Solar radiation", agg: "mean", unit: "kWh/m²/day", decimals: 2 }
+    temp: { label: "Temperature", unit: "°C", decimals: 1 },
+    precip: { label: "Precipitation", unit: "mm", decimals: 0 },
+    rh: { label: "Relative humidity", unit: "%", decimals: 1 },
+    solar: { label: "Solar radiation", unit: "MJ/m²", decimals: 0 }
   };
   const START_YEAR = 2001;
-  const FILL = -999.0;
+  const FETCH_TIMEOUT_MS = 30000;
   const DEFAULT = { lat: 12.97, lon: 77.59, label: "Bengaluru, India" };
   const BOX_HALF_DEG = 0.09; // ~10 km each side -> ~20 x 20 km box
 
-  const cache = new Map(); // session-only: "lat,lon" -> { years, annual }
+  const cache = new Map(); // session-only: "lat,lon" -> daily arrays
   let els = {};
   let requestSeq = 0;
-  let state = { lat: DEFAULT.lat, lon: DEFAULT.lon, label: DEFAULT.label, example: true, variable: "T2M", started: false };
+  let state = { lat: DEFAULT.lat, lon: DEFAULT.lon, label: DEFAULT.label, example: true, variable: "temp", view: "annual", started: false };
 
   function init() {
     els = {
@@ -47,6 +49,14 @@
       b.addEventListener("click", () => {
         state.variable = b.dataset.var;
         document.querySelectorAll(".var-btn").forEach((x) =>
+          x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+        renderFromCache();
+      })
+    );
+    document.querySelectorAll(".view-btn").forEach((b) =>
+      b.addEventListener("click", () => {
+        state.view = b.dataset.view;
+        document.querySelectorAll(".view-btn").forEach((x) =>
           x.setAttribute("aria-pressed", x === b ? "true" : "false"));
         renderFromCache();
       })
@@ -106,87 +116,180 @@
     }
   }
 
-  /* ----- NASA POWER monthly series -> complete-year annual values ----- */
-  function parseAnnual(params) {
-    // Strict YYYYMM keys only; a year counts when all 12 months are
-    // present and real (no fill values) across every variable.
-    const endYear = new Date().getFullYear();
-    const years = [];
-    const annual = { T2M: [], PRECTOTCORR: [], RH2M: [], ALLSKY_SFC_SW_DWN: [] };
-    for (let y = START_YEAR; y <= endYear; y++) {
-      const mvals = {};
-      let ok = true;
-      for (const v of Object.keys(annual)) {
-        mvals[v] = [];
-        for (let m = 1; m <= 12; m++) {
-          const raw = params[v] && params[v][`${y}${String(m).padStart(2, "0")}`];
-          if (typeof raw !== "number" || !Number.isFinite(raw) || raw === FILL) { ok = false; break; }
-          mvals[v].push(raw);
-        }
-        if (!ok) break;
-      }
-      if (!ok) continue;
-      years.push(y);
-      annual.T2M.push(mean(mvals.T2M));
-      annual.RH2M.push(mean(mvals.RH2M));
-      annual.ALLSKY_SFC_SW_DWN.push(mean(mvals.ALLSKY_SFC_SW_DWN));
-      annual.PRECTOTCORR.push(mvals.PRECTOTCORR.reduce((s, v, i) => s + v * daysInMonth(y, i + 1), 0));
-    }
-    return { years, annual };
+  /* ----- ERA5-Land daily history ----- */
+  function withTimeout(ms) {
+    const c = new AbortController();
+    const t = setTimeout(() => c.abort(), ms);
+    return { signal: c.signal, done: () => clearTimeout(t) };
   }
-
-  function mean(a) { return a.reduce((s, v) => s + v, 0) / a.length; }
-  function daysInMonth(y, m) { return new Date(y, m, 0).getDate(); }
 
   async function load() {
     const token = ++requestSeq;
-    showSkeleton("Loading historical climate data…");
+    showSkeleton(state.view === "annual" ? "Loading annual climate history…" : "Loading recent conditions…");
     say("");
     try {
       const key = `${state.lat.toFixed(2)},${state.lon.toFixed(2)}`;
-      let series = cache.get(key);
-      if (!series) {
+      let daily = cache.get(key);
+      if (!daily) {
         const endYear = new Date().getFullYear();
-        const url = `https://power.larc.nasa.gov/api/temporal/monthly/point` +
-          `?parameters=T2M,PRECTOTCORR,RH2M,ALLSKY_SFC_SW_DWN&community=AG` +
-          `&longitude=${state.lon}&latitude=${state.lat}&format=JSON&start=${START_YEAR}&end=${endYear}`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("power failed");
+        const url = `https://archive-api.open-meteo.com/v1/archive?latitude=${state.lat}&longitude=${state.lon}` +
+          `&start_date=${START_YEAR}-01-01&end_date=${endYear}-12-31` +
+          `&daily=temperature_2m_max,temperature_2m_min,temperature_2m_mean,precipitation_sum,relative_humidity_2m_mean,shortwave_radiation_sum` +
+          `&timezone=auto&models=era5_land`;
+        const gate = withTimeout(FETCH_TIMEOUT_MS);
+        let res;
+        try {
+          res = await fetch(url, { signal: gate.signal });
+        } finally {
+          gate.done();
+        }
+        if (!res.ok) throw new Error("archive failed");
         const data = await res.json();
-        const params = data && data.properties && data.properties.parameter;
-        if (!params || !params.T2M) throw new Error("power empty");
         if (token !== requestSeq) return;
-        series = parseAnnual(params);
-        if (!series.years.length) throw new Error("power empty");
-        cache.set(key, series);
+        daily = data && data.daily;
+        if (!daily || !Array.isArray(daily.time) || !daily.time.length) throw new Error("archive empty");
+        cache.set(key, daily);
       }
       if (token !== requestSeq) return;
-      renderFromCache(series);
+      renderFromCache(daily);
       loadPulse(token);
     } catch (e) {
       if (token !== requestSeq) return;
       els.chart.hidden = true;
-      showSkeleton("Climate data is temporarily unavailable.");
+      showSkeleton(e && e.name === "AbortError"
+        ? "Climate data request timed out — please try again."
+        : "Climate data is temporarily unavailable.");
     }
   }
 
-  function renderFromCache(series) {
-    series = series || cache.get(`${state.lat.toFixed(2)},${state.lon.toFixed(2)}`);
-    if (!series || !series.years.length) return;
+  function isValidDay(d, i) {
+    return ["temperature_2m_max", "temperature_2m_min", "temperature_2m_mean",
+      "precipitation_sum", "relative_humidity_2m_mean", "shortwave_radiation_sum"]
+      .every((k) => typeof (d[k] || [])[i] === "number" && Number.isFinite(d[k][i]));
+  }
+
+  function completeYears(d) {
+    // A year counts only when every calendar day is present and valid.
+    const byYear = {};
+    (d.time || []).forEach((iso, i) => {
+      const y = Number(String(iso).slice(0, 4));
+      if (!Number.isFinite(y)) return;
+      (byYear[y] = byYear[y] || []).push(i);
+    });
+    return Object.keys(byYear).map(Number).sort((a, b) => a - b).filter((y) => {
+      const idx = byYear[y];
+      const days = new Date(y, 1, 29).getDate() === 29 ? 366 : 365;
+      return idx.length === days && idx.every((i) => isValidDay(d, i));
+    });
+  }
+
+  function latestValidIndex(d) {
+    for (let i = (d.time || []).length - 1; i >= 0; i--) {
+      if (isValidDay(d, i)) return i;
+    }
+    return -1;
+  }
+
+  function annualSeries(d, years, variable) {
+    const idxByYear = {};
+    (d.time || []).forEach((iso, i) => {
+      const y = Number(String(iso).slice(0, 4));
+      (idxByYear[y] = idxByYear[y] || []).push(i);
+    });
+    return years.map((y) => {
+      const idx = idxByYear[y];
+      if (variable === "temp") {
+        return {
+          mean: avg(idx.map((i) => d.temperature_2m_mean[i])),
+          hi: avg(idx.map((i) => d.temperature_2m_max[i])),
+          lo: avg(idx.map((i) => d.temperature_2m_min[i]))
+        };
+      }
+      if (variable === "precip") return { mean: sum(idx.map((i) => d.precipitation_sum[i])) };
+      if (variable === "rh") return { mean: avg(idx.map((i) => d.relative_humidity_2m_mean[i])) };
+      return { mean: sum(idx.map((i) => d.shortwave_radiation_sum[i])) };
+    });
+  }
+
+  function avg(a) { return a.reduce((s, v) => s + v, 0) / a.length; }
+  function sum(a) { return a.reduce((s, v) => s + v, 0); }
+
+  function renderFromCache(daily) {
+    daily = daily || cache.get(`${state.lat.toFixed(2)},${state.lon.toFixed(2)}`);
+    if (!daily) return;
     const cfg = VARS[state.variable];
-    const values = series.annual[state.variable];
-    const years = series.years;
-    els.skeleton.hidden = true;
-    els.chart.hidden = false;
-    els.chart.innerHTML = chartSVG(years, values, cfg);
+    if (state.view === "annual") {
+      const years = completeYears(daily);
+      if (!years.length) {
+        els.chart.hidden = true;
+        showSkeleton("No complete years available for this location yet.");
+        return;
+      }
+      const series = annualSeries(daily, years, state.variable);
+      const titles = {
+        temp: "Annual mean of daily mean temperature",
+        precip: "Annual total precipitation",
+        rh: "Annual mean relative humidity",
+        solar: "Annual total solar radiation"
+      };
+      els.skeleton.hidden = true;
+      els.chart.hidden = false;
+      els.chart.innerHTML = chartSVG(
+        years.map(String), series.map((s) => s.mean),
+        series.every((s) => s.hi !== undefined)
+          ? [{ values: series.map((s) => s.hi), faint: true }, { values: series.map((s) => s.lo), faint: true }]
+          : [],
+        cfg, `${state.label}: ${titles[state.variable]}, ${years[0]}–${years[years.length - 1]}`
+      );
+      setMeta(`${state.label} · ${fmtLat(state.lat)}, ${fmtLon(state.lon)} · ${titles[state.variable]} · ` +
+        `${years[0]}–${years[years.length - 1]} · ${cfg.unit} · ERA5-Land via Open-Meteo`);
+    } else {
+      const end = latestValidIndex(daily);
+      if (end < 0) {
+        els.chart.hidden = true;
+        showSkeleton("No recent data available for this location yet.");
+        return;
+      }
+      const start = Math.max(0, end - 29);
+      const idx = [];
+      for (let i = start; i <= end; i++) idx.push(i);
+      const dates = idx.map((i) => daily.time[i]);
+      const titles = {
+        temp: "Daily mean temperature",
+        precip: "Daily precipitation total",
+        rh: "Daily mean relative humidity",
+        solar: "Daily solar radiation total"
+      };
+      const pick = {
+        temp: "temperature_2m_mean", precip: "precipitation_sum",
+        rh: "relative_humidity_2m_mean", solar: "shortwave_radiation_sum"
+      }[state.variable];
+      const values = idx.map((i) => daily[pick][i]);
+      if (values.some((v) => typeof v !== "number" || !Number.isFinite(v))) {
+        els.chart.hidden = true;
+        showSkeleton("Recent data is incomplete for this location.");
+        return;
+      }
+      const extra = state.variable === "temp"
+        ? [{ values: idx.map((i) => daily.temperature_2m_max[i]), faint: true, tag: "max" },
+           { values: idx.map((i) => daily.temperature_2m_min[i]), faint: true, tag: "min" }]
+        : [];
+      els.skeleton.hidden = true;
+      els.chart.hidden = false;
+      els.chart.innerHTML = chartSVG(
+        dates.map((dISO) => shortDate(dISO)), values, extra, cfg,
+        `${state.label}: ${titles[state.variable]}, ${dates[0]} to ${dates[dates.length - 1]}`
+      );
+      setMeta(`${state.label} · ${fmtLat(state.lat)}, ${fmtLon(state.lon)} · ${titles[state.variable]} · ` +
+        `Historical reanalysis · Data through ${dates[dates.length - 1]} · ${cfg.unit} · ERA5-Land via Open-Meteo`);
+    }
     els.place.textContent = state.label;
     if (els.note) els.note.textContent = state.example
       ? "Example location — search for another place below."
       : `Showing data for ${state.label}.`;
-    els.meta.textContent = `${state.label} · ${fmtLat(state.lat)}, ${fmtLon(state.lon)} · ` +
-      `Annual ${cfg.agg} ${cfg.label.toLowerCase()} · ${years[0]}–${years[years.length - 1]} · ` +
-      `${cfg.unit} · NASA POWER`;
   }
+
+  function setMeta(text) { if (els.meta) els.meta.textContent = text; }
 
   function showSkeleton(text) {
     if (!els.skeleton) return;
@@ -194,32 +297,45 @@
     els.skeleton.textContent = text;
   }
 
-  function chartSVG(years, values, cfg) {
-    const W = 620, H = 260, PL = 52, PR = 16, PT = 16, PB = 36;
-    const min = Math.min(...values), max = Math.max(...values);
+  function shortDate(iso) {
+    const m = String(iso).slice(5, 7);
+    const d = String(iso).slice(8, 10);
+    return `${Number(m)}/${Number(d)}`;
+  }
+
+  function chartSVG(labels, values, extra, cfg, ariaSummary) {
+    const W = 620, H = 260, PL = 56, PR = 16, PT = 16, PB = 36;
+    const all = values.concat(...extra.map((e) => e.values));
+    const min = Math.min(...all), max = Math.max(...all);
     const span = (max - min) || 1;
     const lo = min - span * 0.15, hi = max + span * 0.15;
-    const n = years.length;
+    const n = values.length;
     const x = (i) => PL + (n === 1 ? (W - PL - PR) / 2 : (i * (W - PL - PR)) / (n - 1));
     const y = (v) => PT + (1 - (v - lo) / (hi - lo)) * (H - PT - PB);
-    const line = values.map((v, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
+    const pathOf = (vals) => vals.map((v, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
+    const main = pathOf(values);
+    const faintPaths = extra.map((e) =>
+      `<path d="${pathOf(e.values)}" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.45" stroke-dasharray="4 3"/>`
+    ).join("");
     const dots = values.map((v, i) =>
-      `<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="3" fill="currentColor"><title>${years[i]}: ${v.toFixed(cfg.decimals)} ${cfg.unit}</title></circle>`
+      `<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="3" fill="currentColor"><title>${escapeHTML(labels[i])}: ${v.toFixed(cfg.decimals)} ${cfg.unit}</title></circle>`
     ).join("");
-    // Year ticks: every 5th year plus the final year, never fabricated.
-    const ticks = years.map((yr, i) => ({ yr, i })).filter(({ yr, i }) => yr % 5 === 0 || i === n - 1);
-    const labels = ticks.map(({ yr, i }) =>
-      `<text x="${x(i).toFixed(1)}" y="${H - 12}" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.55" font-family="monospace">${yr}</text>`
+    // Ticks: annual years -> every 5th + last; daily -> ~6 evenly.
+    const isYear = /^\d{4}$/.test(labels[0] || "");
+    const tickIdx = labels.map((l, i) => i).filter((i) =>
+      isYear ? (Number(labels[i]) % 5 === 0 || i === n - 1) : (i % Math.ceil(n / 6) === 0 || i === n - 1));
+    const ticks = tickIdx.map((i) =>
+      `<text x="${x(i).toFixed(1)}" y="${H - 12}" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.55" font-family="monospace">${escapeHTML(labels[i])}</text>`
     ).join("");
-    const summary = `${years[0]} ${values[0].toFixed(cfg.decimals)}, ${years[n - 1]} ${values[n - 1].toFixed(cfg.decimals)} ${cfg.unit}`;
-    return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Annual ${cfg.agg} ${cfg.label} for ${escapeHTML(state.label)}, ${years[0]} to ${years[n - 1]}. First year ${escapeHTML(summary.split(",")[0])}, last year ${escapeHTML(summary.split(",")[1] || "")}.">
+    return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${escapeHTML(ariaSummary)}">
       <line x1="${PL}" y1="${PT}" x2="${PL}" y2="${H - PB}" stroke="currentColor" opacity="0.25"/>
       <line x1="${PL}" y1="${H - PB}" x2="${W - PR}" y2="${H - PB}" stroke="currentColor" opacity="0.25"/>
       <text x="${PL - 8}" y="${y(max).toFixed(1) + 4}" text-anchor="end" font-size="11" fill="currentColor" opacity="0.6" font-family="monospace">${max.toFixed(cfg.decimals)}</text>
       <text x="${PL - 8}" y="${y(min).toFixed(1) + 4}" text-anchor="end" font-size="11" fill="currentColor" opacity="0.6" font-family="monospace">${min.toFixed(cfg.decimals)}</text>
-      <path d="${line} L${x(n - 1).toFixed(1)},${H - PB} L${x(0).toFixed(1)},${H - PB} Z" fill="currentColor" opacity="0.08"/>
-      <path d="${line}" fill="none" stroke="currentColor" stroke-width="2"/>
-      ${dots}${labels}
+      <path d="${main} L${x(n - 1).toFixed(1)},${H - PB} L${x(0).toFixed(1)},${H - PB} Z" fill="currentColor" opacity="0.08"/>
+      ${faintPaths}
+      <path d="${main}" fill="none" stroke="currentColor" stroke-width="2"/>
+      ${dots}${ticks}
     </svg>`;
   }
 
