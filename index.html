@@ -3,24 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Arkraj Biswas — Environmental & Climate Researcher</title>
-  <meta name="description" content="Arkraj Biswas — Environmental & Climate Researcher. Work across climate, urban environments, GIS, remote sensing, forestry, agriculture and environmental policy." />
+  <title>Arkraj Biswas | Environmental & Climate Researcher</title>
+  <meta name="description" content="Arkraj Biswas is an Environmental & Climate Researcher working on urban forestry, urban heat, GIS and remote sensing, sustainability and environmental policy." />
   <meta name="author" content="Arkraj Biswas" />
   <meta name="theme-color" content="#1f2521" />
   <link rel="canonical" href="https://arkrajbiswas.com/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Arkraj Biswas" />
-  <meta property="og:title" content="Arkraj Biswas — Environmental & Climate Researcher" />
+  <meta property="og:title" content="Arkraj Biswas | Environmental & Climate Researcher" />
   <meta property="og:description" content="Research across climate, urban environments, GIS, forestry, agriculture and environmental policy." />
   <meta property="og:url" content="https://arkrajbiswas.com/" />
-  <meta name="twitter:card" content="summary" />
+  <meta property="og:image" content="https://arkrajbiswas.com/assets/fieldwork/IMG-20260612-WA0001.jpg" />
+  <meta property="og:image:alt" content="Arkraj Biswas during fieldwork" />
+  <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%2333573f'/><path d='M6 22c4-3 7 1 11-2s6 0 7-3' stroke='%23faf8f2' fill='none' stroke-width='2' stroke-linecap='round'/><circle cx='22' cy='10' r='2.2' fill='%23faf8f2'/></svg>" />
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"Person","name":"Arkraj Biswas","url":"https://arkrajbiswas.com/","image":"https://arkrajbiswas.com/assets/fieldwork/IMG-20260612-WA0001.jpg","description":"Environmental & Climate Researcher — climate, sustainability, GIS, remote sensing, forestry, agriculture, environmental policy.","sameAs":["https://github.com/Arkraj7/arkrajbiswas"]}
+  {"@context":"https://schema.org","@type":"Person","name":"Arkraj Biswas","url":"https://arkrajbiswas.com/","image":"https://arkrajbiswas.com/assets/fieldwork/IMG-20260612-WA0001.jpg","jobTitle":"Environmental & Climate Researcher","description":"Environmental & Climate Researcher — climate, sustainability, GIS, remote sensing, forestry, agriculture, environmental policy.","sameAs":["https://in.linkedin.com/in/arkraj-biswas-kugel","https://github.com/Arkraj7"]}
   </script>
 </head>
 <body>
@@ -266,12 +268,14 @@
             <div class="lens-skeleton" id="lensSkeleton">Climate chart loads here — scroll to begin.</div>
             <div id="lensChart" hidden></div>
           </div>
-          <p class="meta" id="lensMeta" style="margin-top:14px">NASA POWER · long-term monthly climatological mean</p>
+          <p class="meta" id="lensMeta" style="margin-top:14px">NASA POWER · annual historical series, 2001 onward</p>
+          <p class="small muted" style="margin:8px 0 0">These values are climate-data estimates, not direct observations from a local weather station.</p>
           <div class="pulse-strip" id="pulseStrip" hidden>
             <p class="meta">Biodiversity Pulse</p>
-            <p style="margin:6px 0 4px"><strong id="pulseCount">—</strong> <span class="muted" id="pulseText">public occurrence records near these coordinates.</span></p>
-            <p class="small muted" id="pulseExamples" style="margin:0 0 6px"></p>
-            <p class="meta">Public observations from GBIF — not Arkraj Biswas research data.</p>
+            <p style="margin:6px 0 4px"><strong id="pulseCount">—</strong> <span class="muted">public occurrence records · </span><strong id="pulseTaxa">—</strong></p>
+            <p class="small muted" id="pulseMeta" style="margin:0"></p>
+            <p class="small muted" id="pulseExamples" style="margin:6px 0"></p>
+            <p class="meta">Public biodiversity observations from GBIF. These records are not Arkraj Biswas's research data.</p>
           </div>
         </div>
       </div>

@@ -223,7 +223,7 @@ function bindNoteLinks(scope) {
   });
 }
 
-/* ---------- Research archive ---------- */
+/* ---------- Research archive (static rows enhanced by JS) ---------- */
 let activeFilter = "all";
 let query = "";
 
@@ -244,14 +244,14 @@ function initResearchPage() {
     b.addEventListener("click", () => {
       activeFilter = b.dataset.filter;
       document.querySelectorAll(".filter-btn").forEach((x) => x.classList.toggle("active", x === b));
-      renderResearch();
+      applyArchiveFilter();
     })
   );
 
   const search = document.getElementById("searchInput");
   if (search) search.addEventListener("input", () => {
     query = search.value.toLowerCase().trim();
-    renderResearch();
+    applyArchiveFilter();
   });
 
   const reset = document.getElementById("resetFilters");
@@ -260,43 +260,22 @@ function initResearchPage() {
     if (search) search.value = "";
     document.querySelectorAll(".filter-btn").forEach((x) =>
       x.classList.toggle("active", x.dataset.filter === "all"));
-    renderResearch();
+    applyArchiveFilter();
   });
 
-  renderResearch();
+  bindArchiveRows(grid);
+  applyArchiveFilter();
 }
 
-function filteredPosts() {
-  return POSTS.filter((p) => {
-    const okCat = activeFilter === "all" || p.category === activeFilter;
-    const hay = (p.title + " " + p.summary + " " + (p.methods || "") + " " + (p.location || "")).toLowerCase();
-    return okCat && (!query || hay.includes(query));
-  });
+function rowMatches(row) {
+  const okCat = activeFilter === "all" || row.dataset.cat === activeFilter;
+  const hay = ((row.dataset.text || "") + " " + (row.textContent || "")).toLowerCase();
+  return okCat && (!query || hay.includes(query));
 }
 
-const GROUPS = [
-  { key: "current", label: "Current research" },
-  { key: "projects", label: "Projects" },
-  { key: "writing", label: "Publications & writing" }
-];
-
-function rowHTML(p) {
-  return `
-    <article class="index-row reveal visible" data-id="${esc(p.id)}" tabindex="0" role="button" aria-label="Open research entry: ${esc(p.title)}">
-      <span class="i-year">${esc(p.year || p.status || "")}</span>
-      <span>
-        <h3>${esc(p.title)}${p.status === "Ongoing" ? ' <span class="ongoing-flag">Ongoing</span>' : ""}</h3>
-        ${metaLine(p) ? `<p class="i-sub">${esc(metaLine(p))}</p>` : ""}
-      </span>
-      <span class="i-side">
-        <span class="tag tag-${esc(p.category)}">${esc(p.category)}</span>
-        <span class="i-open">Open <span class="arr">→</span></span>
-      </span>
-    </article>`;
-}
-
-function bindRows(grid) {
-  grid.querySelectorAll(".index-row").forEach((row) => {
+function bindArchiveRows(grid) {
+  grid.querySelectorAll(".index-row[data-id]").forEach((row) => {
+    row.classList.add("reveal", "visible");
     row.addEventListener("click", () => openModal(row.dataset.id));
     row.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openModal(row.dataset.id); }
@@ -304,29 +283,36 @@ function bindRows(grid) {
   });
 }
 
-function renderResearch() {
+function applyArchiveFilter() {
   const grid = document.getElementById("researchGrid");
   if (!grid) return;
   const empty = document.getElementById("emptyState");
   const count = document.getElementById("resultCount");
   const archiveCount = document.getElementById("archiveCount");
-  const list = filteredPosts();
-
+  const rows = Array.from(grid.querySelectorAll(".index-row[data-id]"));
+  let shown = 0;
+  rows.forEach((row) => {
+    const vis = rowMatches(row);
+    row.hidden = !vis;
+    if (vis) shown++;
+  });
+  grid.querySelectorAll("[data-group-list]").forEach((list) => {
+    const anyVisible = Array.from(list.querySelectorAll(".index-row")).some((r) => !r.hidden);
+    list.hidden = !anyVisible;
+    const head = grid.querySelector(`[data-group-head="${list.dataset.groupList}"]`);
+    if (head) {
+      head.hidden = !anyVisible;
+      const n = list.querySelectorAll(".index-row:not([hidden])").length;
+      const badge = head.querySelector("[data-group-count]");
+      if (badge) badge.textContent = `${n} ${n === 1 ? "entry" : "entries"}`;
+    }
+  });
   if (count) {
     const label = activeFilter === "all" ? "across all themes" : `in ${activeFilter}`;
-    count.textContent = `Showing ${list.length} of ${POSTS.length} entries ${label}.`;
+    count.textContent = `Showing ${shown} of ${rows.length} entries ${label}.`;
   }
-  if (archiveCount) archiveCount.textContent = `${POSTS.length} verified entries`;
-  if (empty) empty.hidden = list.length > 0;
-
-  grid.innerHTML = GROUPS.map((g) => {
-    const items = list.filter((p) => p.group === g.key);
-    if (!items.length) return "";
-    return `<div class="group-head"><h2>${g.label}</h2><span class="meta">${items.length} ${items.length === 1 ? "entry" : "entries"}</span></div>
-      <div class="index-list">${items.map(rowHTML).join("")}</div>`;
-  }).join("");
-
-  bindRows(grid);
+  if (archiveCount) archiveCount.textContent = `${rows.length} verified entries`;
+  if (empty) empty.hidden = shown > 0;
 }
 
 /* ---------- Modal ---------- */
