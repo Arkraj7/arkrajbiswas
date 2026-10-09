@@ -12,6 +12,7 @@
   const CACHE_MS = 10 * 60 * 1000;
 
   let els = {};
+  let lastSnapshot = null;
 
   function init() {
     els = {
@@ -30,11 +31,19 @@
       mHumidity: document.getElementById("mHumidity"),
       mWind: document.getElementById("mWind"),
       mUv: document.getElementById("mUv"),
-      mPm: document.getElementById("mPm")
+      mPm: document.getElementById("mPm"),
+      chart: document.getElementById("earthChart"),
+      dlPng: document.getElementById("earthDlPng"),
+      dlForecast: document.getElementById("earthDlForecast"),
+      dlSnap: document.getElementById("earthDlSnap")
     };
     if (!els.place || !els.locate) return; // section absent on other pages
 
     els.locate.addEventListener("click", onLocate);
+    if (els.dlPng) els.dlPng.addEventListener("click", exportChartPNG);
+    if (els.dlForecast) els.dlForecast.addEventListener("click", exportForecastCSV);
+    if (els.dlSnap) els.dlSnap.addEventListener("click", exportSnapshotCSV);
+    updateDlButtons();
     els.form.addEventListener("submit", (e) => {
       e.preventDefault();
       searchPlaces(els.input.value.trim());
@@ -120,6 +129,8 @@
 
   async function load(lat, lon, label) {
     const token = ++requestSeq;
+    lastSnapshot = null;
+    updateDlButtons();
     const key = `${lat.toFixed(2)},${lon.toFixed(2)}`;
     const hit = cache.get(key);
     if (hit && Date.now() - hit.at < CACHE_MS) {
@@ -197,6 +208,60 @@
         </div>`;
       }).join("");
     }
+
+    lastSnapshot = {
+      label, lat, lon, model: model || "Open-Meteo",
+      time: c.time || "",
+      temp: num(c.temperature_2m), feels: num(c.apparent_temperature),
+      humidity: num(c.relative_humidity_2m), wind: num(c.wind_speed_10m),
+      precipProb: (hi >= 0 && h.precipitation_probability) ? num(h.precipitation_probability[hi]) : null,
+      uv: (hi >= 0 && h.uv_index) ? num(h.uv_index[hi]) : null,
+      pm25: num((aq && aq.current ? aq.current.pm2_5 : null)),
+      aqi: num((aq && aq.current ? aq.current.us_aqi : null)),
+      cond: weatherLabel(c.weather_code),
+      days: (d.time || []).map((day, i) => ({
+        date: day,
+        tmax: num((d.temperature_2m_max || [])[i]),
+        tmin: num((d.temperature_2m_min || [])[i]),
+        pp: num((d.precipitation_probability_max || [])[i]),
+        code: (d.weather_code || [])[i],
+        cond: weatherLabel((d.weather_code || [])[i])
+      }))
+    };
+    renderMiniChart();
+    updateDlButtons();
+  }
+
+  function updateDlButtons() {
+    const on = !!lastSnapshot;
+    [els.dlPng, els.dlForecast, els.dlSnap].forEach((b) => { if (b) b.disabled = !on; });
+  }
+
+  /* ----- Compact 7-day range chart (from the held forecast) ----- */
+  function renderMiniChart() {
+    if (!els.chart || !lastSnapshot) return;
+    const days = lastSnapshot.days.filter((x) => x.tmax !== null && x.tmin !== null);
+    if (!days.length) { els.chart.innerHTML = ""; return; }
+    const W = 620, H = 150, PL = 44, PR = 12, PT = 12, PB = 30;
+    const min = Math.min(...days.map((x) => x.tmin));
+    const max = Math.max(...days.map((x) => x.tmax));
+    const span = (max - min) || 1;
+    const lo = min - span * 0.2, hi = max + span * 0.2;
+    const n = days.length;
+    const X = (i) => PL + (n === 1 ? (W - PL - PR) / 2 : (i * (W - PL - PR)) / (n - 1));
+    const Y = (v) => PT + (1 - (v - lo) / (hi - lo)) * (H - PT - PB);
+    const bars = days.map((x, i) => {
+      const cx = X(i).toFixed(1);
+      return `<line x1="${cx}" y1="${Y(x.tmax).toFixed(1)}" x2="${cx}" y2="${Y(x.tmin).toFixed(1)}" stroke="currentColor" stroke-width="5" stroke-linecap="round" opacity="0.55">` +
+        `<title>${escapeHTML(x.date)}: ${Math.round(x.tmin)}° to ${Math.round(x.tmax)}°C${x.pp !== null ? `, ${Math.round(x.pp)}% precipitation` : ""}</title></line>` +
+        `<circle cx="${cx}" cy="${Y(x.tmax).toFixed(1)}" r="3.4" fill="currentColor"/>`;
+    }).join("");
+    const dow = days.map((x, i) =>
+      `<text x="${X(i).toFixed(1)}" y="${H - 8}" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.55" font-family="monospace">${i === 0 ? "Today" : weekday(x.date)}</text>`
+    ).join("");
+    els.chart.innerHTML =
+      `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Seven-day forecast temperature range for ${escapeHTML(lastSnapshot.label)}">` +
+      `<line x1="${PL}" y1="${H - PB}" x2="${W - PR}" y2="${H - PB}" stroke="currentColor" opacity="0.25"/>${bars}${dow}</svg>`;
   }
 
   function setMeta(el, text) { if (el) el.textContent = text; }
@@ -204,6 +269,159 @@
   function fmtLon(v) { return `${Math.abs(v).toFixed(2)}°${v >= 0 ? "E" : "W"}`; }
   function say(text) { if (els.status) els.status.textContent = text; }
   function setBusy(b) { if (els.locate) els.locate.disabled = b; }
+
+  /* ----- Exports (from the held forecast response — no extra calls) ----- */
+  function placeSlug(s) {
+    return String(s).split(",")[0].toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "place";
+  }
+
+  function downloadBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+  }
+
+  function csvCell(v) {
+    const s = v === null || v === undefined ? "" : String(v);
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  }
+
+  function fmtVal(v, digits) {
+    return (typeof v === "number" && Number.isFinite(v)) ? v.toFixed(digits) : "";
+  }
+
+  function exportSnapshotCSV() {
+    if (!lastSnapshot) return;
+    const s = lastSnapshot;
+    const lines = [
+      "# Earth / Now snapshot export (current conditions, UTF-8)",
+      `# Place,${s.label}`,
+      `# Latitude,${s.lat}`,
+      `# Longitude,${s.lon}`,
+      `# Data timestamp,${s.time}`,
+      `# Model,${s.model}`,
+      `# Source,Open-Meteo forecast + CAMS air quality`,
+      `# Note,Forecast values for the selected place; not station observations`,
+      ["metric", "value", "unit"].map(csvCell).join(","),
+      ["condition", s.cond, ""].map(csvCell).join(","),
+      ["temperature", fmtVal(s.temp, 1), "°C"].map(csvCell).join(","),
+      ["apparent_temperature", fmtVal(s.feels, 1), "°C"].map(csvCell).join(","),
+      ["relative_humidity", s.humidity === null ? "" : Math.round(s.humidity), "%"].map(csvCell).join(","),
+      ["wind_speed_10m", fmtVal(s.wind, 1), "km/h"].map(csvCell).join(","),
+      ["precipitation_probability", s.precipProb === null ? "" : Math.round(s.precipProb), "%"].map(csvCell).join(","),
+      ["uv_index", fmtVal(s.uv, 1), ""].map(csvCell).join(","),
+      ["pm2_5", fmtVal(s.pm25, 1), "µg/m³"].map(csvCell).join(","),
+      ["us_aqi", s.aqi === null ? "" : Math.round(s.aqi), ""].map(csvCell).join(",")
+    ];
+    downloadBlob(new Blob(["\uFEFF" + lines.join("\n")], { type: "text/csv;charset=utf-8" }),
+      `earth-now-${placeSlug(s.label)}-snapshot.csv`);
+  }
+
+  function exportForecastCSV() {
+    if (!lastSnapshot) return;
+    const s = lastSnapshot;
+    const lines = [
+      "# Earth / Now 7-day forecast export (UTF-8)",
+      `# Place,${s.label}`,
+      `# Latitude,${s.lat}`,
+      `# Longitude,${s.lon}`,
+      `# Model,${s.model}`,
+      `# Source,Open-Meteo forecast`,
+      `# Note,Forecast values for the selected place; not measured data or station observations`,
+      ["date", "tmin_c", "tmax_c", "precipitation_probability_pct", "condition"].map(csvCell).join(",")
+    ];
+    s.days.forEach((d) => {
+      lines.push([
+        d.date,
+        d.tmin === null ? "" : Math.round(d.tmin),
+        d.tmax === null ? "" : Math.round(d.tmax),
+        d.pp === null ? "" : Math.round(d.pp),
+        d.cond || ""
+      ].map(csvCell).join(","));
+    });
+    downloadBlob(new Blob(["\uFEFF" + lines.join("\n")], { type: "text/csv;charset=utf-8" }),
+      `earth-now-${placeSlug(s.label)}-forecast-7day.csv`);
+  }
+
+  function xmlEsc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function exportChartPNG() {
+    if (!lastSnapshot) return;
+    const s = lastSnapshot;
+    const days = s.days.filter((x) => x.tmax !== null && x.tmin !== null);
+    if (!days.length) { say("No forecast values available to export."); return; }
+    const W = 1600, H = 900, PL = 170, PR = 90, PT = 250, PB = 210;
+    const min = Math.min(...days.map((x) => x.tmin));
+    const max = Math.max(...days.map((x) => x.tmax));
+    const span = (max - min) || 1;
+    const lo = min - span * 0.15, hi = max + span * 0.15;
+    const n = days.length;
+    const X = (i) => PL + (n === 1 ? (W - PL - PR) / 2 : (i * (W - PL - PR)) / (n - 1));
+    const Y = (v) => PT + (1 - (v - lo) / (hi - lo)) * (H - PT - PB);
+    let bars = "", labels = "";
+    days.forEach((x, i) => {
+      const cx = X(i).toFixed(1);
+      bars += `<line x1="${cx}" y1="${Y(x.tmax).toFixed(1)}" x2="${cx}" y2="${Y(x.tmin).toFixed(1)}" stroke="#33573F" stroke-width="14" stroke-linecap="round" opacity="0.65"/>` +
+        `<circle cx="${cx}" cy="${Y(x.tmax).toFixed(1)}" r="9" fill="#33573F"/>` +
+        `<text x="${cx}" y="${(Y(x.tmax) - 22).toFixed(1)}" text-anchor="middle" font-size="26" fill="#1F2521" font-family="monospace">${Math.round(x.tmax)}°</text>`;
+      labels += `<text x="${cx}" y="${H - 168}" text-anchor="middle" font-size="22" fill="#5a635c" font-family="monospace">${i === 0 ? "Today" : xmlEsc(weekday(x.date))}</text>`;
+    });
+    const svg =
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">` +
+      `<rect width="${W}" height="${H}" fill="#FAF8F2"/>` +
+      `<text x="90" y="80" font-size="26" letter-spacing="4" fill="#33573F" font-family="monospace">EARTH / NOW · ARKRAJ BISWAS</text>` +
+      `<text x="90" y="142" font-size="50" fill="#1F2521" font-family="Georgia, serif">7-day forecast: daily min–max temperature</text>` +
+      `<text x="90" y="192" font-size="30" fill="#49534C" font-family="Georgia, serif" font-style="italic">${xmlEsc(s.label)} · ${xmlEsc(fmtLat(s.lat))}, ${xmlEsc(fmtLon(s.lon))}</text>` +
+      `<line x1="${PL}" y1="${H - PB}" x2="${W - PR}" y2="${H - PB}" stroke="#1F2521" stroke-opacity="0.3" stroke-width="2"/>` +
+      bars + labels +
+      `<text x="90" y="${H - 92}" font-size="24" fill="#49534C" font-family="Arial, sans-serif">°C · ${xmlEsc(s.model)} via Open-Meteo · Air quality: CAMS (values shown where returned)</text>` +
+      `<text x="90" y="${H - 58}" font-size="22" fill="#83877F" font-family="Arial, sans-serif">Forecast values for the selected place, not station observations. Exported ${new Date().toISOString().slice(0, 10)}.</text>` +
+      `</svg>`;
+    svgToPng(svg, W, H, `earth-now-${placeSlug(s.label)}-forecast-7day.png`)
+      .catch(() => say("Chart export failed — please try again."));
+  }
+
+  function svgToPng(svgStr, w, h, filename) {
+    return new Promise((resolve, reject) => {
+      let url = null;
+      try {
+        const blob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
+        url = URL.createObjectURL(blob);
+        const img = new Image();
+        img.onload = () => {
+          try {
+            const c = document.createElement("canvas");
+            c.width = w; c.height = h;
+            const ctx = c.getContext("2d");
+            ctx.fillStyle = "#FAF8F2";
+            ctx.fillRect(0, 0, w, h);
+            ctx.drawImage(img, 0, 0, w, h);
+            URL.revokeObjectURL(url);
+            url = null;
+            c.toBlob((b) => {
+              if (b) { downloadBlob(b, filename); resolve(true); }
+              else reject(new Error("encode failed"));
+            }, "image/png");
+          } catch (err) {
+            if (url) URL.revokeObjectURL(url);
+            reject(err);
+          }
+        };
+        img.onerror = () => { if (url) URL.revokeObjectURL(url); reject(new Error("render failed")); };
+        img.src = url;
+      } catch (err) {
+        if (url) URL.revokeObjectURL(url);
+        reject(err);
+      }
+    });
+  }
 
   /* ----- Small factual mappings (standard scales) ----- */
   function weatherLabel(code) {
@@ -244,6 +462,7 @@
 
   /* ----- Helpers ----- */
   function num(v) {
+    if (v === null || v === undefined || v === "") return null;
     const n = Number(v);
     return Number.isFinite(n) ? n : null;
   }

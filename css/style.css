@@ -232,6 +232,17 @@ body.menu-open .scrim { opacity: 1; pointer-events: auto; }
 }
 .slide-btn:hover { border-color: var(--accent); color: var(--ink); }
 
+/* Download buttons (Climate Lens + Earth / Now exports) */
+.dl-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.dl-btn {
+  border: 1px solid var(--line); background: transparent; color: var(--ink-soft);
+  border-radius: 999px; padding: 8px 16px; cursor: pointer;
+  font-family: inherit; font-size: 0.84rem; font-weight: 600;
+  transition: border-color 0.25s, color 0.25s, opacity 0.25s;
+}
+.dl-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--ink); }
+.dl-btn:disabled { opacity: 0.45; cursor: default; }
+
 /* Static editorial photograph frame (profile, bio) */
 .photo-frame {
   aspect-ratio: 4 / 5; overflow: hidden;
