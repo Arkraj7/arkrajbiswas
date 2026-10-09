@@ -275,6 +275,20 @@ body.menu-open .scrim { opacity: 1; pointer-events: auto; }
 .field-grid img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; transition: transform 0.6s ease; }
 .field-grid figure:hover img { transform: scale(1.025); }
 
+/* Thumbnail research row (home features) */
+.index-row .row-thumb { width: 96px; height: 120px; object-fit: cover; object-position: center; border-radius: 6px; border: 1px solid var(--line); flex: none; }
+.index-row.thumb-row { grid-template-columns: 110px 1fr auto; align-items: center; }
+@media (max-width: 900px) {
+  .index-row .row-thumb { width: 100%; height: 180px; }
+  .index-row.thumb-row { grid-template-columns: 1fr; }
+}
+
+/* Research figures (white-background charts stay legible in both themes) */
+.fig-block { margin: 34px 0 0; max-width: 920px; }
+.fig-block:first-of-type { margin-top: 26px; }
+.fig-frame { border: 1px solid var(--line); border-radius: 4px; background: #fff; padding: 10px; }
+.fig-frame img { width: 100%; height: auto; display: block; }
+
 /* Breadcrumb (project pages) */
 .breadcrumb { padding: 26px 0 0; font-size: 0.88rem; color: var(--muted); }
 .breadcrumb a { color: var(--ink-soft); text-decoration: none; }
@@ -335,6 +349,7 @@ body.menu-open .scrim { opacity: 1; pointer-events: auto; }
 .tag-climate { border-color: color-mix(in srgb, var(--accent) 45%, transparent); color: var(--accent); }
 .tag-environment { background: var(--sage-wash); border-color: transparent; color: var(--accent); }
 .tag-agriculture { border-color: color-mix(in srgb, var(--earth) 55%, transparent); color: var(--earth); }
+.tag-justice { background: var(--sage-wash); border-color: color-mix(in srgb, var(--accent) 45%, transparent); color: var(--accent); }
 
 /* Methods band — typography only */
 .methods-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; border-top: 1px solid var(--line); padding-top: 32px; }

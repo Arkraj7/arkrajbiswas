@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=11" />
+  <link rel="stylesheet" href="css/style.css?v=12" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%2333573f'/><g stroke='%23faf8f2' stroke-width='2.4' fill='none' stroke-linecap='round'><path d='M16 7c-2.2 3.8-2.2 8.4 0 12 2.2-3.6 2.2-8.2 0-12z'/><path d='M7 23.5c4.5 3.5 13.5 3.5 18 0'/></g></svg>" />
 </head>
 <body>
@@ -73,7 +73,7 @@
       <h1 class="reveal">Research <em>archive.</em></h1>
       <p class="lede reveal">Verified work only — current research, projects and writing. Where only a title is confirmed so far, the entry says so.</p>
       <div class="archive-bar reveal">
-        <span class="meta" id="archiveCount">9 entries</span>
+        <span class="meta" id="archiveCount">10 entries</span>
         <span class="meta">Current · Projects · Publications &amp; writing</span>
       </div>
       <div class="research-controls reveal">
@@ -82,6 +82,7 @@
           <button class="filter-btn" data-filter="climate" id="filter-climate">Climate</button>
           <button class="filter-btn" data-filter="environment" id="filter-environment">Environment</button>
           <button class="filter-btn" data-filter="agriculture" id="filter-agriculture">Agriculture</button>
+          <button class="filter-btn" data-filter="justice" id="filter-justice">Justice</button>
         </div>
         <label class="search-box">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
@@ -128,8 +129,16 @@
         </a>
       </div>
       <div id="researchGrid">
-        <div class="group-head" data-group-head="current"><h2>Current research</h2><span class="meta" data-group-count>1 entry</span></div>
+        <div class="group-head" data-group-head="current"><h2>Current research</h2><span class="meta" data-group-count>2 entries</span></div>
         <div class="index-list" data-group-list="current">
+          <article class="index-row" data-id="bio-inequity" data-cat="justice" data-text="systemic bio-inequity biodiversity poverty paradox india environmental justice conservation policy ecological wealth independent research note" tabindex="0" role="button" aria-label="Open research entry: Systemic Bio-Inequity in India">
+            <span class="i-year">Ongoing inquiry</span>
+            <span>
+              <h3>Systemic Bio-Inequity in India: Exploring the Biodiversity–Poverty Paradox</h3>
+              <p class="i-sub">Independent Research Note · Environmental justice</p>
+            </span>
+            <span class="i-side"><span class="tag tag-justice">justice</span><span class="i-open">Open <span class="arr">→</span></span></span>
+          </article>
           <article class="index-row" data-id="urban-forestry-framework" data-cat="environment" data-text="strategic framework human-centric urban forestry socio-economic psychological governance nagar van yojana gis audits surveys well-being assessments monitoring ongoing" tabindex="0" role="button" aria-label="Open research entry: Strategic Framework for Human-Centric Urban Forestry">
             <span class="i-year">Ongoing</span>
             <span>
@@ -273,6 +282,6 @@
       </div>
     </div>
   </footer>
-  <script src="js/main.js?v=11"></script>
+  <script src="js/main.js?v=12"></script>
 </body>
 </html>

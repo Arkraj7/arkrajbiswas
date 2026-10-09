@@ -32,6 +32,17 @@ const PLACEHOLDER_BODY = "<p>Detailed project information will be added here.</p
 
 const POSTS = [
   {
+    id: "bio-inequity",
+    group: "current",
+    category: "justice",
+    title: "Systemic Bio-Inequity in India: Exploring the Biodiversity–Poverty Paradox",
+    summary: "Independent India-focused inquiry into biodiversity, poverty and the distribution of benefits from nature.",
+    meta: "Ongoing inquiry · Environmental justice",
+    year: "", location: "India", methods: "", status: "Ongoing inquiry", kind: "Independent Research Note",
+    overview: "An independent inquiry into why ecological wealth can exist alongside poverty — and what that gap means for conservation finance, governance and policy in India.",
+    page: "projects/bio-inequity.html"
+  },
+  {
     id: "urban-forestry-framework",
     group: "current",
     category: "environment",
@@ -226,7 +237,7 @@ function initResearchPage() {
 
   if (location.hash.startsWith("#filter-")) {
     const f = location.hash.replace("#filter-", "");
-    if (["all", "climate", "environment", "agriculture"].includes(f)) activeFilter = f;
+    if (["all", "climate", "environment", "agriculture", "justice"].includes(f)) activeFilter = f;
     document.querySelectorAll(".filter-btn").forEach((b) =>
       b.classList.toggle("active", b.dataset.filter === activeFilter)
     );
@@ -339,6 +350,7 @@ function entryBody(p) {
   if (p.objectives) h += `<h4>Objectives</h4><p>${esc(p.objectives)}</p>`;
   if (p.methods) h += `<h4>Methods</h4><p>${esc(p.methods)}</p>`;
   if (p.role) h += `<h4>Role</h4><p>${esc(p.role)}</p>`;
+  if (p.page) h += `<p><a class="text-link" href="${esc(p.page)}">Explore the full inquiry →</a></p>`;
   return h || PLACEHOLDER_BODY;
 }
 
