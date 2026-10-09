@@ -53,7 +53,7 @@
         state.variable = b.dataset.var;
         document.querySelectorAll(".var-btn").forEach((x) =>
           x.setAttribute("aria-pressed", x === b ? "true" : "false"));
-        renderFromCache();
+        load(); // fetches the needed model on first use, else instant
       })
     );
     document.querySelectorAll(".view-btn").forEach((b) =>
@@ -61,7 +61,7 @@
         state.view = b.dataset.view;
         document.querySelectorAll(".view-btn").forEach((x) =>
           x.setAttribute("aria-pressed", x === b ? "true" : "false"));
-        renderFromCache();
+        load();
       })
     );
 
@@ -131,22 +131,29 @@
     return { signal: c.signal, done: () => clearTimeout(t) };
   }
 
-  function archiveUrl(model) {
+  /* One minimal request per model, carrying only the variables the
+     selected chart needs (temperature brings max/min companions). */
+  function archiveUrl(model, dailyVars) {
     const today = new Date().toISOString().slice(0, 10);
     return `https://archive-api.open-meteo.com/v1/archive?latitude=${state.lat}&longitude=${state.lon}` +
       `&start_date=${START_YEAR}-01-01&end_date=${today}` +
-      `&daily=temperature_2m_max,temperature_2m_min,temperature_2m_mean,precipitation_sum,relative_humidity_2m_mean,shortwave_radiation_sum` +
+      `&daily=${dailyVars.join(",")}` +
       `&timezone=auto&models=${model}`;
   }
 
-  async function fetchModel(model) {
+  async function fetchModel(model, dailyVars) {
     const gate = withTimeout(FETCH_TIMEOUT_MS);
     try {
-      const res = await fetch(archiveUrl(model), { signal: gate.signal });
+      const res = await fetch(archiveUrl(model, dailyVars), { signal: gate.signal });
       if (!res.ok) throw new Error(`${model} failed`);
       const data = await res.json();
       const daily = data && data.daily;
       if (!daily || !Array.isArray(daily.time) || !daily.time.length) throw new Error(`${model} empty`);
+      for (const v of dailyVars) {
+        if (!Array.isArray(daily[v]) || daily[v].length !== daily.time.length) {
+          throw new Error(`${model} missing ${v}`);
+        }
+      }
       return daily;
     } finally {
       gate.done();
@@ -168,19 +175,24 @@
       const key = `${state.lat.toFixed(2)},${state.lon.toFixed(2)}`;
       let entry = cache.get(key);
       if (!entry) {
-        // Both providers in parallel; either may fail independently.
-        const [land, era5] = await Promise.allSettled([fetchModel("era5_land"), fetchModel("era5")]);
-        if (token !== requestSeq) return;
-        entry = {
-          era5_land: land.status === "fulfilled" ? land.value : null,
-          era5: era5.status === "fulfilled" ? era5.value : null
-        };
-        if (!entry.era5_land && !entry.era5) {
-          const timedOut = [land, era5].some((r) => r.status === "rejected" && r.reason && r.reason.name === "AbortError");
-          throw { name: timedOut ? "AbortError" : "FetchError" };
-        }
+        entry = { era5_land: undefined, era5: undefined };
         cache.set(key, entry);
       }
+      // Fetch only the provider the selected variable needs, and only
+      // once per session; a recorded null means it already failed.
+      const need = VAR_MODEL[state.variable];
+      if (entry[need] === undefined) {
+        try {
+          entry[need] = await fetchModel(need, varsFor(state.variable));
+        } catch (e) {
+          if (e && e.name === "AbortError") throw e;
+          entry[need] = null;
+        }
+      }
+        if (token !== requestSeq) return;
+        if (!entry.era5_land && !entry.era5) {
+          throw { name: "FetchError" };
+        }
       if (token !== requestSeq) return;
       renderFromCache();
       loadPulse(token);
@@ -205,7 +217,18 @@
     rh: ["relative_humidity_2m_mean"],
     solar: ["shortwave_radiation_sum"]
   };
+  // Supplementary max/min accompany the temperature request only.
+  const VAR_DAILY = {
+    temp: ["temperature_2m_max", "temperature_2m_min", "temperature_2m_mean"],
+    precip: ["precipitation_sum"],
+    rh: ["relative_humidity_2m_mean"],
+    solar: ["shortwave_radiation_sum"]
+  };
   const MIN_COVERAGE = { temp: 0.98, rh: 0.98, precip: 1.0, solar: 1.0 };
+
+  function varsFor(variable) {
+    return VAR_DAILY[variable] || VAR_DAILY.temp;
+  }
 
   function validNum(v) {
     return typeof v === "number" && Number.isFinite(v);
