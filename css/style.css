@@ -257,6 +257,16 @@ body.menu-open .scrim { opacity: 1; pointer-events: auto; }
   box-shadow: var(--shadow);
 }
 .photo-wide img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+/* Hero figure: contained scientific maps, capped height, legend-safe */
+.photo-hero {
+  overflow: hidden;
+  border: 1px solid var(--line); border-radius: 4px; background: var(--stone);
+  box-shadow: var(--shadow);
+  max-height: clamp(350px, 44vw, 430px);
+}
+.photo-hero img { width: 100%; height: 100%; max-height: inherit; object-fit: contain; object-position: center; display: block; }
+@media (max-width: 900px) { .photo-hero { max-height: 300px; } }
+@media (max-width: 560px) { .photo-hero { max-height: 250px; } }
 .visual-caption a { color: inherit; }
 
 /* Fieldwork grid (research page documentation strip) */
