@@ -72,7 +72,8 @@ const POSTS = [
     summary: "Performed geospatial analysis of UHI, green space and urban development trends using satellite imagery and landscape indicators.",
     meta: "Jan–Jun 2025 · Bengaluru",
     year: "2025", location: "Bengaluru", methods: "Satellite imagery · Landscape indicators (UHI, GSI, UDI)", status: "Jan–Jun 2025", kind: "Project",
-    overview: "Performed geospatial analysis of UHI, green space and urban development trends using satellite imagery and landscape indicators."
+    overview: "Performed geospatial analysis of UHI, green space and urban development trends using satellite imagery and landscape indicators.",
+    page: "projects/bengaluru-urban-heat.html"
   },
   {
     id: "enhancing-urban-forestry",
@@ -137,6 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initDrawer();
   initProgress();
   initReveal();
+  initLightbox();
   initHomeLists();
   initResearchPage();
   initContactForm();
@@ -350,7 +352,7 @@ function entryBody(p) {
   if (p.objectives) h += `<h4>Objectives</h4><p>${esc(p.objectives)}</p>`;
   if (p.methods) h += `<h4>Methods</h4><p>${esc(p.methods)}</p>`;
   if (p.role) h += `<h4>Role</h4><p>${esc(p.role)}</p>`;
-  if (p.page) h += `<p><a class="text-link" href="${esc(p.page)}">Explore the full inquiry →</a></p>`;
+  if (p.page) h += `<p><a class="text-link" href="${esc(p.page)}">Explore the full study →</a></p>`;
   return h || PLACEHOLDER_BODY;
 }
 
@@ -384,6 +386,39 @@ function closeModal() {
   backdrop.hidden = true;
   document.body.style.overflow = "";
   if (lastFocused && document.contains(lastFocused)) lastFocused.focus({ preventScroll: true });
+}
+
+/* ---------- Lightbox: project figure enlargement ---------- */
+let lightboxReturn = null;
+
+function initLightbox() {
+  const box = document.getElementById("lightbox");
+  if (!box) return;
+  const img = document.getElementById("lightboxImg");
+  const cap = document.getElementById("lightboxCap");
+  const close = document.getElementById("lightboxClose");
+  const closeBox = () => {
+    box.hidden = true;
+    document.body.style.overflow = "";
+    if (lightboxReturn && document.contains(lightboxReturn)) lightboxReturn.focus({ preventScroll: true });
+  };
+  document.querySelectorAll("[data-lightbox]").forEach((a) => {
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      lightboxReturn = a;
+      img.src = a.getAttribute("href");
+      img.alt = (a.querySelector("img") || {}).alt || "Enlarged project figure";
+      if (cap) cap.textContent = a.dataset.caption || "";
+      box.hidden = false;
+      document.body.style.overflow = "hidden";
+      if (close) close.focus({ preventScroll: true });
+    });
+  });
+  if (close) close.addEventListener("click", closeBox);
+  box.addEventListener("click", (e) => { if (e.target === box) closeBox(); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !box.hidden) closeBox();
+  });
 }
 
 /* ---------- Contact form (no backend: opens mailto) ---------- */
