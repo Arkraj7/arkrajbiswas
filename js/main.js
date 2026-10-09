@@ -77,41 +77,44 @@ const POSTS = [
   },
   {
     id: "enhancing-urban-forestry",
-    group: "writing",
+    group: "briefs",
     category: "environment",
     title: "Enhancing Urban Forestry: Field Evidence and Implementation Recommendations for the Nagar Van Yojana",
-    summary: "Policy brief presenting field evidence and implementation recommendations for the Nagar Van Yojana.",
-    meta: "Policy brief · Urban forestry",
-    year: "", location: "", methods: "106 visitor surveys · 15 key-informant interviews · 14 focus-group discussions · Field observations and PRA transect walks", status: "Policy Brief", kind: "Policy Brief",
-    overview: "Based on fieldwork at 14 Nagar Van and Nagar Vatika sites across Uttar Pradesh, Madhya Pradesh and Rajasthan, the policy brief examines maintenance funding, irrigation, staffing, visitor experience, community participation and local revenue mechanisms. It proposes more reliable maintenance funding and a phased transition toward greater community participation and locally appropriate revenue models. A time-bounded assessment of selected sites, not a nationally representative evaluation.",
+    summary: "Based on fieldwork across 14 Nagar Van and Nagar Vatika sites in Uttar Pradesh, Madhya Pradesh and Rajasthan, this policy brief examines maintenance funding, irrigation, staffing, visitor experience, community participation and local revenue mechanisms.",
+    meta: "SSRN Working Paper · September 2026",
+    year: "2026", location: "", methods: "106 visitor surveys · 15 key-informant interviews · 14 focus-group discussions · Field observations and PRA transect walks", status: "SSRN Working Paper", kind: "Policy Brief",
+    overview: "Based on fieldwork across 14 Nagar Van and Nagar Vatika sites in Uttar Pradesh, Madhya Pradesh and Rajasthan, this policy brief examines maintenance funding, irrigation, staffing, visitor experience, community participation and local revenue mechanisms. It proposes a phased approach to more reliable maintenance funding and locally appropriate community participation. The assessment covers selected sites during a defined fieldwork period and should not be treated as a nationally representative evaluation.",
     publication: "SSRN Working Paper", date: "Written 16 August 2026 · Posted 11 September 2026",
     url: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7415140",
     doi: "https://doi.org/10.2139/ssrn.7415140"
   },
   {
     id: "etawah-design",
-    group: "writing",
+    group: "articles",
     category: "environment",
     title: "The Etawah design: An 123-acre urban forest as its lungs",
+    summary: "An account of Etawah Nagar Van as urban infrastructure, examining solar-powered facilities, water management, native planting and community participation, along with access, local livelihoods and long-term ecological performance.",
     meta: "Question of Cities · 4 September 2026",
-    year: "2026", location: "", methods: "", status: "Article", kind: "Article",
-    overview: "An account of Etawah Nagar Van as urban infrastructure, examining how solar-powered facilities, water management, native tree planting and local participation contribute to the operation of a public urban forest. The piece also considers accessibility, community involvement and the question of long-term ecological performance.",
+    year: "2026", location: "", methods: "", status: "Published Article", kind: "Article",
+    overview: "An account of Etawah Nagar Van as urban infrastructure, examining solar-powered facilities, water management, native planting and community participation, along with the questions of access, local livelihoods and long-term ecological performance.",
     publication: "Question of Cities", date: "4 September 2026",
     url: "https://questionofcities.org/the-etawah-design-an-123-acre-urban-forest-as-its-lungs/"
   },
   {
     id: "forest-zodiac",
-    group: "writing",
+    group: "articles",
     category: "environment",
     title: "When a Forest Knows Your Zodiac Sign",
+    summary: "This opinion piece looks at Nagar Van Naulakhi in Ujjain and the City Forest in Sagar to explore how culturally themed gardens and local identity can strengthen people's connection with urban forests.",
     meta: "CSR Times · August 2026, pp. 60–61",
-    year: "2026", location: "", methods: "", status: "Article", kind: "Opinion",
-    overview: "This opinion piece looks at Nagar Van Naulakhi in Ujjain and the City Forest in Sagar to explore how culturally themed gardens, identity, public use and environmental learning can strengthen people's connection with urban forests. The central idea is that planting is only part of urban forestry; people also need meaningful reasons to visit, care for and use these spaces.",
-    publication: "CSR Times", date: "August 2026, pp. 60–61 · Opinion"
+    year: "2026", location: "", methods: "", status: "Opinion", kind: "Opinion",
+    overview: "This opinion piece looks at Nagar Van Naulakhi in Ujjain and the City Forest in Sagar to explore how culturally themed gardens and local identity can strengthen people's connection with urban forests. It considers how public access, environmental learning and community use can help make green spaces meaningful beyond plantation activity.",
+    publication: "CSR Times", date: "August 2026, pp. 60–61 · Opinion",
+    url: "https://csrtimes.org/when-a-forest-knows-your-zodiac-sign/"
   },
   {
     id: "reimagining-ugs",
-    group: "writing",
+    group: "articles",
     category: "environment",
     title: "Reimagining Urban Green Spaces as Fundamental Infrastructure in a Warming India",
     meta: "Blog / Article",
@@ -119,7 +122,7 @@ const POSTS = [
   },
   {
     id: "ugs-thesis",
-    group: "writing",
+    group: "projects",
     category: "environment",
     title: "Spatiotemporal Assessment of UGS Dynamics – Bengaluru",
     meta: "Research thesis · Bengaluru",
@@ -127,7 +130,7 @@ const POSTS = [
   },
   {
     id: "india-counts-trees",
-    group: "writing",
+    group: "articles",
     category: "environment",
     title: "India Counts Trees, Not Shade",
     meta: "Article / Commentary",
@@ -137,16 +140,21 @@ const POSTS = [
   },
   {
     id: "etawah-field-evidence",
-    group: "writing",
+    group: "briefs",
     category: "environment",
-    title: "Etawah Nagar Van: Field Evidence on Urban Forestry",
-    meta: "Research article",
-    year: "", location: "", methods: "", status: "Research Article", kind: "Research Article"
+    title: "Etawah Nagar Van: Field Evidence on Urban Forestry, Community Use and Climate-Resilient Infrastructure in Uttar Pradesh",
+    summary: "This case study examines Etawah Nagar Van using field assessments, visitor and vendor surveys, interviews, focus-group discussions, participatory transect walks and geospatial/administrative validation.",
+    meta: "SSRN Working Paper · September 2026",
+    year: "2026", location: "Uttar Pradesh", methods: "", status: "SSRN Working Paper", kind: "Research Case Study",
+    overview: "This case study examines Etawah Nagar Van using field assessments, visitor and vendor surveys, interviews, focus-group discussions, participatory transect walks and geospatial/administrative validation. It discusses how urban forestry, public use, water management, low-carbon infrastructure, local livelihoods and community governance operate together at the site.",
+    publication: "SSRN Working Paper", date: "Written 14 September 2026 · Posted 16 September 2026",
+    url: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7460046",
+    doi: "https://doi.org/10.2139/ssrn.7460046"
   }
 ];
 
 const FEATURED_ID = "urban-forestry-framework";
-const HOME_PICKS = ["nagar-van-benefits", "bengaluru-uhi", "enhancing-urban-forestry"];
+const HOME_PICKS = ["nagar-van-benefits", "bengaluru-uhi"];
 
 /* ---------- Shared UI ---------- */
 document.addEventListener("DOMContentLoaded", () => {
@@ -257,7 +265,7 @@ function initResearchPage() {
 
   if (location.hash.startsWith("#filter-")) {
     const f = location.hash.replace("#filter-", "");
-    if (["all", "climate", "environment", "agriculture", "justice"].includes(f)) activeFilter = f;
+    if (["all", "climate", "environment", "justice"].includes(f)) activeFilter = f;
     document.querySelectorAll(".filter-btn").forEach((b) =>
       b.classList.toggle("active", b.dataset.filter === activeFilter)
     );
