@@ -39,7 +39,9 @@ const POSTS = [
     summary: "Ongoing National CAMPA research — GIS-based audits, socio-economic surveys, psychological well-being assessments, climate resilience, community well-being, participatory governance and a monitoring framework.",
     meta: "Ongoing · National CAMPA",
     year: "", location: "", methods: "GIS-based audits · Socio-economic surveys · Well-being assessments", status: "Ongoing", kind: "Current Research",
-    body: `<p>Ongoing National CAMPA research evaluating the socio-economic, psychological and governance outcomes of the Nagar Van Yojana. The work brings together GIS-based audits, socio-economic surveys, psychological well-being assessments, climate resilience, community well-being and participatory governance, towards a monitoring framework.</p><p><em>Methodology only — findings will be added here as they are confirmed.</em></p>`
+    overview: "Ongoing National CAMPA research evaluating the socio-economic, psychological and governance outcomes of the Nagar Van Yojana.",
+    objectives: "Evaluate socio-economic, psychological and governance outcomes and develop a monitoring framework, bringing together GIS-based audits, socio-economic surveys, psychological well-being assessments, climate resilience, community well-being and participatory governance.",
+    role: "Research Associate, National CAMPA"
   },
   {
     id: "nagar-van-benefits",
@@ -48,8 +50,8 @@ const POSTS = [
     title: "Socio-Economic, Cultural & Ecological Benefits — Nagar Van Yojana",
     summary: "Assessing the socio-economic, livelihood, socio-cultural, ecological and climatic benefits of the Nagar Van Yojana through an integrated multi-analysis methodological framework.",
     meta: "Jan–Jun 2025 · Urban forestry",
-    year: "2025", location: "", methods: "Urban Forestry · Environmental Assessment", status: "Jan–Jun 2025", kind: "Project",
-    body: `<p>Assessing the socio-economic, livelihood, socio-cultural, ecological and climatic benefits of the Nagar Van Yojana through an integrated multi-analysis methodological framework.</p>${PLACEHOLDER_BODY}`
+    year: "2025", location: "", methods: "Integrated multi-analysis methodological framework", status: "Jan–Jun 2025", kind: "Project",
+    overview: "Assessing the socio-economic, livelihood, socio-cultural, ecological and climatic benefits of the Nagar Van Yojana through an integrated multi-analysis methodological framework."
   },
   {
     id: "bengaluru-uhi",
@@ -58,8 +60,8 @@ const POSTS = [
     title: "Decadal Study of UHI, GSI & UDI over Bengaluru",
     summary: "Performed geospatial analysis of UHI, green space and urban development trends using satellite imagery and landscape indicators.",
     meta: "Jan–Jun 2025 · Bengaluru",
-    year: "2025", location: "Bengaluru", methods: "UHI · GSI · UDI", status: "Jan–Jun 2025", kind: "Project",
-    body: `<p>Performed geospatial analysis of UHI, green space and urban development trends using satellite imagery and landscape indicators.</p>${PLACEHOLDER_BODY}`
+    year: "2025", location: "Bengaluru", methods: "Satellite imagery · Landscape indicators (UHI, GSI, UDI)", status: "Jan–Jun 2025", kind: "Project",
+    overview: "Performed geospatial analysis of UHI, green space and urban development trends using satellite imagery and landscape indicators."
   },
   {
     id: "enhancing-urban-forestry",
@@ -68,58 +70,48 @@ const POSTS = [
     title: "Enhancing Urban Forestry: Field Evidence and Implementation Recommendations for the Nagar Van Yojana",
     summary: "Policy brief presenting field evidence and implementation recommendations for the Nagar Van Yojana.",
     meta: "Policy brief · Urban forestry",
-    year: "", location: "", methods: "Field evidence · Implementation", status: "Policy Brief", kind: "Policy Brief",
-    body: `<p>Policy brief presenting field evidence and implementation recommendations for the Nagar Van Yojana.</p>${PLACEHOLDER_BODY}`
+    year: "", location: "", methods: "", status: "Policy Brief", kind: "Policy Brief",
+    overview: "Policy brief presenting field evidence and implementation recommendations for the Nagar Van Yojana."
   },
   {
     id: "etawah-design",
     group: "writing",
     category: "environment",
     title: "The Etawah Design: A 123-Acre Urban Forest as Its Lungs",
-    summary: "Details and full text will be added here.",
-    meta: "Article · Details forthcoming",
-    year: "", location: "", methods: "", status: "Article", kind: "Article",
-    body: PLACEHOLDER_BODY
+    meta: "Article",
+    year: "", location: "", methods: "", status: "Article", kind: "Article"
   },
   {
     id: "forest-zodiac",
     group: "writing",
     category: "environment",
     title: "When a Forest Knows Your Zodiac Sign",
-    summary: "Details and full text will be added here.",
-    meta: "Article · Details forthcoming",
-    year: "", location: "", methods: "", status: "Article", kind: "Article",
-    body: PLACEHOLDER_BODY
+    meta: "Article",
+    year: "", location: "", methods: "", status: "Article", kind: "Article"
   },
   {
     id: "reimagining-ugs",
     group: "writing",
     category: "environment",
     title: "Reimagining Urban Green Spaces as Fundamental Infrastructure in a Warming India",
-    summary: "Details and full text will be added here.",
-    meta: "Blog / Article · Details forthcoming",
-    year: "", location: "", methods: "", status: "Blog / Article", kind: "Blog / Article",
-    body: PLACEHOLDER_BODY
+    meta: "Blog / Article",
+    year: "", location: "", methods: "", status: "Blog / Article", kind: "Blog / Article"
   },
   {
     id: "ugs-thesis",
     group: "writing",
     category: "environment",
     title: "Spatiotemporal Assessment of UGS Dynamics – Bengaluru",
-    summary: "Details and full text will be added here.",
     meta: "Research thesis · Bengaluru",
-    year: "", location: "Bengaluru", methods: "", status: "Research Thesis", kind: "Research Thesis",
-    body: PLACEHOLDER_BODY
+    year: "", location: "Bengaluru", methods: "", status: "Research Thesis", kind: "Research Thesis"
   },
   {
     id: "etawah-field-evidence",
     group: "writing",
     category: "environment",
     title: "Etawah Nagar Van: Field Evidence on Urban Forestry",
-    summary: "Details and full text will be added here.",
-    meta: "Research article · Details forthcoming",
-    year: "", location: "", methods: "", status: "Research Article", kind: "Research Article",
-    body: PLACEHOLDER_BODY
+    meta: "Research article",
+    year: "", location: "", methods: "", status: "Research Article", kind: "Research Article"
   }
 ];
 
@@ -340,6 +332,16 @@ function initModal() {
   } catch (e) { /* ignore */ }
 }
 
+function entryBody(p) {
+  // Render only populated fields; a single muted line when nothing is known.
+  let h = "";
+  if (p.overview) h += `<p>${esc(p.overview)}</p>`;
+  if (p.objectives) h += `<h4>Objectives</h4><p>${esc(p.objectives)}</p>`;
+  if (p.methods) h += `<h4>Methods</h4><p>${esc(p.methods)}</p>`;
+  if (p.role) h += `<h4>Role</h4><p>${esc(p.role)}</p>`;
+  return h || PLACEHOLDER_BODY;
+}
+
 function openModal(id) {
   const p = POSTS.find((x) => x.id === id);
   if (!p) return;
@@ -355,7 +357,7 @@ function openModal(id) {
   document.getElementById("modalTitle").textContent = p.title;
   document.getElementById("modalMeta").textContent =
     [p.year || p.status, p.location, p.methods].filter(Boolean).join("  ·  ");
-  document.getElementById("modalBody").innerHTML = p.body;
+  document.getElementById("modalBody").innerHTML = entryBody(p);
   backdrop.hidden = false;
   document.body.style.overflow = "hidden";
   const modal = backdrop.querySelector(".modal");

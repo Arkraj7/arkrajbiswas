@@ -104,13 +104,12 @@ p { margin: 0 0 1em; max-width: var(--measure); }
 .brand { display: flex; align-items: center; gap: 11px; text-decoration: none; color: var(--ink); }
 .brand-mark { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: var(--paper); display: grid; place-items: center; flex: none; transition: transform 0.4s ease; }
 .brand:hover .brand-mark { transform: rotate(-14deg); }
-.brand-mark svg { width: 18px; height: 18px; }
-.mark-draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: markdraw 7s ease-in-out infinite; }
-@keyframes markdraw {
-  0% { stroke-dashoffset: 1; opacity: 0.5; }
-  35% { stroke-dashoffset: 0; opacity: 1; }
-  70% { stroke-dashoffset: 0; opacity: 1; }
-  100% { stroke-dashoffset: 1; opacity: 0.5; }
+.brand-mark svg { width: 24px; height: 24px; }
+.brand-mark { width: 36px; height: 36px; }
+.lotus-bloom { transform-box: fill-box; transform-origin: 50% 100%; animation: lotusbloom 0.9s ease-out 0.25s 1 both; }
+@keyframes lotusbloom {
+  from { transform: scale(0.88); opacity: 0.35; }
+  to { transform: scale(1); opacity: 1; }
 }
 .brand-text { font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 0.01em; }
 .brand-text em { font-style: italic; color: var(--accent); }
@@ -578,6 +577,6 @@ body.menu-open .scrim { opacity: 1; pointer-events: auto; }
   .nav-links { transition: none; }
   .slides-frame img { transition: none; }
   .slides-bar.go i { animation: none; }
-  .mark-draw { animation: none; stroke-dashoffset: 0; opacity: 1; }
+  .lotus-bloom { animation: none; }
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
