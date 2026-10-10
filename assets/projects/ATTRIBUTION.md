@@ -1,10 +1,12 @@
-# Temporary illustrative project visuals
+# Illustrative project visuals (retained, not currently displayed)
 
-These images are TEMPORARY illustrative visuals, not project documentation.
-Each is labeled on the site as an illustrative image to be replaced with
-real project documentation. Do not present them as fieldwork photographs.
+These images are illustrative visuals by external creators, not project
+documentation. Neither is currently displayed on the public site: both
+feature slots now use local project-documentation photography.
 
-## 1. cubbon-canopy.jpg (used: home + research current-research feature)
+If either image is used again, restore its on-page credit exactly as below.
+
+## 1. cubbon-canopy.jpg
 
 - Title: "Tree canopy at Cubbon park, Bengaluru (2026) 01"
 - Creator: Gpkp (Wikimedia Commons user)
@@ -13,7 +15,7 @@ real project documentation. Do not present them as fieldwork photographs.
 - Local copy resized to 1400px for web use; original retained on Commons.
 - Credit shown on site: "Illustrative image: Gpkp, Wikimedia Commons, CC BY-SA 4.0"
 
-## 2. cubbon-park.jpg (used: research featured block)
+## 2. cubbon-park.jpg
 
 - Title: "Cubbon Park 2019 June 23"
 - Creator: Amol.Gaitonde (Wikimedia Commons user)

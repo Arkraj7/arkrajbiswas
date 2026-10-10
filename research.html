@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=16" />
+  <link rel="stylesheet" href="css/style.css?v=17" />
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"CollectionPage","name":"Research & Writing | Arkraj Biswas","url":"https://arkrajbiswas.com/research","mainEntity":{"@type":"ItemList","numberOfItems":10,"itemListElement":[
   {"@type":"ListItem","position":1,"name":"Systemic Bio-Inequity in India: Exploring the Biodiversity–Poverty Paradox","url":"https://arkrajbiswas.com/projects/bio-inequity"},
@@ -33,7 +33,11 @@
   {"@type":"ListItem","position":9,"name":"Etawah Nagar Van: Field Evidence on Urban Forestry, Community Use and Climate-Resilient Infrastructure in Uttar Pradesh","url":"https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7460046"},
   {"@type":"ListItem","position":10,"name":"India Counts Trees, Not Shade"}]}}
   </script>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%2333573f'/><g stroke='%23faf8f2' stroke-width='2.4' fill='none' stroke-linecap='round'><path d='M16 7c-2.2 3.8-2.2 8.4 0 12 2.2-3.6 2.2-8.2 0-12z'/><path d='M7 23.5c4.5 3.5 13.5 3.5 18 0'/></g></svg>" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+  <link rel="shortcut icon" href="favicon.ico" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
 </head>
 <body>
   <div class="progress-bar" id="progressBar"></div>
@@ -108,14 +112,12 @@
       <div class="archive-feature reveal">
         <div class="visual-frame feature-visual">
           <figure>
-            <div class="photo-wide">
-              <img src="assets/projects/cubbon-park.jpg" alt="Wooded grove in an urban park (illustrative image, not project documentation)" loading="lazy" decoding="async" />
+            <div class="photo-wide contain">
+              <img src="assets/fieldwork/cover.jpg" alt="Arkraj Biswas discussing survey papers with two field workers among trees during fieldwork" loading="lazy" decoding="async" />
             </div>
             <figcaption class="visual-caption">
-              <span class="meta">Illustrative project visual</span>
-              <span class="meta">Replace with project documentation</span>
+              <span class="meta">Project Documentation</span>
             </figcaption>
-            <p class="meta" style="margin-top:8px">Illustrative image: <a href="https://commons.wikimedia.org/wiki/File:Cubbon_Park_2019_June_23.jpg" target="_blank" rel="noopener">Amol.Gaitonde, Wikimedia Commons, CC BY-SA 4.0</a></p>
           </figure>
         </div>
         <div>
@@ -262,6 +264,55 @@
       </div>
     </section>
 
+    <section class="section-tight" aria-labelledby="atlasH">
+      <p class="kicker reveal">Visual research index</p>
+      <h2 class="reveal" id="atlasH">Environmental Research Atlas</h2>
+      <p class="reveal muted" style="max-width:42rem">Explore environmental questions through the maps, figures and field evidence behind my research. Each visual focuses on a specific question, with its data or methodology explained alongside it.</p>
+      <nav class="reveal atlas-index" aria-label="Atlas stories">
+        <a href="#atlas-urban-heat">A · Urban heat &amp; green spaces</a>
+        <a href="#atlas-urban-forestry">B · Urban forestry as infrastructure</a>
+        <a href="#atlas-bio-inequity">C · Bio-inequity &amp; biodiversity–poverty</a>
+      </nav>
+      <article class="reveal atlas-feature" id="atlas-urban-heat" aria-labelledby="atlasA">
+        <div class="visual-frame">
+          <figure style="margin:0">
+            <div class="photo-wide">
+              <img src="assets/decadalstudy/web/Picture10thesis_1.jpg" alt="Urban heat island index maps of Bengaluru for 2014, 2019 and 2024, expressed as land-surface-temperature z-scores from minus 4 to 3" loading="lazy" decoding="async" />
+            </div>
+            <figcaption class="visual-caption"><span class="meta">UHI index (LST z-score) · April 2014 / 2019 / 2024</span></figcaption>
+          </figure>
+        </div>
+        <div>
+          <p class="meta">A · Bengaluru</p>
+          <h3 id="atlasA">Where does the city hold its heat?</h3>
+          <p>Three April snapshots of Bengaluru's surface-temperature pattern, expressed as z-scores so each year is comparable. Read alongside vegetation and built-up maps, they show how thermal hotspots sit within the city's changing green and built fabric.</p>
+          <dl class="meta-row">
+            <div><dt>Period</dt><dd>April 2014 · 2019 · 2024</dd></div>
+            <div><dt>Indicators</dt><dd>LST · NDVI · NDBI · GSI</dd></div>
+            <div><dt>Methods</dt><dd>Landsat analysis · Moran's I · CCDM</dd></div>
+          </dl>
+          <p style="display:flex;gap:14px;flex-wrap:wrap">
+            <a href="projects/bengaluru-urban-heat.html" class="text-link">Full case study →</a>
+            <a href="assets/decadalstudy/Picture10thesis%20(1).png" class="text-link" download="bengaluru-uhi-index-2014-2019-2024.png">Download figure ↓</a>
+          </p>
+        </div>
+      </article>
+      <article class="reveal atlas-entry" aria-labelledby="atlasB">
+        <div id="atlas-urban-forestry">
+          <p class="meta">B · Uttar Pradesh, Madhya Pradesh, Rajasthan</p>
+          <h3 id="atlasB">Can a planted forest become public infrastructure?</h3>
+          <p>Fourteen Nagar Van and Nagar Vatika sites, assessed through surveys, interviews, transect walks and geospatial checks — asking what keeps a green space useful after planting day.</p>
+          <p><a href="projects/nagar-van-assessment.html" class="text-link">Assessment case study →</a></p>
+        </div>
+        <div id="atlas-bio-inequity">
+          <p class="meta">C · India, state level</p>
+          <h3 id="atlasC">Who benefits from ecological wealth?</h3>
+          <p>State-level maps and correlations exploring the biodiversity–poverty paradox: rich ecosystems alongside poorer communities.</p>
+          <p><a href="projects/bio-inequity.html" class="text-link">Bio-inequity inquiry →</a></p>
+        </div>
+      </article>
+    </section>
+
     <section class="section-tight">
       <div class="cta-band reveal">
         <div>
@@ -307,6 +358,6 @@
       </div>
     </div>
   </footer>
-  <script src="js/main.js?v=16"></script>
+  <script src="js/main.js?v=17"></script>
 </body>
 </html>

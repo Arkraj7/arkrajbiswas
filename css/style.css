@@ -308,6 +308,16 @@ body.menu-open .scrim { opacity: 1; pointer-events: auto; }
 .lightbox figcaption { color: #edebe1; margin: 12px 0; }
 .lightbox .btn { margin-top: 4px; }
 
+/* Atlas (research page visual index) */
+.atlas-index { display: flex; gap: 8px 26px; flex-wrap: wrap; margin: 22px 0 8px; }
+.atlas-index a { color: var(--ink-soft); text-decoration: none; font-size: 0.92rem; font-weight: 600; border-bottom: 1px solid var(--line); padding-bottom: 3px; transition: color 0.25s, border-color 0.25s; }
+.atlas-index a:hover { color: var(--accent); border-color: var(--accent); }
+.atlas-feature { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(24px, 4vw, 52px); align-items: center; margin-top: 30px; padding-top: 30px; border-top: 1px solid var(--line-soft); }
+.atlas-feature h3 { font-size: clamp(1.5rem, 2.8vw, 2.1rem); margin: 10px 0 10px; }
+.atlas-entry { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 4vw, 52px); margin-top: 30px; padding-top: 26px; border-top: 1px solid var(--line-soft); }
+.atlas-entry h3 { font-size: clamp(1.25rem, 2.2vw, 1.6rem); margin: 10px 0 8px; }
+@media (max-width: 900px) { .atlas-feature, .atlas-entry { grid-template-columns: 1fr; } }
+
 /* Breadcrumb (project pages) */
 .breadcrumb { padding: 26px 0 0; font-size: 0.88rem; color: var(--muted); }
 .breadcrumb a { color: var(--ink-soft); text-decoration: none; }
