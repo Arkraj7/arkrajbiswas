@@ -1,0 +1,54 @@
+name: Refresh NASA GISTEMP data
+
+# Monthly refresh of the Global Climate Signal dataset. The GitHub Pages
+# deployment workflow is untouched; this workflow only ever commits the
+# generated dataset file when its validated contents actually change.
+on:
+  schedule:
+    # 06:00 UTC on the 15th of each month (after NASA's monthly update).
+    - cron: "0 6 15 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gistemp-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run validated updater
+        run: python scripts/update-gistemp.py
+
+      - name: Validate generated JSON
+        run: >-
+          python -c "import json,sys;
+          d=json.load(open('assets/data/gistemp-global-monthly.json'));
+          assert d['metadata']['baseline']=='1951-1980';
+          assert len(d['monthly'])>1000 and len(d['annual'])>100;
+          assert d['monthly']==sorted(d['monthly'],key=lambda r:r['date']);
+          assert all(set(d['annual'][i])==set(d['annual'][0]) for i in range(len(d['annual'])));
+          print('gistemp JSON valid:',d['monthly'][0]['date'],'->',d['monthly'][-1]['date'])"
+
+      - name: Commit only on real change
+        run: |
+          if git diff --quiet -- assets/data/gistemp-global-monthly.json; then
+            echo "Dataset unchanged — no commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/data/gistemp-global-monthly.json
+          git commit -m "Refresh NASA GISTEMP monthly data"
+          git push

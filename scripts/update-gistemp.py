@@ -45,14 +45,16 @@ def main():
         SOURCE_URL, headers={"User-Agent": "ArkrajBiswas-site/1.0"})
     try:
         with urllib.request.urlopen(req, timeout=120) as res:
-            if res.status != 200:
-                fail(f"HTTP {res.status}")
+            # file:// and some handlers report no status; None means no HTTP error.
+            status = getattr(res, "status", None) or 200
+            if status != 200:
+                fail(f"HTTP {status}")
             ctype = res.headers.get("Content-Type", "")
             raw = res.read().decode("utf-8", "replace")
     except Exception as exc:  # network failure: keep the old file
         fail(f"download failed ({exc}); existing file untouched")
 
-    if "<html" in raw[:2000].lower() or len(raw) < 5000:
+    if "<html" in raw[:2000].lower():
         fail("response looks like an error page, not the dataset")
 
     lines = raw.splitlines()
@@ -106,10 +108,10 @@ def main():
     keys = sorted(monthly.keys())
     if keys != sorted(set(keys)):
         fail("duplicate dates")
-    if any(b > a for a, b in zip(keys, keys[1:])):
-        fail("dates out of order")
     if not keys or not keys[0].startswith("1880-01"):
         fail(f"series does not start at 1880-01 (starts {keys[0] if keys else None})")
+    if int(keys[-1][:4]) < datetime.date.today().year - 1:
+        fail(f"response looks truncated (ends {keys[-1]}); existing file untouched")
 
     # Complete years: all twelve valid months.
     complete = []
@@ -159,6 +161,25 @@ def main():
         "annual": [{"year": y, "anomaly": annual[y]} for y in complete],
     }
     os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
+    # Idempotency: if only the retrieval date would change, keep the old
+    # file untouched so scheduled runs commit solely on real data changes.
+    if os.path.exists(OUT_PATH):
+        try:
+            with open(OUT_PATH, encoding="utf-8") as fh:
+                old = json.load(fh)
+            old_cmp = dict(old)
+            old_meta = dict(old_cmp.get("metadata", {}))
+            old_meta.pop("retrieved", None)
+            old_cmp["metadata"] = old_meta
+            new_cmp = {"monthly": payload["monthly"], "annual": payload["annual"]}
+            new_meta = dict(payload["metadata"])
+            new_meta.pop("retrieved", None)
+            new_cmp["metadata"] = new_meta
+            if old_cmp == new_cmp:
+                print("update-gistemp: data unchanged; existing file kept")
+                return
+        except (OSError, ValueError) as exc:
+            print(f"update-gistemp: existing file unreadable ({exc}); regenerating")
     tmp = OUT_PATH + ".tmp"
     with open(tmp, "w", encoding="utf-8") as fh:
         json.dump(payload, fh)

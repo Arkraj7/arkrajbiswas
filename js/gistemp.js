@@ -127,60 +127,7 @@
     }
   }
 
-  /* ----- Render ----- */
-  function currentSeries() {
-    if (state.view === "annual" || state.view === "stripes") {
-      return {
-        labels: data.years.map((r) => String(r.y)),
-        values: data.years.map((r) => r.v),
-        unit: "°C", decimals: 2,
-        title: "Annual global land–ocean temperature anomaly",
-        period: `${data.years[0].y}–${data.years[data.years.length - 1].y}`,
-        kind: "annual"
-      };
-    }
-    return {
-      labels: data.months.map((r) => r.d),
-      values: data.months.map((r) => r.v),
-      unit: "°C", decimals: 2,
-      title: "Monthly global land–ocean temperature anomaly",
-      period: `${data.months[0].d} to ${data.months[data.months.length - 1].d}`,
-      kind: "monthly"
-    };
-  }
-
-  function render() {
-    if (!data) return;
-    const s = currentSeries();
-    const latestM = data.months[data.months.length - 1];
-    const latestY = data.years[data.years.length - 1];
-    els.latest.textContent = `${fmtAnom(latestM.v)} °C`;
-    els.latestSub.textContent = `${monthName(latestM.d)} · latest month · ${latestY.y} annual mean ${fmtAnom(latestY.v)} °C`;
-    els.meta.textContent = `Global land–ocean temperature anomaly · °C vs 1951–1980 · ${s.period} · NASA GISTEMP v4`;
-    lastExport = {
-      place: "Global", lat: null, lon: null, variable: state.view,
-      title: s.title, labels: s.labels.slice(), unit: s.unit, decimals: 2,
-      cols: [{ key: "v", header: "anomaly_c", values: s.values.slice() }],
-      period: s.period, agg: s.kind === "annual" ? "official annual means of complete years" : "monthly means as published",
-      model: "NASA GISTEMP v4"
-    };
-    updateDlButtons();
-    els.skeleton.hidden = true;
-    els.chart.hidden = false;
-    if (state.view === "stripes") {
-      renderStripes();
-      destroyChart();
-      if (els.tableWrap) els.tableWrap.hidden = true;
-      if (els.presets) els.presets.innerHTML = "";
-      if (els.reset) els.reset.hidden = true;
-      return;
-    }
-    if (els.stripes) els.stripes.hidden = true;
-    if (els.stripeLegend) els.stripeLegend.hidden = true;
-    buildChart(s);
-    renderTable();
-  }
-
+  /* ----- Render (single implementation below) ----- */
   function fmtAnom(v) {
     return (v > 0 ? "+" : "") + v.toFixed(2);
   }
@@ -486,7 +433,7 @@
     const latestY = data.years[data.years.length - 1];
     els.latest.textContent = `${fmtAnom(latestM.v)} °C`;
     els.latestSub.textContent = `${monthName(latestM.d)} · latest month · ${latestY.y} annual mean ${fmtAnom(latestY.v)} °C`;
-    els.meta.textContent = `Global land–ocean temperature anomaly · °C vs 1951–1980 · ${s.period} · NASA GISTEMP v4`;
+    els.meta.textContent = `Global land–ocean temperature anomaly · °C vs 1951–1980 · ${s.period} · NASA GISTEMP v4 · data through ${data.meta.valid_through}`;
     lastExport = {
       place: "Global", lat: null, lon: null, variable: state.view,
       title: s.title, labels: s.labels.slice(), unit: s.unit, decimals: 2,
