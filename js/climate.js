@@ -34,6 +34,7 @@
       input: document.getElementById("lensSearch"),
       results: document.getElementById("lensResults"),
       status: document.getElementById("lensStatus"),
+      note2: document.getElementById("lensCompareNote"),
       canvas: document.getElementById("lensCanvas"),
       presets: document.getElementById("lensPresets"),
       reset: document.getElementById("lensReset"),
@@ -174,7 +175,9 @@
     const token = ++requestSeq;
     lastExport = null;
     updateDlButtons();
-    showSkeleton(state.view === "annual" ? "Loading annual climate history…" : "Loading recent conditions…");
+    showSkeleton(state.view === "annual" ? "Loading annual climate history…"
+      : state.view === "compare" ? "Loading year comparison…"
+      : "Loading recent conditions…");
     say("");
     hideRetry();
     try {
@@ -386,9 +389,11 @@
         (excluded.length ? ` · ${excluded.length} year${excluded.length === 1 ? "" : "s"} excluded (missing days)` : ""));
       els.skeleton.hidden = true;
       els.chart.hidden = false;
+      if (els.note2) els.note2.hidden = true;
       buildChart(years.map(String), chartSeries, cfg,
         `${state.label}: ${titles[state.variable]}, ${years[0]} to ${years[years.length - 1]}`);
-    } else {
+      if (els.note2) els.note2.hidden = true;
+    } else if (state.view === "recent") {
       const end = latestValidIndex(daily, state.variable);
       if (end < 0) {
         els.chart.hidden = true;
@@ -446,6 +451,85 @@
         dates.map((dISO) => shortDate(dISO)), chartSeries, cfg,
         `${state.label}: ${titles[state.variable]}, ${dates[0]} to ${dates[dates.length - 1]}`
       );
+      if (els.note2) els.note2.hidden = true;
+    } else {
+      // Compare years: overlay the current year-to-date against the three
+      // previous years over the same calendar window.
+      // Leap rule (documented): 29 February is omitted consistently in
+      // every series, so 01 March onward aligns across leap/non-leap years.
+      const endIdx = latestValidIndex(daily, state.variable);
+      if (endIdx < 0) {
+        els.chart.hidden = true;
+        showSkeleton(`No ${cfg.label.toLowerCase()} values available for comparison at this location yet.`);
+        showRetry();
+        return;
+      }
+      const endISO = daily.time[endIdx];
+      const y0 = Number(String(endISO).slice(0, 4));
+      const cutoff = String(endISO).slice(5); // MM-DD of latest valid day
+      const at = {};
+      (daily.time || []).forEach((iso, i) => { at[String(iso).slice(0, 10)] = i; });
+      const positions = [];
+      for (let m = 1; m <= 12; m++) {
+        const dim = new Date(2001, m, 0).getDate();
+        for (let d = 1; d <= dim; d++) {
+          const mmdd = `${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+          if (mmdd === "02-29" || mmdd > cutoff) continue;
+          positions.push(mmdd);
+        }
+      }
+      const pickC = {
+        temp: "temperature_2m_mean", precip: "precipitation_sum",
+        rh: "relative_humidity_2m_mean", solar: "shortwave_radiation_sum"
+      }[state.variable];
+      const candYears = [y0, y0 - 1, y0 - 2, y0 - 3].filter((y) => y >= START_YEAR);
+      const colsAll = candYears.map((y) => positions.map((mmdd) => {
+        const i = at[`${y}-${mmdd}`];
+        const v = i === undefined ? null : daily[pickC][i];
+        return validNum(v) ? v : null;
+      }));
+      if (colsAll[0].every((v) => v === null)) {
+        els.chart.hidden = true;
+        showSkeleton(`No ${cfg.label.toLowerCase()} values available for ${y0} yet.`);
+        showRetry();
+        return;
+      }
+      // Keep a historical year only when at least half its window is valid.
+      const need = Math.ceil(positions.length / 2);
+      const kept = candYears.filter((y, k) =>
+        k === 0 || colsAll[k].filter((v) => v !== null).length >= need);
+      const titlesC = {
+        temp: "Daily mean temperature",
+        precip: "Daily precipitation total",
+        rh: "Daily mean relative humidity",
+        solar: "Daily solar radiation total"
+      };
+      const chartSeries = [];
+      const cols = [];
+      kept.forEach((y) => {
+        const k = candYears.indexOf(y);
+        const tag = y === y0 ? `${y} (current year)` : `${y}`;
+        chartSeries.push({ name: tag, values: colsAll[k], main: y === y0, gaps: false });
+        cols.push({ key: `y${y}`, header: `${y}_${unitSlug(cfg.unit)}`, values: colsAll[k].slice() });
+      });
+      const labels = positions.map((mmdd) => {
+        const [m, d] = mmdd.split("-");
+        return `${Number(m)}/${Number(d)}`;
+      });
+      els.skeleton.hidden = true;
+      els.chart.hidden = false;
+      setExport({
+        title: `${titlesC[state.variable]} by calendar date`, labels, model,
+        cols, unit: cfg.unit, decimals: cfg.decimals,
+        period: `Jan 1 – ${cutoff} · ${kept[kept.length - 1]}–${y0}`,
+        agg: "daily values as returned (no aggregation)",
+        filetag: `compare-${kept[kept.length - 1]}-${y0}`
+      });
+      setMeta(`${state.label} · ${fmtLat(state.lat)}, ${fmtLon(state.lon)} · ${titlesC[state.variable]} by calendar date · ` +
+        `Data through ${endISO} · ${cfg.unit} · ${model} via Open-Meteo`);
+      buildChart(labels, chartSeries, cfg,
+        `${state.label}: ${titlesC[state.variable]} by calendar date, data through ${endISO}`);
+      if (els.note2) els.note2.hidden = false;
     }
     els.place.textContent = state.label;
     if (els.note) els.note.textContent = state.example
@@ -582,6 +666,13 @@
         { key: "all", label: "All", count: n }
       ];
     }
+    if (state.view === "compare") {
+      return [
+        { key: "3m", label: "3M", count: 90 },
+        { key: "6m", label: "6M", count: 180 },
+        { key: "all", label: "All", count: n }
+      ];
+    }
     return [
       { key: "7d", label: "7D", count: 7 },
       { key: "14d", label: "14D", count: 14 },
@@ -666,7 +757,7 @@
       pointRadius: s.main ? 2.6 : 0,
       pointHoverRadius: 5,
       tension: 0.15,
-      spanGaps: true,
+      spanGaps: s.gaps === false ? false : true,
       abName: s.name,
       abDecimals: cfg.decimals,
       abUnit: cfg.unit
@@ -798,6 +889,7 @@
   }
 
   function exportBase() {
+    if (lastExport.filetag) return `climate-lens-${placeSlug()}-${varSlug()}-${lastExport.filetag}`;
     const first = String(lastExport.labels[0]).replace(/[^0-9]/g, "");
     const last = String(lastExport.labels[lastExport.labels.length - 1]).replace(/[^0-9]/g, "");
     return `climate-lens-${placeSlug()}-${varSlug()}-${first}-${last}`;

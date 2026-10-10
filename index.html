@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=20" />
+  <link rel="stylesheet" href="css/style.css?v=21" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
@@ -318,8 +318,10 @@
           <div class="var-row" role="group" aria-label="Climate view">
             <button class="var-btn view-btn" type="button" data-view="annual" aria-pressed="true">Annual history</button>
             <button class="var-btn view-btn" type="button" data-view="recent" aria-pressed="false">Recent 30 days</button>
+            <button class="var-btn view-btn" type="button" data-view="compare" aria-pressed="false">Compare years</button>
           </div>
           <p class="small muted" id="lensStatus" role="status" style="margin:0"></p>
+          <p class="small muted" id="lensCompareNote" hidden>This comparison overlays daily values for the same calendar dates across years. It is intended to support visual comparison of seasonal patterns; it is not a weather forecast and does not by itself establish a long-term climate trend.</p>
           <div class="dl-row">
             <button class="dl-btn" id="lensDlPng" type="button" disabled>Download PNG</button>
             <button class="dl-btn" id="lensDlCsv" type="button" disabled>Download CSV</button>
@@ -464,13 +466,13 @@
     </div>
   </footer>
 
-  <script src="assets/vendor/chart.umd.min.js?v=20"></script>
-  <script src="assets/vendor/hammer.min.js?v=20"></script>
-  <script src="assets/vendor/chartjs-plugin-zoom.min.js?v=20"></script>
-  <script src="js/main.js?v=20"></script>
-  <script src="js/earth.js?v=20"></script>
-  <script src="js/slides.js?v=20"></script>
-  <script src="js/climate.js?v=20"></script>
-  <script src="js/gistemp.js?v=20"></script>
+  <script src="assets/vendor/chart.umd.min.js?v=21"></script>
+  <script src="assets/vendor/hammer.min.js?v=21"></script>
+  <script src="assets/vendor/chartjs-plugin-zoom.min.js?v=21"></script>
+  <script src="js/main.js?v=21"></script>
+  <script src="js/earth.js?v=21"></script>
+  <script src="js/slides.js?v=21"></script>
+  <script src="js/climate.js?v=21"></script>
+  <script src="js/gistemp.js?v=21"></script>
 </body>
 </html>
