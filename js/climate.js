@@ -606,7 +606,8 @@
         if (window.ChartZoom) window.Chart.register(window.ChartZoom);
         window.Chart.__abPlugins = true;
         window.Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
-        window.Chart.defaults.animation = { duration: 350 };
+        const calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        window.Chart.defaults.animation = calm ? false : { duration: 350 };
       }
     }
     return chartAvailable();
