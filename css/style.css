@@ -318,6 +318,12 @@ body.menu-open .scrim { opacity: 1; pointer-events: auto; }
 .atlas-entry h3 { font-size: clamp(1.25rem, 2.2vw, 1.6rem); margin: 10px 0 8px; }
 @media (max-width: 900px) { .atlas-feature, .atlas-entry { grid-template-columns: 1fr; } }
 
+/* Global stripes */
+.stripe-wrap { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2px; margin-top: 6px; border-radius: 6px; overflow: hidden; }
+.stripe-wrap span { display: block; height: clamp(64px, 9vw, 110px); min-width: 2px; }
+.stripe-legend { display: flex; align-items: center; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+.stripe-bar { display: inline-block; width: 140px; height: 10px; border-radius: 5px; background: linear-gradient(90deg, rgb(47,109,179), rgb(239,233,220) 50%, rgb(194,94,58)); border: 1px solid var(--line-soft); }
+
 /* Breadcrumb (project pages) */
 .breadcrumb { padding: 26px 0 0; font-size: 0.88rem; color: var(--muted); }
 .breadcrumb a { color: var(--ink-soft); text-decoration: none; }

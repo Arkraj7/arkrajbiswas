@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=18" />
+  <link rel="stylesheet" href="css/style.css?v=20" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
@@ -355,6 +355,62 @@
       </div>
     </section>
 
+    <!-- GLOBAL CLIMATE SIGNAL -->
+    <section class="section-tight container" aria-labelledby="gcsH">
+      <div class="section-head reveal">
+        <div>
+          <p class="kicker">Global climate record</p>
+          <h2 id="gcsH">Global Climate Signal</h2>
+        </div>
+        <p>Explore the long-term global temperature record.</p>
+      </div>
+      <div class="lens-grid reveal">
+        <div class="lens-controls">
+          <p class="meta">Readouts</p>
+          <p class="earth-place" id="gcsLatest" style="font-size:clamp(1.4rem,2.4vw,2rem)">—</p>
+          <p class="small muted" id="gcsLatestSub">Loading the global record…</p>
+          <p class="meta" style="margin-top:6px">View</p>
+          <div class="var-row" role="group" aria-label="Global record view">
+            <button class="var-btn" type="button" data-gview="monthly" aria-pressed="true">Monthly history</button>
+            <button class="var-btn" type="button" data-gview="annual" aria-pressed="false">Annual history</button>
+            <button class="var-btn" type="button" data-gview="stripes" aria-pressed="false">Climate stripes</button>
+          </div>
+          <p class="small muted" id="gcsStatus" role="status" style="margin:0"></p>
+          <div class="dl-row">
+            <button class="dl-btn" id="gcsDlPng" type="button" disabled>Download PNG</button>
+            <button class="dl-btn" id="gcsDlCsv" type="button" disabled>Download CSV</button>
+            <button class="dl-btn" id="gcsRetry" type="button" hidden>Retry</button>
+          </div>
+        </div>
+        <div>
+          <div class="lens-chart" id="gcsChartWrap">
+            <div class="lens-skeleton" id="gcsSkeleton" aria-hidden="true"><span>Preparing global record…</span></div>
+            <div id="gcsChart" hidden>
+              <div class="lens-canvas-wrap"><canvas id="gcsCanvas"></canvas></div>
+              <div class="dl-row" role="group" aria-label="Chart range">
+                <span class="meta" style="align-self:center">Range</span>
+                <span id="gcsPresets" style="display:contents"></span>
+                <button class="var-btn" id="gcsReset" type="button" hidden>Reset zoom</button>
+              </div>
+              <div class="stripe-legend" id="gcsStripeLegend" hidden>
+                <span class="meta">Cooler</span>
+                <span class="stripe-bar" aria-hidden="true"></span>
+                <span class="meta">Warmer</span>
+                <span class="meta" id="gcsStripeScale"></span>
+              </div>
+              <div class="stripe-wrap" id="gcsStripes" hidden tabindex="0" role="img" aria-label="Annual climate stripes"></div>
+              <details class="lens-data" id="gcsTableWrap" hidden>
+                <summary>Data table</summary>
+                <div class="lens-table-scroll"><table id="gcsTable"></table></div>
+              </details>
+            </div>
+          </div>
+          <p class="meta" id="gcsMeta" style="margin-top:14px">NASA GISTEMP v4 · global land–ocean temperature anomaly</p>
+          <p class="small muted" style="margin:8px 0 0">These are monthly global land–ocean temperature anomalies relative to the NASA GISTEMP 1951–1980 baseline. They describe long-term global temperature variation, not local daily weather. Data: <a href="https://data.giss.nasa.gov/gistemp/data_v4.html" target="_blank" rel="noopener">NASA GISS GISTEMP v4</a>.</p>
+        </div>
+      </div>
+    </section>
+
     <!-- A LITTLE ABOUT ME -->
     <section class="section-tight container" aria-labelledby="bioH">
       <div class="bio-grid">
@@ -408,12 +464,13 @@
     </div>
   </footer>
 
-  <script src="assets/vendor/chart.umd.min.js?v=18"></script>
-  <script src="assets/vendor/hammer.min.js?v=18"></script>
-  <script src="assets/vendor/chartjs-plugin-zoom.min.js?v=18"></script>
-  <script src="js/main.js?v=18"></script>
-  <script src="js/earth.js?v=18"></script>
-  <script src="js/slides.js?v=18"></script>
-  <script src="js/climate.js?v=18"></script>
+  <script src="assets/vendor/chart.umd.min.js?v=20"></script>
+  <script src="assets/vendor/hammer.min.js?v=20"></script>
+  <script src="assets/vendor/chartjs-plugin-zoom.min.js?v=20"></script>
+  <script src="js/main.js?v=20"></script>
+  <script src="js/earth.js?v=20"></script>
+  <script src="js/slides.js?v=20"></script>
+  <script src="js/climate.js?v=20"></script>
+  <script src="js/gistemp.js?v=20"></script>
 </body>
 </html>

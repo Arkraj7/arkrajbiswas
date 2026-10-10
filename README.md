@@ -27,6 +27,11 @@ python -m http.server 8000
 - **Email + profiles** → `contact.html` (real inbox
   `arkraj.biswas6@gmail.com`; LinkedIn/Scholar slots activate when links are shared).
 - **Theme** → `css/style.css` `:root` / `[data-theme="dark"]`.
+- **Global temperature record** → run `python scripts/update-gistemp.py`
+  (needs network access to data.giss.nasa.gov). It validates the official
+  NASA GISTEMP v4 file and writes `assets/data/gistemp-global-monthly.json`.
+  The JSON is committed; the homepage reads the local file. Re-run
+  occasionally to pick up new months. Never hand-edit the JSON.
 
 ## Deploy
 
