@@ -62,17 +62,19 @@ const POSTS = [
     summary: "Assessing the socio-economic, livelihood, socio-cultural, ecological and climatic benefits of the Nagar Van Yojana through an integrated multi-analysis methodological framework.",
     meta: "Jan–Jun 2025 · Urban forestry",
     year: "2025", location: "", methods: "Integrated multi-analysis methodological framework", status: "Jan–Jun 2025", kind: "Project",
-    overview: "Assessing the socio-economic, livelihood, socio-cultural, ecological and climatic benefits of the Nagar Van Yojana through an integrated multi-analysis methodological framework."
+    overview: "Assessing the socio-economic, livelihood, socio-cultural, ecological and climatic benefits of the Nagar Van Yojana through an integrated multi-analysis methodological framework.",
+    page: "projects/nagar-van-assessment.html"
   },
   {
     id: "bengaluru-uhi",
     group: "projects",
     category: "climate",
-    title: "Decadal Study of UHI, GSI & UDI over Bengaluru",
-    summary: "Performed geospatial analysis of UHI, green space and urban development trends using satellite imagery and landscape indicators.",
-    meta: "Jan–Jun 2025 · Bengaluru",
-    year: "2025", location: "Bengaluru", methods: "Satellite imagery · Landscape indicators (UHI, GSI, UDI)", status: "Jan–Jun 2025", kind: "Project",
-    overview: "Performed geospatial analysis of UHI, green space and urban development trends using satellite imagery and landscape indicators.",
+    title: "Bengaluru: Urban Heat, Green Spaces and Urban Development",
+    subtitle: "Spatiotemporal Assessment of Urban Green Space Dynamics and Their Mitigating Influence on Urban Heat Island: A Decadal Study of Bengaluru",
+    summary: "M.Sc. dissertation examining Bengaluru's land-surface temperature, vegetation, built-up patterns and green-space configuration across April 2014, 2019 and 2024.",
+    meta: "M.Sc. dissertation · 2025 · Bengaluru",
+    year: "2025", location: "Bengaluru", methods: "Landsat-based LST, NDVI, NDBI and GSI analysis · Landscape metrics · Moran's I · CCDM", status: "2025", kind: "M.Sc. Dissertation",
+    overview: "M.Sc. dissertation examining how Bengaluru's thermal environment and urban green spaces changed over a decade, comparing April observations from 2014, 2019 and 2024. The study combines remote sensing with landscape metrics and spatial statistical techniques to investigate how urban green-space configuration relates to the city's thermal environment, without treating all green spaces as interchangeable.",
     page: "projects/bengaluru-urban-heat.html"
   },
   {
@@ -86,7 +88,8 @@ const POSTS = [
     overview: "Based on fieldwork across 14 Nagar Van and Nagar Vatika sites in Uttar Pradesh, Madhya Pradesh and Rajasthan, this policy brief examines maintenance funding, irrigation, staffing, visitor experience, community participation and local revenue mechanisms. It proposes a phased approach to more reliable maintenance funding and locally appropriate community participation. The assessment covers selected sites during a defined fieldwork period and should not be treated as a nationally representative evaluation.",
     publication: "SSRN Working Paper", date: "Written 16 August 2026 · Posted 11 September 2026",
     url: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7415140",
-    doi: "https://doi.org/10.2139/ssrn.7415140"
+    doi: "https://doi.org/10.2139/ssrn.7415140",
+    page: "projects/nagar-van-assessment.html"
   },
   {
     id: "etawah-design",
@@ -119,14 +122,6 @@ const POSTS = [
     title: "Reimagining Urban Green Spaces as Fundamental Infrastructure in a Warming India",
     meta: "Blog / Article",
     year: "", location: "", methods: "", status: "Blog / Article", kind: "Blog / Article"
-  },
-  {
-    id: "ugs-thesis",
-    group: "projects",
-    category: "environment",
-    title: "Spatiotemporal Assessment of UGS Dynamics – Bengaluru",
-    meta: "Research thesis · Bengaluru",
-    year: "", location: "Bengaluru", methods: "", status: "Research Thesis", kind: "Research Thesis"
   },
   {
     id: "india-counts-trees",
@@ -388,6 +383,7 @@ function initModal() {
 function entryBody(p) {
   // Render only populated fields; a single muted line when nothing is known.
   let h = "";
+  if (p.subtitle) h += `<p class="muted" style="font-style:italic">${esc(p.subtitle)}</p>`;
   if (p.overview) h += `<p>${esc(p.overview)}</p>`;
   if (p.objectives) h += `<h4>Objectives</h4><p>${esc(p.objectives)}</p>`;
   if (p.methods) h += `<h4>Methods</h4><p>${esc(p.methods)}</p>`;
