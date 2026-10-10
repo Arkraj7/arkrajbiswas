@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=17" />
+  <link rel="stylesheet" href="css/style.css?v=18" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
@@ -328,8 +328,19 @@
         </div>
         <div>
           <div class="lens-chart" id="lensChartWrap">
-            <div class="lens-skeleton" id="lensSkeleton">Climate chart loads here — scroll to begin.</div>
-            <div id="lensChart" hidden></div>
+            <div class="lens-skeleton" id="lensSkeleton" aria-hidden="true"><span>Preparing climate data…</span></div>
+            <div id="lensChart" hidden>
+              <div class="lens-canvas-wrap"><canvas id="lensCanvas"></canvas></div>
+              <div class="dl-row" role="group" aria-label="Chart range">
+                <span class="meta" style="align-self:center">Range</span>
+                <span id="lensPresets" style="display:contents"></span>
+                <button class="var-btn" id="lensReset" type="button" hidden>Reset zoom</button>
+              </div>
+              <details class="lens-data" id="lensTableWrap" hidden>
+                <summary>Data table</summary>
+                <div class="lens-table-scroll"><table id="lensTable"></table></div>
+              </details>
+            </div>
           </div>
           <p class="meta" id="lensMeta" style="margin-top:14px">ERA5-Land via Open-Meteo · annual history from 2001</p>
           <p class="small muted" style="margin:8px 0 0">These values are climate-data estimates, not direct observations from a local weather station.</p>
@@ -397,9 +408,12 @@
     </div>
   </footer>
 
-  <script src="js/main.js?v=17"></script>
-  <script src="js/earth.js?v=17"></script>
-  <script src="js/slides.js?v=17"></script>
-  <script src="js/climate.js?v=17"></script>
+  <script src="assets/vendor/chart.umd.min.js?v=18"></script>
+  <script src="assets/vendor/hammer.min.js?v=18"></script>
+  <script src="assets/vendor/chartjs-plugin-zoom.min.js?v=18"></script>
+  <script src="js/main.js?v=18"></script>
+  <script src="js/earth.js?v=18"></script>
+  <script src="js/slides.js?v=18"></script>
+  <script src="js/climate.js?v=18"></script>
 </body>
 </html>

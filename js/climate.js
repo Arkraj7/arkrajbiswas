@@ -34,6 +34,12 @@
       input: document.getElementById("lensSearch"),
       results: document.getElementById("lensResults"),
       status: document.getElementById("lensStatus"),
+      canvas: document.getElementById("lensCanvas"),
+      presets: document.getElementById("lensPresets"),
+      reset: document.getElementById("lensReset"),
+      tableWrap: document.getElementById("lensTableWrap"),
+      table: document.getElementById("lensTable"),
+      tableCap: document.getElementById("lensTableCap"),
       retry: document.getElementById("lensRetry"),
       chart: document.getElementById("lensChart"),
       skeleton: document.getElementById("lensSkeleton"),
@@ -84,7 +90,7 @@
             load();
           }
         });
-      }, { rootMargin: "0px 0px -10% 0px" });
+      }, { rootMargin: "0px 0px 300px 0px" });
       io.observe(section);
     } else {
       state.started = true;
@@ -355,15 +361,13 @@
       const covMin = Math.min(...series.map((s) => s.cov));
       const excluded = excludedYears(daily, state.variable, years);
       const hasFaint = series.every((s) => s.hi !== undefined && s.hi !== null && s.lo !== null);
-      els.skeleton.hidden = true;
-      els.chart.hidden = false;
-      els.chart.innerHTML = chartSVG(
-        years.map(String), series.map((s) => s.mean),
-        hasFaint
-          ? [{ values: series.map((s) => s.hi), faint: true }, { values: series.map((s) => s.lo), faint: true }]
-          : [],
-        cfg, `${state.label}: ${titles[state.variable]}, ${years[0]}–${years[years.length - 1]}`
-      );
+      const chartSeries = [{ name: `Annual mean of daily ${state.variable === "temp" ? "means" : "values"}`, values: series.map((s) => s.mean), main: true }];
+      if (state.variable === "temp" && hasFaint) {
+        chartSeries.push(
+          { name: "Annual mean of daily maxima", values: series.map((s) => s.hi) },
+          { name: "Annual mean of daily minima", values: series.map((s) => s.lo) }
+        );
+      }
       setExport({
         title: titles[state.variable], labels: years.map(String), model,
         cols: state.variable === "temp"
@@ -380,6 +384,10 @@
         `${years[0]}–${years[years.length - 1]} · daily coverage ${Math.floor(covMin * 100)}–100% · ` +
         `${cfg.unit} · ${model} via Open-Meteo` +
         (excluded.length ? ` · ${excluded.length} year${excluded.length === 1 ? "" : "s"} excluded (missing days)` : ""));
+      els.skeleton.hidden = true;
+      els.chart.hidden = false;
+      buildChart(years.map(String), chartSeries, cfg,
+        `${state.label}: ${titles[state.variable]}, ${years[0]} to ${years[years.length - 1]}`);
     } else {
       const end = latestValidIndex(daily, state.variable);
       if (end < 0) {
@@ -411,15 +419,16 @@
       }
       const hiAll = state.variable === "temp" ? idx.map((i) => daily.temperature_2m_max[i]) : [];
       const loAll = state.variable === "temp" ? idx.map((i) => daily.temperature_2m_min[i]) : [];
-      const extra = (state.variable === "temp" && hiAll.every(validNum) && loAll.every(validNum))
-        ? [{ values: hiAll, faint: true, tag: "max" }, { values: loAll, faint: true, tag: "min" }]
-        : [];
+      const showExtra = state.variable === "temp" && hiAll.every(validNum) && loAll.every(validNum);
+      const chartSeries = [{ name: `Daily ${state.variable === "temp" ? "mean temperature" : "values"}`, values, main: true }];
+      if (showExtra) {
+        chartSeries.push(
+          { name: "Daily maximum temperature", values: hiAll },
+          { name: "Daily minimum temperature", values: loAll }
+        );
+      }
       els.skeleton.hidden = true;
       els.chart.hidden = false;
-      els.chart.innerHTML = chartSVG(
-        dates.map((dISO) => shortDate(dISO)), values, extra, cfg,
-        `${state.label}: ${titles[state.variable]}, ${dates[0]} to ${dates[dates.length - 1]}`
-      );
       setExport({
         title: titles[state.variable], labels: dates.slice(), model,
         cols: state.variable === "temp"
@@ -433,6 +442,10 @@
       });
       setMeta(`${state.label} · ${fmtLat(state.lat)}, ${fmtLon(state.lon)} · ${titles[state.variable]} · ` +
         `Historical reanalysis · Data through ${dates[dates.length - 1]} · ${cfg.unit} · ${model} via Open-Meteo`);
+      buildChart(
+        dates.map((dISO) => shortDate(dISO)), chartSeries, cfg,
+        `${state.label}: ${titles[state.variable]}, ${dates[0]} to ${dates[dates.length - 1]}`
+      );
     }
     els.place.textContent = state.label;
     if (els.note) els.note.textContent = state.example
@@ -457,51 +470,303 @@
     return `${Number(m)}/${Number(d)}`;
   }
 
-  function chartSVG(labels, values, extra, cfg, ariaSummary) {
-    const W = 620, H = 260, PL = 56, PR = 16, PT = 16, PB = 36;
-    const clean = (a) => a.filter((v) => typeof v === "number" && Number.isFinite(v));
-    const all = clean(values.concat(...extra.map((e) => e.values)));
-    if (!all.length) return "";
-    const min = Math.min(...all), max = Math.max(...all);
-    const span = (max - min) || 1;
-    const lo = min - span * 0.15, hi = max + span * 0.15;
-    const n = values.length;
-    const x = (i) => PL + (n === 1 ? (W - PL - PR) / 2 : (i * (W - PL - PR)) / (n - 1));
-    const y = (v) => PT + (1 - (v - lo) / (hi - lo)) * (H - PT - PB);
-    const pathOf = (vals) => {
-      // Break the path across missing values instead of bridging them.
-      let d = "", pen = false;
-      vals.forEach((v, i) => {
-        if (typeof v !== "number" || !Number.isFinite(v)) { pen = false; return; }
-        d += `${pen ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)} `;
-        pen = true;
-      });
-      return d.trim();
+  /* ----- Interactive chart (Chart.js, native canvas) ----- */
+  let chart = null;
+  let chartThemeObs = null;
+
+  function chartAvailable() {
+    return typeof window.Chart !== "undefined";
+  }
+
+  function themeColors() {
+    const cs = window.getComputedStyle(document.documentElement);
+    const get = (n, fb) => (cs.getPropertyValue(n) || "").trim() || fb;
+    return {
+      ink: get("--ink", "#1f2521"),
+      soft: get("--ink-soft", "#49534c"),
+      muted: get("--muted", "#83877f"),
+      line: get("--line-soft", "rgba(31,37,33,.12)"),
+      accent: get("--accent", "#33573f")
     };
-    const main = pathOf(values);
-    const faintPaths = extra.map((e) =>
-      `<path d="${pathOf(e.values)}" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.45" stroke-dasharray="4 3"/>`
-    ).join("");
-    const dots = values.map((v, i) =>
-      `<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="3" fill="currentColor"><title>${escapeHTML(labels[i])}: ${v.toFixed(cfg.decimals)} ${cfg.unit}</title></circle>`
-    ).join("");
-    // Ticks: annual years -> every 5th + last; daily -> ~6 evenly.
-    const isYear = /^\d{4}$/.test(labels[0] || "");
-    const tickIdx = labels.map((l, i) => i).filter((i) =>
-      isYear ? (Number(labels[i]) % 5 === 0 || i === n - 1) : (i % Math.ceil(n / 6) === 0 || i === n - 1));
-    const ticks = tickIdx.map((i) =>
-      `<text x="${x(i).toFixed(1)}" y="${H - 12}" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.55" font-family="monospace">${escapeHTML(labels[i])}</text>`
-    ).join("");
-    return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${escapeHTML(ariaSummary)}">
-      <line x1="${PL}" y1="${PT}" x2="${PL}" y2="${H - PB}" stroke="currentColor" opacity="0.25"/>
-      <line x1="${PL}" y1="${H - PB}" x2="${W - PR}" y2="${H - PB}" stroke="currentColor" opacity="0.25"/>
-      <text x="${PL - 8}" y="${y(max).toFixed(1) + 4}" text-anchor="end" font-size="11" fill="currentColor" opacity="0.6" font-family="monospace">${max.toFixed(cfg.decimals)}</text>
-      <text x="${PL - 8}" y="${y(min).toFixed(1) + 4}" text-anchor="end" font-size="11" fill="currentColor" opacity="0.6" font-family="monospace">${min.toFixed(cfg.decimals)}</text>
-      <path d="${main} L${x(n - 1).toFixed(1)},${H - PB} L${x(0).toFixed(1)},${H - PB} Z" fill="currentColor" opacity="0.08"/>
-      ${faintPaths}
-      <path d="${main}" fill="none" stroke="currentColor" stroke-width="2"/>
-      ${dots}${ticks}
-    </svg>`;
+  }
+
+  function withAlpha(rgb, a) {
+    const m = String(rgb).match(/(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
+    if (m) return `rgba(${m[1]},${m[2]},${m[3]},${a})`;
+    return rgb;
+  }
+
+  // Subtle vertical crosshair at the hovered observation.
+  const crosshairPlugin = {
+    id: "ab-crosshair",
+    afterDraw(c, args, opts) {
+      const active = c.getActiveElements ? c.getActiveElements() : [];
+      if (!active.length || !c.chartArea) return;
+      const x = active[0].element.x;
+      const ctx = c.ctx;
+      ctx.save();
+      ctx.strokeStyle = (opts && opts.color) || "rgba(128,128,128,.55)";
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(x, c.chartArea.top);
+      ctx.lineTo(x, c.chartArea.bottom);
+      ctx.stroke();
+      ctx.restore();
+    }
+  };
+
+  function ensureChartLib() {
+    if (!chartAvailable() || !window.Chart.__abPlugins) {
+      if (chartAvailable() && !window.Chart.__abPlugins) {
+        window.Chart.register(crosshairPlugin);
+        if (window.ChartZoom) window.Chart.register(window.ChartZoom);
+        window.Chart.__abPlugins = true;
+        window.Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+        window.Chart.defaults.animation = { duration: 350 };
+      }
+    }
+    return chartAvailable();
+  }
+
+  function destroyChart() {
+    if (chart) { chart.destroy(); chart = null; }
+  }
+
+  function applyChartTheme() {
+    if (!chart) return;
+    const t = themeColors();
+    chart.options.color = t.soft;
+    chart.options.scales.x.ticks.color = t.muted;
+    chart.options.scales.x.grid.color = t.line;
+    chart.options.scales.y.ticks.color = t.muted;
+    chart.options.scales.y.grid.color = t.line;
+    chart.options.plugins.tooltip = tooltipOptions(t);
+    chart.options.plugins.crosshair = { color: t.muted };
+    chart.update("none");
+  }
+
+  function watchTheme() {
+    if (chartThemeObs || !("MutationObserver" in window)) return;
+    chartThemeObs = new MutationObserver((muts) => {
+      if (muts.some((m) => m.attributeName === "data-theme")) applyChartTheme();
+    });
+    chartThemeObs.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  }
+
+  function tooltipOptions(t) {
+    return {
+      enabled: true,
+      backgroundColor: t.ink,
+      titleColor: t.muted === t.ink ? t.ink : undefined,
+      padding: 12,
+      displayColors: false,
+      callbacks: {
+        title: (items) => (items.length ? String(items[0].label) : ""),
+        label: (item) => {
+          const v = item.parsed && typeof item.parsed.y === "number" ? item.parsed.y : null;
+          const ds = item.dataset || {};
+          const name = ds.abName || ds.label || "";
+          return v === null ? name : `${name}: ${v.toFixed(ds.abDecimals != null ? ds.abDecimals : 1)} ${ds.abUnit || ""}`.trim();
+        },
+        footer: () => `${state.label} · ${VARS[state.variable].label}`
+      }
+    };
+  }
+
+  // Preset ranges over the loaded labels; returns null when N/A.
+  function presetDefs(n) {
+    if (state.view === "annual") {
+      return [
+        { key: "5y", label: "5Y", count: 5 },
+        { key: "10y", label: "10Y", count: 10 },
+        { key: "all", label: "All", count: n }
+      ];
+    }
+    return [
+      { key: "7d", label: "7D", count: 7 },
+      { key: "14d", label: "14D", count: 14 },
+      { key: "30d", label: "30D", count: 30 }
+    ];
+  }
+
+  function renderPresets(n) {
+    if (!els.presets) return;
+    els.presets.innerHTML = "";
+    presetDefs(n).forEach((p) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "var-btn";
+      b.textContent = p.label;
+      b.setAttribute("aria-pressed", "false");
+      b.setAttribute("aria-label", `Show last ${p.count} observations`);
+      if (n < p.count && p.key !== "all") b.disabled = true;
+      b.addEventListener("click", () => {
+        if (!chart) return;
+        const total = chart.data.labels.length;
+        const c = Math.min(p.count, total);
+        chart.options.scales.x.min = total - c;
+        chart.options.scales.x.max = total - 1;
+        chart.update();
+        markPreset(b);
+        renderTable();
+      });
+      els.presets.appendChild(b);
+    });
+    if (els.reset) {
+      els.reset.hidden = false;
+      els.reset.onclick = () => {
+        if (!chart) return;
+        chart.resetZoom();
+        delete chart.options.scales.x.min;
+        delete chart.options.scales.x.max;
+        chart.update();
+        markPreset(null);
+        renderTable();
+      };
+    }
+  }
+
+  function markPreset(active) {
+    if (!els.presets) return;
+    els.presets.querySelectorAll("button").forEach((x) =>
+      x.setAttribute("aria-pressed", x === active ? "true" : "false"));
+  }
+
+  function visibleRange() {
+    if (!chart) return null;
+    const n = chart.data.labels.length;
+    const s = chart.scales.x;
+    let lo = typeof s.min === "number" ? s.min : 0;
+    let hi = typeof s.max === "number" ? s.max : n - 1;
+    lo = Math.max(0, Math.min(n - 1, Math.round(lo)));
+    hi = Math.max(0, Math.min(n - 1, Math.round(hi)));
+    if (hi < lo) { const t = lo; lo = hi; hi = t; }
+    return { lo, hi };
+  }
+
+  function buildChart(labels, series, cfg, ariaSummary) {
+    // series: [{name, values, main, decimals, unit}]
+    if (!ensureChartLib() || !els.canvas) {
+      els.chart.hidden = true;
+      showSkeleton("Interactive chart unavailable — the data table below still lists the values.");
+      renderTableFallback(labels, series, cfg);
+      return false;
+    }
+    watchTheme();
+    destroyChart();
+    const t = themeColors();
+    const datasets = series.map((s, i) => ({
+      label: s.name,
+      data: s.values,
+      borderColor: s.main ? t.accent : t.muted,
+      backgroundColor: s.main ? withAlpha(t.accent, 0.1) : "transparent",
+      fill: !!s.main,
+      borderWidth: s.main ? 2.4 : 1.4,
+      borderDash: s.main ? [] : [5, 4],
+      pointRadius: s.main ? 2.6 : 0,
+      pointHoverRadius: 5,
+      tension: 0.15,
+      spanGaps: true,
+      abName: s.name,
+      abDecimals: cfg.decimals,
+      abUnit: cfg.unit
+    }));
+    chart = new window.Chart(els.canvas, {
+      type: "line",
+      data: { labels: labels.slice(), datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        color: t.soft,
+        interaction: { mode: "index", intersect: false },
+        plugins: {
+          legend: {
+            display: series.length > 1,
+            labels: { color: t.soft, usePointStyle: true, pointStyle: "line" },
+            onClick: window.Chart.defaults.plugins.legend.onClick
+          },
+          title: { display: false },
+          tooltip: tooltipOptions(t),
+          crosshair: { color: t.muted },
+          zoom: {
+            limits: { x: { minRange: 2 } },
+            pan: { enabled: true, mode: "x" },
+            zoom: {
+              drag: { enabled: true, mode: "x" },
+              pinch: { enabled: true, mode: "x" },
+              wheel: { enabled: false },
+              mode: "x",
+              onZoomComplete: () => { markPreset(null); renderTable(); }
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: t.muted, maxTicksLimit: 8, maxRotation: 0 },
+            grid: { color: t.line }
+          },
+          y: {
+            ticks: { color: t.muted, maxTicksLimit: 6 },
+            grid: { color: t.line }
+          }
+        },
+        onHover: (e, els_) => {
+          if (els.canvas) els.canvas.style.cursor = els_ && els_.length ? "crosshair" : "default";
+        }
+      }
+    });
+    els.canvas.setAttribute("role", "img");
+    els.canvas.setAttribute("aria-label", ariaSummary);
+    // Touch: let vertical page scroll pass through; horizontal goes to chart.
+    els.canvas.style.touchAction = "pan-y";
+    renderPresets(labels.length);
+    renderTable();
+    return true;
+  }
+
+  function currentSeries() {
+    if (!lastExport) return null;
+    return {
+      labels: lastExport.labels.slice(),
+      cols: lastExport.cols.map((c) => ({ header: c.header, values: c.values.slice() })),
+      unit: lastExport.unit,
+      decimals: lastExport.decimals
+    };
+  }
+
+  function renderTable() {
+    if (!els.table) return;
+    const s = currentSeries();
+    if (!s) { if (els.tableWrap) els.tableWrap.hidden = true; return; }
+    const r = visibleRange();
+    const lo = r ? r.lo : 0, hi = r ? r.hi : s.labels.length - 1;
+    let html = `<caption id="lensTableCap">${escapeHTML(lastExport.title)} — ${escapeHTML(lastExport.place)}, ${escapeHTML(lastExport.period)}</caption><thead><tr><th scope="col">Date</th>`;
+    s.cols.forEach((c) => { html += `<th scope="col">${escapeHTML(c.header)} (${escapeHTML(s.unit)})</th>`; });
+    html += "</tr></thead><tbody>";
+    for (let i = lo; i <= hi; i++) {
+      html += `<tr><th scope="row">${escapeHTML(String(s.labels[i]))}</th>`;
+      s.cols.forEach((c) => {
+        const v = c.values[i];
+        html += `<td>${typeof v === "number" && Number.isFinite(v) ? v.toFixed(s.decimals) : "Not available"}</td>`;
+      });
+      html += "</tr>";
+    }
+    html += "</tbody>";
+    els.table.innerHTML = html;
+    if (els.tableWrap) els.tableWrap.hidden = false;
+  }
+
+  function renderTableFallback(labels, series, cfg) {
+    // No-chart path: still expose the values accessibly.
+    if (!els.table) return;
+    lastExport = lastExport || null;
+    let html = `<caption>Values (${escapeHTML(cfg.unit)})</caption><thead><tr><th scope="col">Date</th><th scope="col">Value (${escapeHTML(cfg.unit)})</th></tr></thead><tbody>`;
+    labels.forEach((l, i) => {
+      const v = series[0] ? series[0].values[i] : null;
+      html += `<tr><th scope="row">${escapeHTML(String(l))}</th><td>${typeof v === "number" && Number.isFinite(v) ? v.toFixed(cfg.decimals) : "Not available"}</td></tr>`;
+    });
+    els.table.innerHTML = html + "</tbody>";
+    if (els.tableWrap) els.tableWrap.hidden = false;
   }
 
   /* ----- Exports (PNG + CSV of exactly what is displayed) ----- */
@@ -555,8 +820,11 @@
   }
 
   function exportCSV() {
-    if (!lastExport) return;
+    if (!lastExport || !chart) return;
     const e = lastExport;
+    const r = visibleRange();
+    const lo = r ? r.lo : 0, hi = r ? r.hi : e.labels.length - 1;
+    const shown = hi > lo ? ` · visible ${e.labels[lo]} to ${e.labels[hi]}` : "";
     const lines = [
       "# Climate Lens export (plotted data, UTF-8)",
       `# Location,${e.place}`,
@@ -564,93 +832,57 @@
       `# Longitude,${e.lon}`,
       `# Variable,${VARS[e.variable].label}`,
       `# Unit,${e.unit}`,
-      `# Period,${e.period}`,
+      `# Period,${e.period}${shown}`,
       `# Model,${e.model || "ERA5-Land"}`,
       `# Source,Open-Meteo Historical Weather API (CC BY 4.0)`,
       `# Aggregation,${e.agg}`
     ];
     lines.push(["label"].concat(e.cols.map((c) => `${c.header} (${e.unit})`)).map(csvCell).join(","));
-    for (let i = 0; i < e.labels.length; i++) {
+    for (let i = lo; i <= hi; i++) {
       lines.push([e.labels[i]].concat(e.cols.map((c) => {
         const v = c.values[i];
         return csvCell(typeof v === "number" && Number.isFinite(v) ? v.toFixed(e.decimals) : "");
       })).join(","));
     }
-    downloadBlob(new Blob(["\uFEFF" + lines.join("\n")], { type: "text/csv;charset=utf-8" }), `${exportBase()}.csv`);
-  }
-
-  function xmlEsc(s) {
-    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    const base = exportBase() + (hi - lo + 1 === e.labels.length ? "" : "-window");
+    downloadBlob(new Blob(["\uFEFF" + lines.join("\n")], { type: "text/csv;charset=utf-8" }), `${base}.csv`);
   }
 
   function exportPNG() {
-    if (!lastExport) return;
+    if (!lastExport || !chart) return;
     const e = lastExport;
-    const W = 1600, H = 900, PL = 150, PR = 80, PT = 210, PB = 170;
-    const vals = e.cols[0].values;
-    const min = Math.min(...vals), max = Math.max(...vals);
-    const span = (max - min) || 1;
-    const lo = min - span * 0.12, hi = max + span * 0.12;
-    const n = vals.length;
-    const X = (i) => PL + (n === 1 ? (W - PL - PR) / 2 : (i * (W - PL - PR)) / (n - 1));
-    const Y = (v) => PT + (1 - (v - lo) / (hi - lo)) * (H - PT - PB);
-    const line = vals.map((v, i) => `${i === 0 ? "M" : "L"}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(" ");
-    const step = Math.max(1, Math.ceil(n / 12));
-    let ticks = "";
-    for (let i = 0; i < n; i += step) {
-      ticks += `<text x="${X(i).toFixed(1)}" y="${H - 128}" text-anchor="middle" font-size="22" fill="#5a635c" font-family="monospace">${xmlEsc(e.labels[i])}</text>`;
+    // Temporarily stamp export titles onto the live chart so the PNG
+    // carries location, units, period, source and disclaimer.
+    const prevTitle = chart.options.plugins.title;
+    const prevSub = chart.options.plugins.subtitle;
+    chart.options.plugins.title = {
+      display: true,
+      text: [`CLIMATE LENS · ${e.title}`, `${e.place} · ${fmtLat(e.lat)}, ${fmtLon(e.lon)}`],
+      font: { size: 20, weight: "600" },
+      padding: { top: 8, bottom: 2 }
+    };
+    chart.options.plugins.subtitle = {
+      display: true,
+      text: `${e.period} · ${e.unit} · ${e.model || "ERA5-Land"} via Open-Meteo (CC BY 4.0) · Gridded estimates, not station observations. Exported ${new Date().toISOString().slice(0, 10)}.`,
+      font: { size: 12 },
+      padding: { bottom: 10 }
+    };
+    chart.update("none");
+    const finish = (ok) => {
+      chart.options.plugins.title = prevTitle;
+      chart.options.plugins.subtitle = prevSub;
+      chart.update("none");
+      if (!ok) say("Chart export failed — please try again.");
+    };
+    try {
+      const url = chart.toBase64Image("image/png", 1);
+      fetch(url)
+        .then((r) => r.blob())
+        .then((b) => { downloadBlob(b, `${exportBase()}.png`); finish(true); })
+        .catch(() => finish(false));
+    } catch (err) {
+      finish(false);
     }
-    const svg =
-      `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">` +
-      `<rect width="${W}" height="${H}" fill="#FAF8F2"/>` +
-      `<text x="80" y="72" font-size="24" letter-spacing="4" fill="#33573F" font-family="monospace">CLIMATE LENS · ARKRAJ BISWAS</text>` +
-      `<text x="80" y="128" font-size="46" fill="#1F2521" font-family="Georgia, serif">${xmlEsc(e.title)}</text>` +
-      `<text x="80" y="172" font-size="28" fill="#49534C" font-family="Georgia, serif" font-style="italic">${xmlEsc(e.place)} · ${xmlEsc(fmtLat(e.lat))}, ${xmlEsc(fmtLon(e.lon))}</text>` +
-      `<line x1="${PL}" y1="${PT}" x2="${PL}" y2="${H - PB}" stroke="#1F2521" stroke-opacity="0.3" stroke-width="2"/>` +
-      `<line x1="${PL}" y1="${H - PB}" x2="${W - PR}" y2="${H - PB}" stroke="#1F2521" stroke-opacity="0.3" stroke-width="2"/>` +
-      `<text x="${PL - 16}" y="${(Y(max) + 8).toFixed(1)}" text-anchor="end" font-size="24" fill="#5a635c" font-family="monospace">${max.toFixed(e.decimals)}</text>` +
-      `<text x="${PL - 16}" y="${(Y(min) + 8).toFixed(1)}" text-anchor="end" font-size="24" fill="#5a635c" font-family="monospace">${min.toFixed(e.decimals)}</text>` +
-      `<path d="${line}" fill="none" stroke="#33573F" stroke-width="5"/>` +
-      ticks +
-      `<text x="80" y="${H - 84}" font-size="23" fill="#49534C" font-family="Arial, sans-serif">${xmlEsc(e.period)} · ${xmlEsc(e.unit)} · ${xmlEsc(e.model || "ERA5-Land")} via Open-Meteo (CC BY 4.0)</text>` +
-      `<text x="80" y="${H - 52}" font-size="21" fill="#83877F" font-family="Arial, sans-serif">Gridded reanalysis estimates, not local station observations. Exported ${new Date().toISOString().slice(0, 10)}.</text>` +
-      `</svg>`;
-    svgToPng(svg, W, H, `${exportBase()}.png`).catch(() => say("Chart export failed — please try again."));
-  }
-
-  function svgToPng(svgStr, w, h, filename) {
-    return new Promise((resolve, reject) => {
-      let url = null;
-      try {
-        const blob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
-        url = URL.createObjectURL(blob);
-        const img = new Image();
-        img.onload = () => {
-          try {
-            const c = document.createElement("canvas");
-            c.width = w; c.height = h;
-            const ctx = c.getContext("2d");
-            ctx.fillStyle = "#FAF8F2";
-            ctx.fillRect(0, 0, w, h);
-            ctx.drawImage(img, 0, 0, w, h);
-            URL.revokeObjectURL(url);
-            url = null;
-            c.toBlob((b) => {
-              if (b) { downloadBlob(b, filename); resolve(true); }
-              else reject(new Error("encode failed"));
-            }, "image/png");
-          } catch (err) {
-            if (url) URL.revokeObjectURL(url);
-            reject(err);
-          }
-        };
-        img.onerror = () => { if (url) URL.revokeObjectURL(url); reject(new Error("render failed")); };
-        img.src = url;
-      } catch (err) {
-        if (url) URL.revokeObjectURL(url);
-        reject(err);
-      }
-    });
   }
 
   /* ----- Biodiversity Pulse: recent records in a defined box ----- */
