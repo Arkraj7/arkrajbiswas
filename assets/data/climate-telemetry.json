@@ -1,0 +1,680 @@
+{
+  "annual_series": [
+    {
+      "enso_oni": 0.4,
+      "gistemp": 0.12,
+      "preind": 0.38,
+      "year": 1940
+    },
+    {
+      "enso_oni": 0.9,
+      "gistemp": 0.18,
+      "preind": 0.44,
+      "year": 1941
+    },
+    {
+      "enso_oni": -0.6,
+      "gistemp": 0.06,
+      "preind": 0.32,
+      "year": 1942
+    },
+    {
+      "enso_oni": -0.4,
+      "gistemp": 0.09,
+      "preind": 0.35,
+      "year": 1943
+    },
+    {
+      "enso_oni": 0.1,
+      "gistemp": 0.2,
+      "preind": 0.46,
+      "year": 1944
+    },
+    {
+      "enso_oni": -0.2,
+      "gistemp": 0.09,
+      "preind": 0.35,
+      "year": 1945
+    },
+    {
+      "enso_oni": 0.1,
+      "gistemp": -0.07,
+      "preind": 0.19,
+      "year": 1946
+    },
+    {
+      "enso_oni": -0.1,
+      "gistemp": -0.03,
+      "preind": 0.23,
+      "year": 1947
+    },
+    {
+      "enso_oni": -0.2,
+      "gistemp": -0.11,
+      "preind": 0.15,
+      "year": 1948
+    },
+    {
+      "enso_oni": -0.6,
+      "gistemp": -0.11,
+      "preind": 0.15,
+      "year": 1949
+    },
+    {
+      "enso_oni": -1.1,
+      "gistemp": -0.18,
+      "preind": 0.08,
+      "year": 1950
+    },
+    {
+      "enso_oni": 0.5,
+      "gistemp": -0.07,
+      "preind": 0.19,
+      "year": 1951
+    },
+    {
+      "enso_oni": 0.2,
+      "gistemp": 0.01,
+      "preind": 0.27,
+      "year": 1952
+    },
+    {
+      "enso_oni": 0.7,
+      "gistemp": 0.08,
+      "preind": 0.34,
+      "year": 1953
+    },
+    {
+      "enso_oni": -0.7,
+      "gistemp": -0.13,
+      "preind": 0.13,
+      "year": 1954
+    },
+    {
+      "enso_oni": -1.3,
+      "gistemp": -0.14,
+      "preind": 0.12,
+      "year": 1955
+    },
+    {
+      "enso_oni": -1.0,
+      "gistemp": -0.19,
+      "preind": 0.07,
+      "year": 1956
+    },
+    {
+      "enso_oni": 0.9,
+      "gistemp": 0.05,
+      "preind": 0.31,
+      "year": 1957
+    },
+    {
+      "enso_oni": 0.8,
+      "gistemp": 0.06,
+      "preind": 0.32,
+      "year": 1958
+    },
+    {
+      "enso_oni": 0.1,
+      "gistemp": 0.03,
+      "preind": 0.29,
+      "year": 1959
+    },
+    {
+      "enso_oni": -0.1,
+      "gistemp": -0.02,
+      "preind": 0.24,
+      "year": 1960
+    },
+    {
+      "enso_oni": -0.1,
+      "gistemp": 0.06,
+      "preind": 0.32,
+      "year": 1961
+    },
+    {
+      "enso_oni": -0.3,
+      "gistemp": 0.03,
+      "preind": 0.29,
+      "year": 1962
+    },
+    {
+      "enso_oni": 0.6,
+      "gistemp": 0.05,
+      "preind": 0.31,
+      "year": 1963
+    },
+    {
+      "enso_oni": -0.6,
+      "gistemp": -0.2,
+      "preind": 0.06,
+      "year": 1964
+    },
+    {
+      "enso_oni": 0.9,
+      "gistemp": -0.11,
+      "preind": 0.15,
+      "year": 1965
+    },
+    {
+      "enso_oni": 0.4,
+      "gistemp": -0.06,
+      "preind": 0.2,
+      "year": 1966
+    },
+    {
+      "enso_oni": -0.3,
+      "gistemp": -0.02,
+      "preind": 0.24,
+      "year": 1967
+    },
+    {
+      "enso_oni": 0.2,
+      "gistemp": -0.08,
+      "preind": 0.18,
+      "year": 1968
+    },
+    {
+      "enso_oni": 0.7,
+      "gistemp": 0.05,
+      "preind": 0.31,
+      "year": 1969
+    },
+    {
+      "enso_oni": -0.6,
+      "gistemp": 0.03,
+      "preind": 0.29,
+      "year": 1970
+    },
+    {
+      "enso_oni": -1.0,
+      "gistemp": -0.08,
+      "preind": 0.18,
+      "year": 1971
+    },
+    {
+      "enso_oni": 1.1,
+      "gistemp": 0.01,
+      "preind": 0.27,
+      "year": 1972
+    },
+    {
+      "enso_oni": -0.8,
+      "gistemp": 0.16,
+      "preind": 0.42,
+      "year": 1973
+    },
+    {
+      "enso_oni": -0.9,
+      "gistemp": -0.07,
+      "preind": 0.19,
+      "year": 1974
+    },
+    {
+      "enso_oni": -1.3,
+      "gistemp": -0.01,
+      "preind": 0.25,
+      "year": 1975
+    },
+    {
+      "enso_oni": 0.2,
+      "gistemp": -0.1,
+      "preind": 0.16,
+      "year": 1976
+    },
+    {
+      "enso_oni": 0.5,
+      "gistemp": 0.18,
+      "preind": 0.44,
+      "year": 1977
+    },
+    {
+      "enso_oni": -0.1,
+      "gistemp": 0.07,
+      "preind": 0.33,
+      "year": 1978
+    },
+    {
+      "enso_oni": 0.3,
+      "gistemp": 0.16,
+      "preind": 0.42,
+      "year": 1979
+    },
+    {
+      "enso_oni": 0.2,
+      "gistemp": 0.26,
+      "preind": 0.52,
+      "year": 1980
+    },
+    {
+      "enso_oni": -0.2,
+      "gistemp": 0.32,
+      "preind": 0.58,
+      "year": 1981
+    },
+    {
+      "enso_oni": 1.3,
+      "gistemp": 0.14,
+      "preind": 0.4,
+      "year": 1982
+    },
+    {
+      "enso_oni": 0.8,
+      "gistemp": 0.32,
+      "preind": 0.58,
+      "year": 1983
+    },
+    {
+      "enso_oni": -0.5,
+      "gistemp": 0.15,
+      "preind": 0.41,
+      "year": 1984
+    },
+    {
+      "enso_oni": -0.6,
+      "gistemp": 0.12,
+      "preind": 0.38,
+      "year": 1985
+    },
+    {
+      "enso_oni": 0.4,
+      "gistemp": 0.18,
+      "preind": 0.44,
+      "year": 1986
+    },
+    {
+      "enso_oni": 1.3,
+      "gistemp": 0.32,
+      "preind": 0.58,
+      "year": 1987
+    },
+    {
+      "enso_oni": -1.1,
+      "gistemp": 0.39,
+      "preind": 0.65,
+      "year": 1988
+    },
+    {
+      "enso_oni": -0.6,
+      "gistemp": 0.27,
+      "preind": 0.53,
+      "year": 1989
+    },
+    {
+      "enso_oni": 0.3,
+      "gistemp": 0.45,
+      "preind": 0.71,
+      "year": 1990
+    },
+    {
+      "enso_oni": 0.8,
+      "gistemp": 0.41,
+      "preind": 0.67,
+      "year": 1991
+    },
+    {
+      "enso_oni": 0.7,
+      "gistemp": 0.22,
+      "preind": 0.48,
+      "year": 1992
+    },
+    {
+      "enso_oni": 0.4,
+      "gistemp": 0.23,
+      "preind": 0.49,
+      "year": 1993
+    },
+    {
+      "enso_oni": 0.5,
+      "gistemp": 0.31,
+      "preind": 0.57,
+      "year": 1994
+    },
+    {
+      "enso_oni": -0.2,
+      "gistemp": 0.45,
+      "preind": 0.71,
+      "year": 1995
+    },
+    {
+      "enso_oni": -0.4,
+      "gistemp": 0.33,
+      "preind": 0.59,
+      "year": 1996
+    },
+    {
+      "enso_oni": 1.6,
+      "gistemp": 0.47,
+      "preind": 0.73,
+      "year": 1997
+    },
+    {
+      "enso_oni": -0.2,
+      "gistemp": 0.61,
+      "preind": 0.87,
+      "year": 1998
+    },
+    {
+      "enso_oni": -1.2,
+      "gistemp": 0.38,
+      "preind": 0.64,
+      "year": 1999
+    },
+    {
+      "enso_oni": -0.8,
+      "gistemp": 0.39,
+      "preind": 0.65,
+      "year": 2000
+    },
+    {
+      "enso_oni": -0.2,
+      "gistemp": 0.53,
+      "preind": 0.79,
+      "year": 2001
+    },
+    {
+      "enso_oni": 0.7,
+      "gistemp": 0.63,
+      "preind": 0.89,
+      "year": 2002
+    },
+    {
+      "enso_oni": 0.3,
+      "gistemp": 0.62,
+      "preind": 0.88,
+      "year": 2003
+    },
+    {
+      "enso_oni": 0.5,
+      "gistemp": 0.53,
+      "preind": 0.79,
+      "year": 2004
+    },
+    {
+      "enso_oni": 0.1,
+      "gistemp": 0.68,
+      "preind": 0.94,
+      "year": 2005
+    },
+    {
+      "enso_oni": 0.3,
+      "gistemp": 0.64,
+      "preind": 0.9,
+      "year": 2006
+    },
+    {
+      "enso_oni": -0.6,
+      "gistemp": 0.66,
+      "preind": 0.92,
+      "year": 2007
+    },
+    {
+      "enso_oni": -0.7,
+      "gistemp": 0.54,
+      "preind": 0.8,
+      "year": 2008
+    },
+    {
+      "enso_oni": 0.6,
+      "gistemp": 0.66,
+      "preind": 0.92,
+      "year": 2009
+    },
+    {
+      "enso_oni": -0.5,
+      "gistemp": 0.72,
+      "preind": 0.98,
+      "year": 2010
+    },
+    {
+      "enso_oni": -0.8,
+      "gistemp": 0.61,
+      "preind": 0.87,
+      "year": 2011
+    },
+    {
+      "enso_oni": -0.1,
+      "gistemp": 0.65,
+      "preind": 0.91,
+      "year": 2012
+    },
+    {
+      "enso_oni": -0.3,
+      "gistemp": 0.67,
+      "preind": 0.93,
+      "year": 2013
+    },
+    {
+      "enso_oni": 0.2,
+      "gistemp": 0.75,
+      "preind": 1.01,
+      "year": 2014
+    },
+    {
+      "enso_oni": 1.7,
+      "gistemp": 0.9,
+      "preind": 1.16,
+      "year": 2015
+    },
+    {
+      "enso_oni": 0.4,
+      "gistemp": 1.01,
+      "preind": 1.27,
+      "year": 2016
+    },
+    {
+      "enso_oni": -0.3,
+      "gistemp": 0.91,
+      "preind": 1.17,
+      "year": 2017
+    },
+    {
+      "enso_oni": 0.1,
+      "gistemp": 0.85,
+      "preind": 1.11,
+      "year": 2018
+    },
+    {
+      "enso_oni": 0.5,
+      "gistemp": 0.98,
+      "preind": 1.24,
+      "year": 2019
+    },
+    {
+      "enso_oni": -0.4,
+      "gistemp": 1.01,
+      "preind": 1.27,
+      "year": 2020
+    },
+    {
+      "enso_oni": -0.8,
+      "gistemp": 0.85,
+      "preind": 1.11,
+      "year": 2021
+    },
+    {
+      "enso_oni": -0.9,
+      "gistemp": 0.89,
+      "preind": 1.15,
+      "year": 2022
+    },
+    {
+      "enso_oni": 1.1,
+      "gistemp": 1.17,
+      "preind": 1.48,
+      "year": 2023
+    },
+    {
+      "enso_oni": 0.4,
+      "gistemp": 1.28,
+      "preind": 1.54,
+      "year": 2024
+    },
+    {
+      "enso_oni": -0.3,
+      "gistemp": 1.19,
+      "preind": 1.47,
+      "year": 2025
+    },
+    {
+      "enso_oni": 1.8,
+      "gistemp": 1.31,
+      "preind": 1.57,
+      "year": 2026
+    }
+  ],
+  "doy_climatology_1850_1900": {
+    "ec46_forecast_monthly": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      1.76,
+      1.79,
+      1.81
+    ],
+    "era_1991_2020_p05": [
+      0.58,
+      0.6,
+      0.62,
+      0.61,
+      0.59,
+      0.57,
+      0.58,
+      0.6,
+      0.62,
+      0.63,
+      0.61,
+      0.59
+    ],
+    "era_1991_2020_p95": [
+      1.12,
+      1.15,
+      1.14,
+      1.1,
+      1.06,
+      1.04,
+      1.06,
+      1.09,
+      1.12,
+      1.15,
+      1.16,
+      1.14
+    ],
+    "months": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    "year_2023_monthly": [
+      1.27,
+      1.32,
+      1.45,
+      1.36,
+      1.38,
+      1.49,
+      1.62,
+      1.66,
+      1.78,
+      1.72,
+      1.75,
+      1.73
+    ],
+    "year_2024_monthly": [
+      1.66,
+      1.77,
+      1.68,
+      1.58,
+      1.52,
+      1.54,
+      1.56,
+      1.59,
+      1.54,
+      1.62,
+      1.61,
+      1.58
+    ],
+    "year_2026_monthly": [
+      1.46,
+      1.48,
+      1.49,
+      1.47,
+      1.48,
+      1.51,
+      1.54,
+      1.58,
+      1.66,
+      1.76,
+      null,
+      null
+    ]
+  },
+  "metadata": {
+    "gistemp_baseline": "1951-1980",
+    "preindustrial_baseline": "1850-1900",
+    "preindustrial_offset_c": 0.26,
+    "sources": [
+      "ERA5 Daily Global Mean Surface Temperature (ECMWF / Copernicus C3S)",
+      "NASA GISS Surface Temperature Analysis (GISTEMP v4)",
+      "NOAA OISST v2.1 Daily Ni\u00f1o 3.4 Index"
+    ],
+    "title": "Global Surface Temperature & ENSO Telemetry",
+    "updated_utc": "2026-10-14T14:38:28Z"
+  },
+  "telemetry_2026": {
+    "annual_projection_c": 1.57,
+    "annual_uncertainty_c": 0.04,
+    "enso_state": "El Ni\u00f1o",
+    "latest_day_anomaly_c": 1.76,
+    "latest_day_date": "2026-10-08",
+    "nino34_30d_mean_c": 3.17,
+    "nino34_daily_c": 3.24,
+    "nino34_forecast_peak_c": 4.0,
+    "nino34_forecast_peak_month": "Dec 2026",
+    "october_projection_c": 1.78,
+    "october_range_c": [
+      1.61,
+      1.95
+    ],
+    "rank_probabilities": [
+      {
+        "label": "Warmest on record",
+        "prob_pct": 5.5,
+        "rank": 1,
+        "ref_val_c": 1.6,
+        "ref_year": 2024
+      },
+      {
+        "label": "2nd warmest",
+        "prob_pct": 94.4,
+        "rank": 2,
+        "ref_val_c": 1.48,
+        "ref_year": 2023
+      },
+      {
+        "label": "3rd warmest or lower",
+        "prob_pct": 0.1,
+        "rank": 3,
+        "ref_val_c": 1.47,
+        "ref_year": 2025
+      }
+    ],
+    "running_365d_mean_c": 1.5,
+    "soi_monthly": -2.0,
+    "ytd_anomaly_c": 1.5
+  }
+}

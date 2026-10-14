@@ -1,0 +1,24 @@
+name: Refresh Climate Telemetry
+
+on:
+  schedule:
+    - cron: '15 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh-telemetry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update NASA GISTEMP & ENSO JSON
+        run: python3 scripts/update_climate_telemetry.py
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/data/climate-telemetry.json
+          git diff --staged --quiet || git commit -m "chore(telemetry): daily climate record sync"
+          git push

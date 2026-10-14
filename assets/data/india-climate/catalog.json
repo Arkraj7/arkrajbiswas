@@ -1,0 +1,198 @@
+{
+  "metadata": {
+    "description": "India Climate Explorer \u2014 validated daily ERA5 reanalysis for 16 Indian cities",
+    "source": "Open-Meteo Historical Weather API (ERA5 model)",
+    "model": "era5",
+    "timezone": "Asia/Kolkata",
+    "period_start": "2001-01-01",
+    "retrieved": "2026-10-13",
+    "cities": [
+      {
+        "id": "new-delhi",
+        "name": "New Delhi",
+        "state": "Delhi",
+        "coordinates": {
+          "lat": 28.6139,
+          "lon": 77.209
+        }
+      },
+      {
+        "id": "bengaluru",
+        "name": "Bengaluru",
+        "state": "Karnataka",
+        "coordinates": {
+          "lat": 12.9716,
+          "lon": 77.5946
+        }
+      },
+      {
+        "id": "mumbai",
+        "name": "Mumbai",
+        "state": "Maharashtra",
+        "coordinates": {
+          "lat": 19.076,
+          "lon": 72.8777
+        }
+      },
+      {
+        "id": "chennai",
+        "name": "Chennai",
+        "state": "Tamil Nadu",
+        "coordinates": {
+          "lat": 13.0827,
+          "lon": 80.2707
+        }
+      },
+      {
+        "id": "kolkata",
+        "name": "Kolkata",
+        "state": "West Bengal",
+        "coordinates": {
+          "lat": 22.5726,
+          "lon": 88.3639
+        }
+      },
+      {
+        "id": "hyderabad",
+        "name": "Hyderabad",
+        "state": "Telangana",
+        "coordinates": {
+          "lat": 17.385,
+          "lon": 78.4867
+        }
+      },
+      {
+        "id": "ahmedabad",
+        "name": "Ahmedabad",
+        "state": "Gujarat",
+        "coordinates": {
+          "lat": 23.0225,
+          "lon": 72.5714
+        }
+      },
+      {
+        "id": "jaipur",
+        "name": "Jaipur",
+        "state": "Rajasthan",
+        "coordinates": {
+          "lat": 26.9124,
+          "lon": 75.7873
+        }
+      },
+      {
+        "id": "lucknow",
+        "name": "Lucknow",
+        "state": "Uttar Pradesh",
+        "coordinates": {
+          "lat": 26.8467,
+          "lon": 80.9462
+        }
+      },
+      {
+        "id": "guwahati",
+        "name": "Guwahati",
+        "state": "Assam",
+        "coordinates": {
+          "lat": 26.1445,
+          "lon": 91.7362
+        }
+      },
+      {
+        "id": "srinagar",
+        "name": "Srinagar",
+        "state": "Jammu and Kashmir",
+        "coordinates": {
+          "lat": 34.0837,
+          "lon": 74.7973
+        }
+      },
+      {
+        "id": "bhopal",
+        "name": "Bhopal",
+        "state": "Madhya Pradesh",
+        "coordinates": {
+          "lat": 23.2599,
+          "lon": 77.4126
+        }
+      },
+      {
+        "id": "bhubaneswar",
+        "name": "Bhubaneswar",
+        "state": "Odisha",
+        "coordinates": {
+          "lat": 20.2961,
+          "lon": 85.8245
+        }
+      },
+      {
+        "id": "kochi",
+        "name": "Kochi",
+        "state": "Kerala",
+        "coordinates": {
+          "lat": 9.9312,
+          "lon": 76.2673
+        }
+      },
+      {
+        "id": "pune",
+        "name": "Pune",
+        "state": "Maharashtra",
+        "coordinates": {
+          "lat": 18.5204,
+          "lon": 73.8567
+        }
+      },
+      {
+        "id": "etawah",
+        "name": "Etawah",
+        "state": "Uttar Pradesh",
+        "coordinates": {
+          "lat": 26.77,
+          "lon": 79.0
+        }
+      }
+    ],
+    "variables": {
+      "temperature_2m_mean": {
+        "unit": "\u00b0C",
+        "description": "Daily mean temperature"
+      },
+      "precipitation_sum": {
+        "unit": "mm",
+        "description": "Daily precipitation total"
+      },
+      "relative_humidity_2m_mean": {
+        "unit": "%",
+        "description": "Daily mean relative humidity"
+      },
+      "shortwave_radiation_sum": {
+        "unit": "MJ/m\u00b2",
+        "description": "Daily shortwave radiation total"
+      }
+    },
+    "coverage_rules": {
+      "temperature_annual_mean": ">=98% valid days",
+      "humidity_annual_mean": ">=98% valid days",
+      "precipitation_annual_total": "100% valid days (complete years only)",
+      "solar_annual_total": "100% valid days (complete years only)"
+    }
+  },
+  "cities": {
+    "new-delhi": "new-delhi.json",
+    "bengaluru": "bengaluru.json",
+    "mumbai": "mumbai.json",
+    "chennai": "chennai.json",
+    "kolkata": "kolkata.json",
+    "hyderabad": "hyderabad.json",
+    "ahmedabad": "ahmedabad.json",
+    "jaipur": "jaipur.json",
+    "lucknow": "lucknow.json",
+    "guwahati": "guwahati.json",
+    "srinagar": "srinagar.json",
+    "bhopal": "bhopal.json",
+    "bhubaneswar": "bhubaneswar.json",
+    "kochi": "kochi.json",
+    "pune": "pune.json",
+    "etawah": "etawah.json"
+  }
+}

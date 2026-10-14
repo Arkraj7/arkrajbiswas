@@ -1,0 +1,233 @@
+/* Climate Brink Researcher Dashboard Styles (Harmonized with arkrajbiswas.com) */
+.cb-container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+}
+.cb-header-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(120, 125, 118, 0.22);
+}
+.cb-eyebrow {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  opacity: 0.68;
+  margin: 0 0 0.3rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.cb-h2 {
+  font-size: clamp(1.65rem, 2.5vw, 2.2rem);
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.cb-lead {
+  margin: 0;
+  max-width: 48ch;
+  font-size: 0.92rem;
+  opacity: 0.78;
+}
+.cb-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+.cb-kpi {
+  padding: 0.95rem 1.1rem;
+  border: 1px solid rgba(120, 125, 118, 0.2);
+  border-radius: 6px;
+  background: rgba(125, 132, 120, 0.05);
+}
+.cb-kpi-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.71rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  opacity: 0.68;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.cb-kpi-num {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin: 0.35rem 0 0.2rem;
+  font-variant-numeric: tabular-nums;
+}
+.cb-kpi-num small {
+  font-size: 0.58em;
+  font-weight: 400;
+  opacity: 0.75;
+}
+.cb-warm { color: #b2182b; }
+.cb-enso { color: #d96b27; }
+.cb-kpi-sub {
+  margin: 0;
+  font-size: 0.75rem;
+  opacity: 0.74;
+}
+.cb-prob-bar {
+  display: flex;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 0.45rem 0 0.35rem;
+  background: rgba(120, 125, 118, 0.16);
+}
+.cb-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 1.4rem;
+  align-items: start;
+}
+@media (max-width: 880px) {
+  .cb-grid { grid-template-columns: 1fr; }
+}
+.cb-sidebar {
+  border: 1px solid rgba(120, 125, 118, 0.2);
+  border-radius: 6px;
+  padding: 1.1rem;
+  background: rgba(125, 132, 120, 0.04);
+}
+.cb-field { margin-bottom: 1.1rem; }
+.cb-field:last-child { margin-bottom: 0; }
+.cb-label {
+  display: block;
+  font-size: 0.71rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+  margin-bottom: 0.45rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.cb-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.cb-pill {
+  appearance: none;
+  background: transparent;
+  color: inherit;
+  border: 1px solid rgba(120, 125, 118, 0.3);
+  border-radius: 4px;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.78rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.14s ease;
+}
+.cb-pill:hover { border-color: rgba(120, 125, 118, 0.65); }
+.cb-pill[aria-pressed="true"] {
+  background: #1d2b22;
+  color: #f5f4f0;
+  border-color: #1d2b22;
+}
+.cb-export-btn {
+  width: 100%;
+  text-align: center;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.cb-input {
+  width: 100%;
+  padding: 0.42rem 0.6rem;
+  font-size: 0.82rem;
+  border: 1px solid rgba(120, 125, 118, 0.32);
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+}
+.cb-readout {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  padding: 0.55rem 0.65rem;
+  border-radius: 4px;
+  background: rgba(120, 125, 118, 0.07);
+}
+.cb-stage-card {
+  border: 1px solid rgba(120, 125, 118, 0.2);
+  border-radius: 6px;
+  padding: 1.15rem;
+  background: rgba(125, 132, 120, 0.025);
+}
+.cb-stage-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.cb-stage-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.cb-stage-tag {
+  font-size: 0.74rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  opacity: 0.7;
+}
+.cb-canvas-box {
+  position: relative;
+  width: 100%;
+  height: 340px;
+}
+.cb-canvas-box canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: crosshair;
+}
+.cb-gbif-banner {
+  margin-top: 0.85rem;
+  padding: 0.65rem 0.85rem;
+  border-left: 3px solid #2e6b47;
+  background: rgba(46, 107, 71, 0.07);
+  border-radius: 4px;
+  font-size: 0.79rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.cb-data-drawer {
+  margin-top: 0.75rem;
+  font-size: 0.78rem;
+}
+.cb-data-drawer summary {
+  cursor: pointer;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  opacity: 0.75;
+}
+.cb-table-scroll {
+  max-height: 180px;
+  overflow-y: auto;
+  margin-top: 0.5rem;
+}
+.cb-table-scroll table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.74rem;
+}
+.cb-table-scroll th, .cb-table-scroll td {
+  text-align: left;
+  padding: 0.28rem 0.5rem;
+  border-bottom: 1px solid rgba(120, 125, 118, 0.15);
+}
+.cb-caption {
+  margin: 0.75rem 0 0;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(120, 125, 118, 0.15);
+  font-size: 0.74rem;
+  opacity: 0.72;
+}

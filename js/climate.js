@@ -78,7 +78,13 @@
     });
     if (els.dlPng) els.dlPng.addEventListener("click", exportPNG);
     if (els.dlCsv) els.dlCsv.addEventListener("click", exportCSV);
-    if (els.retry) els.retry.addEventListener("click", () => { hideRetry(); load(); });
+    if (els.retry) els.retry.addEventListener("click", () => {
+      hideRetry();
+      // Explicit retry clears only this variable's recorded failure.
+      const entry = cache.get(`${state.lat.toFixed(2)},${state.lon.toFixed(2)}`);
+      if (entry) { delete entry[state.variable]; delete entry[state.variable + ":failedAt"]; }
+      load();
+    });
     updateDlButtons();
 
     const section = els.chart.closest("section");
@@ -171,6 +177,87 @@
     return model === "era5_land" ? "ERA5-Land" : "ERA5";
   }
 
+  /* ----- Relative humidity: hourly ERA5-Land -> local daily means -----
+     The archive API has no documented daily humidity variable, so each
+     local calendar day is aggregated from its 24 hourly readings
+     (timezone=auto aligns timestamps to local midnight). A day counts
+     only with 24 valid hourly values; partial days (including today)
+     are dropped, never zero-filled or interpolated. Full history is
+     fetched in bounded ~3-year chunks to keep each request manageable. */
+  function rhChunkRanges() {
+    const endY = new Date().getFullYear();
+    const out = [];
+    for (let y = START_YEAR; y <= endY; y += 3) {
+      const y2 = Math.min(y + 2, endY);
+      out.push([`${y}-01-01`, y2 === endY ? new Date().toISOString().slice(0, 10) : `${y2}-12-31`]);
+    }
+    return out;
+  }
+
+  async function fetchRhChunk(start, end) {
+    const gate = withTimeout(FETCH_TIMEOUT_MS);
+    try {
+      const url = `https://archive-api.open-meteo.com/v1/archive?latitude=${state.lat}&longitude=${state.lon}` +
+        `&start_date=${start}&end_date=${end}` +
+        `&hourly=relative_humidity_2m&timezone=auto&models=era5_land`;
+      const res = await fetch(url, { signal: gate.signal });
+      if (!res.ok) throw new Error("era5_land rh chunk failed");
+      const data = await res.json();
+      const h = data && data.hourly;
+      if (!h || !Array.isArray(h.time) || !Array.isArray(h.relative_humidity_2m) ||
+          h.time.length !== h.relative_humidity_2m.length) {
+        throw new Error("era5_land rh chunk malformed");
+      }
+      return { time: h.time, rh: h.relative_humidity_2m };
+    } finally {
+      gate.done();
+    }
+  }
+
+  async function runBounded(tasks, limit) {
+    // Bounded concurrency preserving task order; any rejection rejects all.
+    const out = new Array(tasks.length);
+    let next = 0;
+    const workers = new Array(Math.min(limit, tasks.length)).fill(0).map(async () => {
+      while (next < tasks.length) {
+        const i = next++;
+        out[i] = await tasks[i]();
+      }
+    });
+    await Promise.all(workers);
+    return out;
+  }
+
+  function deriveRhDaily(chunks) {
+    const byDay = new Map();
+    for (const c of chunks) {
+      c.time.forEach((t, i) => {
+        const d = String(t).slice(0, 10);
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) return;
+        if (!byDay.has(d)) byDay.set(d, []);
+        byDay.get(d).push(c.rh[i]);
+      });
+    }
+    const dates = [...byDay.keys()].sort();
+    const time = [], rh = [];
+    for (const d of dates) {
+      const vals = byDay.get(d);
+      if (vals.length === 24 && vals.every(validNum)) {
+        time.push(d);
+        rh.push(vals.reduce((a, b) => a + b, 0) / 24);
+      }
+    }
+    return { time, relative_humidity_2m_mean: rh };
+  }
+
+  async function fetchRhDaily() {
+    const ranges = rhChunkRanges();
+    const chunks = await runBounded(ranges.map(([s, e]) => () => fetchRhChunk(s, e)), 3);
+    const daily = deriveRhDaily(chunks);
+    if (!daily.time.length) throw new Error("era5_land rh empty");
+    return daily;
+  }
+
   async function load() {
     const token = ++requestSeq;
     lastExport = null;
@@ -184,24 +271,28 @@
       const key = `${state.lat.toFixed(2)},${state.lon.toFixed(2)}`;
       let entry = cache.get(key);
       if (!entry) {
-        entry = { era5_land: undefined, era5: undefined };
+        entry = {};
         cache.set(key, entry);
       }
-      // Fetch only the provider the selected variable needs, and only
-      // once per session; a recorded null means it already failed.
-      const need = VAR_MODEL[state.variable];
-      if (entry[need] === undefined) {
+      // One cache slot per variable: a temperature response can never
+      // satisfy humidity, and a failure poisons only its own variable.
+      // A recorded failure refetches only via Retry or after 60 seconds.
+      const slot = state.variable;
+      const vars = varsFor(state.variable);
+      const failedAt = entry[slot + ":failedAt"] || 0;
+      const failedRecently = entry[slot] === null && (Date.now() - failedAt < 60000);
+      if (!hasVars(entry[slot], vars) && !failedRecently) {
         try {
-          entry[need] = await fetchModel(need, varsFor(state.variable));
+          entry[slot] = state.variable === "rh"
+            ? await fetchRhDaily()
+            : await fetchModel(VAR_MODEL[state.variable], vars);
+          delete entry[slot + ":failedAt"];
         } catch (e) {
           if (e && e.name === "AbortError") throw e;
-          entry[need] = null;
+          entry[slot] = null;
+          entry[slot + ":failedAt"] = Date.now();
         }
       }
-        if (token !== requestSeq) return;
-        if (!entry.era5_land && !entry.era5) {
-          throw { name: "FetchError" };
-        }
       if (token !== requestSeq) return;
       renderFromCache();
       loadPulse(token);
@@ -243,10 +334,18 @@
     return typeof v === "number" && Number.isFinite(v);
   }
 
+  // A cached response is reusable only when it actually contains every
+  // array the requested variable needs, aligned with its time axis.
+  // Temperature-only data must never satisfy a humidity request.
+  function hasVars(daily, vars) {
+    return !!daily && Array.isArray(daily.time) &&
+      vars.every((v) => Array.isArray(daily[v]) && daily[v].length === daily.time.length);
+  }
+
   function varDaily() {
     const key = `${state.lat.toFixed(2)},${state.lon.toFixed(2)}`;
     const entry = cache.get(key) || {};
-    return entry[VAR_MODEL[state.variable]] || null;
+    return entry[state.variable] || null;
   }
 
   function coverage(daily, year, keys) {

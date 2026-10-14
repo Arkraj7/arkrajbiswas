@@ -20,6 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css?v=21" />
+  <link rel="stylesheet" href="assets/css/climate-brink.css?v=1" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
@@ -223,6 +224,7 @@
           <span><h4>The Etawah design: An 123-acre urban forest as its lungs</h4><p class="i-sub">Question of Cities · 4 September 2026 · Published Article</p></span>
           <span class="i-side"><span class="tag tag-environment">article</span><span class="i-open">Read article <span class="arr">→</span></span></span>
         </a>
+        <div style="margin:-6px 0 10px;display:flex;justify-content:flex-end"><button type="button" class="dl-btn bibtex-btn" data-bibtex="@article{biswas2026etawahdesign, author={Biswas, Arkraj}, title={The Etawah design: An 123-acre urban forest as its lungs}, journal={Question of Cities}, year={2026}, month={September}, day={4}, url={https://questionofcities.org/the-etawah-design-an-123-acre-urban-forest-as-its-lungs/}}" aria-label="Copy BibTeX citation for The Etawah design">[Copy BibTeX]</button></div>
         <a class="index-row" href="research.html" data-open-note="forest-zodiac" style="text-decoration:none;color:inherit">
           <span class="i-year">2026</span>
           <span><h4>When a Forest Knows Your Zodiac Sign</h4><p class="i-sub">CSR Times · August 2026 · Opinion</p></span>
@@ -233,6 +235,7 @@
           <span><h4>Enhancing Urban Forestry: Field Evidence and Implementation Recommendations</h4><p class="i-sub">SSRN Working Paper · Policy Brief</p></span>
           <span class="i-side"><span class="tag tag-environment">brief</span><span class="i-open">Read note <span class="arr">→</span></span></span>
         </a>
+        <div style="margin:-6px 0 10px;display:flex;justify-content:flex-end"><button type="button" class="dl-btn bibtex-btn" data-bibtex="@techreport{biswas2026enhancingurbanforestry, author={Biswas, Arkraj}, title={Enhancing Urban Forestry: Field Evidence and Implementation Recommendations for the Nagar Van Yojana}, institution={SSRN}, year={2026}, type={Working Paper}, url={https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7415140}}" aria-label="Copy BibTeX citation for Enhancing Urban Forestry">[Copy BibTeX]</button></div>
       </div>
       <p class="reveal" style="margin-top:18px"><a href="research.html" class="text-link">View all research and writing →</a></p>
       <div class="index-list reveal" id="selectedRows" style="margin-top:6px"></div>
@@ -295,7 +298,7 @@
           <p class="kicker">Long-term climate data</p>
           <h2 id="lensH">Climate Lens</h2>
         </div>
-        <p>Explore climate conditions through long-term environmental data. Observed series only — no trend claims.</p>
+        <p>Explore climate conditions through long-term environmental data. Historical gridded reanalysis estimates — no trend claims.</p>
       </div>
       <div class="lens-grid reveal">
         <div class="lens-controls">
@@ -345,7 +348,7 @@
             </div>
           </div>
           <p class="meta" id="lensMeta" style="margin-top:14px">ERA5-Land via Open-Meteo · annual history from 2001</p>
-          <p class="small muted" style="margin:8px 0 0">These values are climate-data estimates, not direct observations from a local weather station.</p>
+          <p class="small muted" style="margin:8px 0 0">Historical gridded reanalysis estimates — not direct observations from a local weather station. ERA5-Land (~11 km) for temperature and humidity; ERA5 (~25 km) for precipitation and solar radiation.</p>
           <div class="pulse-strip" id="pulseStrip" hidden>
             <p class="meta">Biodiversity Pulse</p>
             <p style="margin:6px 0 4px"><strong id="pulseCount">—</strong> <span class="muted">public occurrence records · </span><strong id="pulseTaxa">—</strong></p>
@@ -472,7 +475,33 @@
   <script src="js/main.js?v=21"></script>
   <script src="js/earth.js?v=21"></script>
   <script src="js/slides.js?v=21"></script>
-  <script src="js/climate.js?v=22"></script>
+  <script src="js/climate.js?v=23"></script>
   <script src="js/gistemp.js?v=22"></script>
+  <script src="assets/js/climate-brink-engine.js?v=1" defer></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.bibtex-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var tex = btn.getAttribute('data-bibtex') || '';
+        var done = function () {
+          var orig = btn.textContent;
+          btn.textContent = 'Copied BibTeX ✓';
+          setTimeout(function () { btn.textContent = orig; }, 2000);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(tex).then(done).catch(done);
+        } else {
+          var ta = document.createElement('textarea');
+          ta.value = tex;
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand('copy'); } catch (e) {}
+          document.body.removeChild(ta);
+          done();
+        }
+      });
+    });
+  });
+  </script>
 </body>
 </html>
