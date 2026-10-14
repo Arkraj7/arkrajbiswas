@@ -241,51 +241,130 @@
       <div class="index-list reveal" id="selectedRows" style="margin-top:6px"></div>
     </section>
 
-    <!-- EARTH / NOW -->
-    <section class="section earth-band" aria-labelledby="earthH">
-      <div class="container">
-        <div class="section-head reveal">
-          <div>
-            <p class="kicker">Live environmental data</p>
-            <h2 id="earthH">Earth / Now</h2>
-          </div>
-          <p>Real-time atmosphere where you are — weather and air quality, read like a scientist.</p>
+    <!-- EARTH / NOW — LIVE MICROMETEOROLOGY & CAMS AIR QUALITY MODULE -->
+    <section class="en-section" id="earth-now" aria-labelledby="en-heading">
+      <div class="en-header">
+        <div>
+          <p class="en-eyebrow">
+            <span class="en-live-dot" aria-hidden="true"></span>
+            <span>Live environmental data · Micrometeorology &amp; Atmospheric Chemistry</span>
+          </p>
+          <h2 class="en-title" id="en-heading">Earth / Now</h2>
         </div>
-        <div class="earth-grid reveal">
-          <div>
-            <p class="meta">Your sky</p>
-            <p class="earth-place" id="earthPlace">Somewhere on Earth</p>
-            <p class="meta" id="earthCoords" style="margin-top:6px">Search for a place to begin</p>
-            <p class="earth-temp" id="earthTemp">—<small> °C</small></p>
-            <p class="earth-cond" id="earthCond">See what the atmosphere looks like where you are.</p>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px">
-              <button class="btn btn-solid" id="earthLocate" type="button">Use my location <span class="arr">→</span></button>
-            </div>
-            <form class="earth-search" id="earthSearchForm" role="search" aria-label="Search for a place">
-              <input type="search" id="earthSearch" placeholder="Or type a place — Delhi, Bengaluru, London…" aria-label="Search for a place" autocomplete="off" list="earthPlaceList" />
-              <datalist id="earthPlaceList"></datalist>
-              <button class="btn btn-line" type="submit">Search</button>
-            </form>
-            <ul class="place-results" id="earthResults" aria-label="Matching places"></ul>
-            <p class="small muted earth-status" id="earthStatus" role="status"></p>
+        <div class="en-header-right">
+          <p class="en-subtitle">Real-time boundary-layer state and air quality, read like a scientist.</p>
+          <div class="en-unit-toggle" role="group" aria-label="Temperature unit">
+            <button type="button" class="en-unit-btn" data-en-unit="C" aria-pressed="true">°C</button>
+            <button type="button" class="en-unit-btn" data-en-unit="K" aria-pressed="false">K</button>
           </div>
+        </div>
+      </div>
+
+      <!-- Station Selector Bar -->
+      <div class="en-station-bar">
+        <div class="en-pills" role="group" aria-label="Research station presets" id="en-preset-group">
+          <button type="button" class="en-pill" data-lat="28.6139" data-lon="77.2090" data-label="New Delhi, India" aria-pressed="true">New Delhi</button>
+          <button type="button" class="en-pill" data-lat="12.9716" data-lon="77.5946" data-label="Bengaluru, India" aria-pressed="false">Bengaluru</button>
+          <button type="button" class="en-pill" data-lat="26.7856" data-lon="79.0158" data-label="Etawah, UP (Nagar Van)" aria-pressed="false">Etawah · Nagar Van</button>
+          <button type="button" class="en-pill" data-lat="30.3165" data-lon="78.0322" data-label="Dehradun, Uttarakhand" aria-pressed="false">Dehradun</button>
+          <button type="button" class="en-pill" data-lat="21.9497" data-lon="88.9000" data-label="Sundarbans, West Bengal" aria-pressed="false">Sundarbans</button>
+          <button type="button" class="en-pill en-pill-geo" id="en-locate-btn" aria-pressed="false">◎ Use my location</button>
+        </div>
+
+        <div class="en-search-wrap">
+          <input
+            type="search"
+            id="en-search-input"
+            class="en-search-input"
+            placeholder="Search any city or coordinates…"
+            aria-label="Search for a place"
+            autocomplete="off"
+          />
+          <ul class="en-search-results" id="en-search-list" aria-label="Matching places"></ul>
+        </div>
+      </div>
+
+      <!-- Main Scientific Workbench -->
+      <div class="en-workbench">
+        <!-- Left Card: Synoptic State & Derived Biometeorology -->
+        <div class="en-synoptic-card">
           <div>
-            <dl class="earth-meta" id="earthMeta">
-              <div><dt>Feels like</dt><dd id="mFeels">—</dd></div>
-              <div><dt>Precipitation</dt><dd id="mPrecip">—</dd></div>
-              <div><dt>Humidity</dt><dd id="mHumidity">—</dd></div>
-              <div><dt>Wind</dt><dd id="mWind">—</dd></div>
-              <div><dt>UV index</dt><dd id="mUv">—</dd></div>
-              <div><dt>PM2.5</dt><dd id="mPm">—</dd></div>
-            </dl>
-            <div class="forecast-strip" id="earthForecast" aria-label="7-day forecast"></div>
-            <div id="earthChart" style="margin-top:18px" aria-hidden="true"></div>
-            <div class="dl-row">
-              <button class="dl-btn" id="earthDlPng" type="button" disabled>Forecast PNG</button>
-              <button class="dl-btn" id="earthDlForecast" type="button" disabled>Forecast CSV</button>
-              <button class="dl-btn" id="earthDlSnap" type="button" disabled>Snapshot CSV</button>
+            <div class="en-station-meta">
+              <span id="en-sky-tag">SYNOPTIC OBSERVATION</span>
+              <span id="en-obs-time">ECMWF IFS · LIVE</span>
             </div>
-            <p class="meta earth-attrib">Weather: Open-Meteo / ECMWF IFS HRES · Air quality: Open-Meteo / CAMS</p>
+            <h3 class="en-place-name" id="en-place-title">New Delhi, India</h3>
+            <p class="en-coord-line" id="en-coord-text">28.61°N, 77.21°E · Elev 216 m</p>
+
+            <div class="en-primary-temp-row">
+              <p class="en-primary-temp" id="en-drybulb-val">28.4<small> °C</small></p>
+            </div>
+            <p class="en-sky-condition" id="en-sky-desc">Clear sky · Dry-bulb surface air temperature (2 m)</p>
+          </div>
+
+          <div class="en-derived-strip" aria-label="Derived psychrometric and canopy metrics">
+            <div class="en-derived-box">
+              <span class="en-derived-label">Wet-Bulb (Tw · Stull)</span>
+              <span class="en-derived-val" id="en-wetbulb-val">20.1 °C</span>
+              <span class="en-derived-tag" id="en-wetbulb-tag"> Normal thermal load</span>
+            </div>
+            <div class="en-derived-box">
+              <span class="en-derived-label">Canopy VPD (Tetens)</span>
+              <span class="en-derived-val" id="en-vpd-val">1.82 kPa</span>
+              <span class="en-derived-tag" id="en-vpd-tag">Moderate stomatal demand</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Card: 8-Cell Telemetry Grid + 7-Day Diurnal Range -->
+        <div class="en-telemetry-card">
+          <dl class="en-dl-grid" aria-label="Boundary layer and air quality indicators">
+            <div class="en-dl-cell">
+              <dt>Apparent / Feels</dt>
+              <dd id="en-dd-feels">29.1 °C<span class="en-dl-sub" id="en-sub-dew">Dew point: 15.8 °C</span></dd>
+            </div>
+            <div class="en-dl-cell">
+              <dt>PM2.5 (CAMS)</dt>
+              <dd id="en-dd-pm25">42.0 µg/m³<span class="en-dl-sub" id="en-sub-who">2.8× WHO 24h limit</span></dd>
+            </div>
+            <div class="en-dl-cell">
+              <dt>PM10 &amp; NO₂</dt>
+              <dd id="en-dd-pm10">86 µg/m³<span class="en-dl-sub" id="en-sub-no2">NO₂: 18.4 µg/m³</span></dd>
+            </div>
+            <div class="en-dl-cell">
+              <dt>Rel. Humidity</dt>
+              <dd id="en-dd-rh">46 %<span class="en-dl-sub" id="en-sub-cloud">Cloud cover: 12%</span></dd>
+            </div>
+            <div class="en-dl-cell">
+              <dt>Wind (10 m)</dt>
+              <dd id="en-dd-wind">11.2 km/h<span class="en-dl-sub" id="en-sub-winddir">295° WNW · 3.1 m/s</span></dd>
+            </div>
+            <div class="en-dl-cell">
+              <dt>Precipitation</dt>
+              <dd id="en-dd-precip">0.0 mm<span class="en-dl-sub" id="en-sub-rainprob">Current hour flux</span></dd>
+            </div>
+            <div class="en-dl-cell">
+              <dt>UV Index / Solar</dt>
+              <dd id="en-dd-uv">5.4<span class="en-dl-sub" id="en-sub-uv">Moderate irradiance</span></dd>
+            </div>
+            <div class="en-dl-cell">
+              <dt>Surface Pressure</dt>
+              <dd id="en-dd-press">986.4 hPa<span class="en-dl-sub" id="en-sub-msl">SLP: 1011.2 hPa</span></dd>
+            </div>
+          </dl>
+
+          <!-- 7-Day Diurnal Range & Precipitation Strip -->
+          <div class="en-forecast-block">
+            <div class="en-forecast-head">
+              <span>7-Day Synoptic Diurnal Envelope (Tmin → Tmax)</span>
+              <span>Daily Precip Sum</span>
+            </div>
+            <div class="en-forecast-rows" id="en-forecast-list" aria-label="7-day forecast"></div>
+          </div>
+
+          <div class="en-footer-meta">
+            <span>Meteorology: Open-Meteo / ECMWF IFS HRES (9 km) · Psychrometrics: Stull (2011) &amp; Tetens</span>
+            <span>Aerosols: Copernicus CAMS Global Atmospheric Composition</span>
           </div>
         </div>
       </div>
@@ -473,7 +552,7 @@
   <script src="assets/vendor/hammer.min.js?v=21"></script>
   <script src="assets/vendor/chartjs-plugin-zoom.min.js?v=21"></script>
   <script src="js/main.js?v=21"></script>
-  <script src="js/earth.js?v=21"></script>
+  <script src="assets/js/earth-now.js?v=1" defer></script>
   <script src="js/slides.js?v=21"></script>
   <script src="js/climate.js?v=23"></script>
   <script src="js/gistemp.js?v=22"></script>
