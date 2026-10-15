@@ -215,10 +215,6 @@
   }
 
   function initBengaluruUhiSlider() {
-    // SUPERSEDED by the publication-grade workbench
-    // (assets/js/bengaluru-uhi-workbench.js). Early return keeps the basic
-    // slider from double-mounting; the bio-inequity inspector below is untouched.
-    return;
     const link = document.querySelector('a[href*="bengaluru-urban-heat.html"]');
     const targetMount = link ? link.parentElement : document.querySelector('main section');
     if (!targetMount || document.getElementById('sw-bengaluru-uhi-widget')) return;
