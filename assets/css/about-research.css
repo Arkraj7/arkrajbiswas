@@ -1,0 +1,270 @@
+/* Editorial & Interactive Enhancements for about.html and research.html */
+.ar-wrap {
+  max-width: 1140px;
+  margin: 3.5rem auto;
+  padding: 0 1.5rem;
+}
+.ar-sec-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  padding-bottom: 1.15rem;
+  margin-bottom: 1.75rem;
+  border-bottom: 1px solid rgba(120, 125, 118, 0.22);
+}
+.ar-eyebrow {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.73rem;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  opacity: 0.68;
+  margin: 0 0 0.35rem;
+}
+.ar-h2 {
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+.ar-lead {
+  margin: 0;
+  max-width: 52ch;
+  font-size: 0.94rem;
+  line-height: 1.6;
+  opacity: 0.82;
+}
+
+/* Natural Narrative Essay Columns on about.html */
+.ar-essay-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 2.25rem;
+  align-items: start;
+  margin-bottom: 3rem;
+}
+@media (max-width: 860px) {
+  .ar-essay-grid { grid-template-columns: 1fr; }
+}
+.ar-prose p {
+  font-size: 1.02rem;
+  line-height: 1.75;
+  margin: 0 0 1.15rem;
+  opacity: 0.9;
+}
+.ar-pullquote {
+  border-left: 3px solid #2e5a44;
+  padding: 0.85rem 1.15rem;
+  margin: 1.25rem 0;
+  background: rgba(46, 90, 68, 0.05);
+  border-radius: 0 6px 6px 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Credentials & Fellowships Card */
+.ar-cred-card {
+  border: 1px solid rgba(120, 125, 118, 0.22);
+  border-radius: 6px;
+  padding: 1.25rem;
+  background: rgba(125, 132, 120, 0.04);
+}
+.ar-badge-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+.ar-badge {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.73rem;
+  padding: 0.26rem 0.6rem;
+  border-radius: 4px;
+  border: 1px solid rgba(120, 125, 118, 0.26);
+  background: rgba(125, 132, 120, 0.06);
+}
+
+/* Interactive Journey Timeline */
+.ar-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.ar-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.ar-pill {
+  appearance: none;
+  background: transparent;
+  color: inherit;
+  border: 1px solid rgba(120, 125, 118, 0.3);
+  border-radius: 999px;
+  padding: 0.34rem 0.78rem;
+  font-size: 0.78rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+.ar-pill:hover { border-color: rgba(120, 125, 118, 0.65); }
+.ar-pill[aria-pressed="true"] {
+  background: #1d2b22;
+  color: #f4efe6;
+  border-color: #1d2b22;
+}
+
+.ar-timeline {
+  display: grid;
+  gap: 0.9rem;
+}
+.ar-tl-item {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 1.25rem;
+  padding: 1.15rem;
+  border: 1px solid rgba(120, 125, 118, 0.2);
+  border-radius: 6px;
+  background: rgba(125, 132, 120, 0.025);
+  transition: border-color 0.15s ease;
+}
+.ar-tl-item:hover {
+  border-color: rgba(120, 125, 118, 0.45);
+}
+@media (max-width: 680px) {
+  .ar-tl-item { grid-template-columns: 1fr; gap: 0.4rem; }
+}
+.ar-tl-date {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.76rem;
+  opacity: 0.72;
+}
+.ar-tl-role {
+  font-size: 1.02rem;
+  font-weight: 600;
+  margin: 0 0 0.2rem;
+}
+.ar-tl-org {
+  font-size: 0.85rem;
+  opacity: 0.78;
+  margin: 0 0 0.5rem;
+}
+.ar-tl-desc {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  margin: 0;
+  opacity: 0.88;
+}
+
+/* Methodological Stack Grid ("How I Work") */
+.ar-stack-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.15rem;
+}
+@media (max-width: 860px) {
+  .ar-stack-grid { grid-template-columns: 1fr; }
+}
+.ar-stack-card {
+  border: 1px solid rgba(120, 125, 118, 0.22);
+  border-radius: 6px;
+  padding: 1.2rem;
+  background: rgba(125, 132, 120, 0.035);
+}
+.ar-stack-card h3 {
+  font-size: 0.98rem;
+  margin: 0.25rem 0 0.5rem;
+}
+.ar-stack-card p {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  opacity: 0.82;
+  margin: 0 0 0.85rem;
+}
+
+/* Research Archive Cards & Expandable Field Context Drawers */
+.ar-search-input {
+  padding: 0.42rem 0.75rem;
+  font-size: 0.82rem;
+  border: 1px solid rgba(120, 125, 118, 0.32);
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  min-width: 260px;
+}
+.ar-archive-list {
+  display: grid;
+  gap: 1.1rem;
+}
+.ar-study-card {
+  border: 1px solid rgba(120, 125, 118, 0.22);
+  border-radius: 6px;
+  padding: 1.3rem;
+  background: rgba(125, 132, 120, 0.03);
+}
+.ar-study-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.73rem;
+  opacity: 0.74;
+  margin-bottom: 0.45rem;
+}
+.ar-study-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0 0 0.45rem;
+  letter-spacing: -0.01em;
+}
+.ar-study-title a {
+  color: inherit;
+  text-decoration: none;
+}
+.ar-study-title a:hover {
+  text-decoration: underline;
+}
+.ar-study-summary {
+  font-size: 0.91rem;
+  line-height: 1.62;
+  margin: 0 0 0.85rem;
+  opacity: 0.88;
+}
+.ar-study-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+.ar-action-btn {
+  appearance: none;
+  background: transparent;
+  border: 1px solid rgba(120, 125, 118, 0.3);
+  color: inherit;
+  border-radius: 4px;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.76rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.ar-action-btn:hover {
+  border-color: rgba(120, 125, 118, 0.7);
+}
+.ar-field-drawer {
+  margin-top: 0.9rem;
+  padding: 0.95rem 1.1rem;
+  border-left: 3px solid #2e5a44;
+  background: rgba(46, 90, 68, 0.05);
+  border-radius: 0 4px 4px 0;
+  font-size: 0.85rem;
+  line-height: 1.65;
+}
