@@ -92,6 +92,18 @@ const POSTS = [
     page: "projects/nagar-van-assessment.html"
   },
   {
+    id: "nagar-van-maintenance-dte",
+    group: "articles",
+    category: "environment",
+    title: "Nagar Van Yojana: The challenge of maintaining India’s urban forests",
+    summary: "An evidence-based analysis of the maintenance challenges facing India’s urban forests, examining delayed funding, frontline workers, sustainable infrastructure and community-led management, with lessons from field research across Uttar Pradesh, Madhya Pradesh and Rajasthan.",
+    meta: "Down To Earth · 15 October 2026",
+    year: "2026", location: "", methods: "", status: "Published Article", kind: "Article",
+    overview: "An evidence-based analysis of the maintenance challenges facing India’s urban forests. Drawing on field research across Uttar Pradesh, Madhya Pradesh and Rajasthan, it examines delayed maintenance funding, the impact on caretakers and park infrastructure, examples of urban-forest management, and proposed solutions involving multi-year funding and local partnerships.",
+    publication: "Down To Earth", date: "15 October 2026",
+    url: "https://www.downtoearth.org.in/forests/nagar-van-yojana-the-challenge-of-maintaining-indias-urban-forests"
+  },
+  {
     id: "etawah-design",
     group: "articles",
     category: "environment",
