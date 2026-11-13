@@ -32,8 +32,8 @@
     },
     {
       "enso_oni": -0.2,
-      "gistemp": 0.09,
-      "preind": 0.35,
+      "gistemp": 0.1,
+      "preind": 0.36,
       "year": 1945
     },
     {
@@ -633,7 +633,7 @@
       "NOAA OISST v2.1 Daily Ni\u00f1o 3.4 Index"
     ],
     "title": "Global Surface Temperature & ENSO Telemetry",
-    "updated_utc": "2026-10-14T14:38:28Z"
+    "updated_utc": "2026-11-13T14:32:20Z"
   },
   "telemetry_2026": {
     "annual_projection_c": 1.57,
